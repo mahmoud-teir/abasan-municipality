@@ -1,0 +1,692 @@
+{
+    "metadata": {
+        "title": "Abasan Alkabera Municipality",
+        "description": "The official digital platform of Abasan Alkabera Municipality"
+    },
+    "nav": {
+        "website": "Main Website",
+        "notifications": "Notifications",
+        "markAllRead": "Mark all as read",
+        "noNotifications": "No new notifications",
+        "home": "Home",
+        "about": "About",
+        "services": "Services",
+        "projects": "Projects",
+        "careers": "Careers",
+        "news": "News",
+        "contact": "Contact",
+        "login": "Login",
+        "register": "Register",
+        "dashboard": "Dashboard",
+        "logout": "Logout",
+        "admin": "Admin Panel",
+        "track": "Track Status",
+        "verification": "Identity Verification"
+    },
+    "home": {
+        "hero": {
+            "title": "Abasan Alkabera Municipality",
+            "subtitle": "Towards Distinguished Digital Municipal Services",
+            "cta": "Get Started",
+            "learnMore": "Learn More"
+        },
+        "services": {
+            "title": "Our Digital Services",
+            "buildingPermit": "Building Permits",
+            "complaints": "Complaints & Suggestions",
+            "appointments": "Book Appointments",
+            "payments": "Bills & Payments",
+            "cardDescription": "Benefit from our e-services easily and quickly without visiting the municipality.",
+            "startService": "Start Service"
+        },
+        "stats": {
+            "title": "Municipality Statistics",
+            "citizens": "Registered Citizens",
+            "requests": "Completed Requests",
+            "services": "Available Services",
+            "support": "Continuous Support"
+        },
+        "news": {
+            "title": "Latest News",
+            "viewAll": "View All",
+            "subtitle": "Follow the latest news and events of Abasan Alkabera Municipality",
+            "readMore": "Read More"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Login",
+            "subtitle": "Enter your details to access your account",
+            "email": "Email Address",
+            "emailOrNationalId": "Email or National ID",
+            "emailPlaceholder": "name@example.com",
+            "password": "Password",
+            "passwordPlaceholder": "••••••••",
+            "rememberMe": "Remember me",
+            "forgotPassword": "Forgot password?",
+            "submit": "Login",
+            "noAccount": "Don't have an account?",
+            "registerNow": "Register now",
+            "loading": "Logging in...",
+            "success": "Logged in successfully",
+            "error": "An error occurred during login"
+        },
+        "forgotPassword": {
+            "title": "Forgot Password?",
+            "description": "Enter your email address and we will send you a link to reset your password.",
+            "emailLabel": "Email Address",
+            "emailPlaceholder": "name@example.com",
+            "submit": "Send Link",
+            "backToLogin": "Back to Login",
+            "successTitle": "Link Sent Successfully",
+            "successDescription": "Check your email for the password reset link.",
+            "emailSentSuccess": "Password reset link sent to your email",
+            "submitError": "Something went wrong"
+        },
+        "register": {
+            "title": "Create New Account",
+            "subtitle": "Create a new account to benefit from e-services",
+            "name": "Full Name",
+            "namePlaceholder": "Full Name",
+            "email": "Email Address",
+            "phone": "Phone Number",
+            "phonePlaceholder": "059xxxxxxx",
+            "nationalId": "National ID",
+            "nationalIdPlaceholder": "Identity Number",
+            "password": "Password",
+            "passwordPlaceholder": "••••••••",
+            "confirmPassword": "Confirm Password",
+            "confirmPasswordPlaceholder": "••••••••",
+            "submit": "Create Account",
+            "hasAccount": "Already have an account?",
+            "loginNow": "Login now",
+            "success": "Account created successfully",
+            "error": "Failed to create account",
+            "passwordsDoNotMatch": "Passwords do not match"
+        },
+        "autoLogout": {
+            "title": "Auto Logout",
+            "description": "Logged out due to inactivity"
+        }
+    },
+    "dashboard": {
+        "welcome": "Welcome, {name}",
+        "myRequests": "My Requests",
+        "newRequest": "New Request",
+        "newComplaint": "New Complaint",
+        "appointments": "Appointments",
+        "complaints": "Complaints",
+        "payments": "Payments",
+        "settings": "Settings",
+        "subtitle": "Welcome to your digital services dashboard",
+        "quickServices": "Quick Services",
+        "mock": {
+            "requestTitle": "Building Permit Request #REQ-{id}",
+            "timeAgo": "{days} days ago"
+        }
+    },
+    "requests": {
+        "status": {
+            "draft": "Draft",
+            "pending": "Pending",
+            "underReview": "Under Review",
+            "needsDocuments": "Needs Documents",
+            "approved": "Approved",
+            "rejected": "Rejected",
+            "cancelled": "Cancelled",
+            "DRAFT": "Draft",
+            "PENDING": "Pending",
+            "UNDER_REVIEW": "Under Review",
+            "NEEDS_DOCUMENTS": "Needs Documents",
+            "APPROVED": "Approved",
+            "REJECTED": "Rejected",
+            "CANCELLED": "Cancelled",
+            "COMPLETED": "Completed"
+        },
+        "types": {
+            "building": "Building Permit",
+            "renovation": "Renovation",
+            "demolition": "Demolition",
+            "division": "Land Division",
+            "other": "Other"
+        },
+        "type": "Request Type",
+        "selectType": "Select Request Type",
+        "address": "Property Address",
+        "addressPlaceholder": "Street, District, Details...",
+        "basinNumber": "Basin Number",
+        "plotNumber": "Plot Number",
+        "description": "Request Description",
+        "descriptionPlaceholder": "Brief description of the request...",
+        "createSuccess": "Request created successfully",
+        "newRequestDescription": "Fill out the form to submit a new request",
+        "details": "Request Details",
+        "date": "Date",
+        "applicant": "Applicant",
+        "reviewNotes": "Review Notes",
+        "reviewNotesPlaceholder": "Add notes for the citizen (required for rejection or changes request)...",
+        "requestActions": {
+            "startReview": "Start Review",
+            "approve": "Approve",
+            "reject": "Reject",
+            "requestChanges": "Request Documents / Changes",
+            "cancel": "Cancel Request",
+            "cancelTitle": "Cancel Request",
+            "cancelConfirm": "Are you sure you want to cancel this request? This action cannot be undone.",
+            "cancelButton": "Yes, Cancel"
+        },
+        "documents": {
+            "title": "Attachments",
+            "download": "Click to download",
+            "defaultName": "PDF Document",
+            "uploadLabel": "Attachments (Plans, ID, Title Deed)",
+            "uploadSuccess": "Files uploaded successfully",
+            "uploadError": "Upload error: {error}",
+            "uploadedList": "Attached Files:"
+        },
+        "noDescription": "No description provided"
+    },
+    "common": {
+        "loading": "Loading...",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "view": "View",
+        "search": "Search",
+        "filter": "Filter",
+        "noResults": "No results found",
+        "error": "An error occurred",
+        "success": "Operation completed successfully",
+        "name": "Name",
+        "email": "Email",
+        "settings": "Settings",
+        "archive": "Archive",
+        "comingSoon": "This feature is coming soon...",
+        "upload": "Upload File",
+        "imageSelected": "Image Selected"
+    },
+    "settings": {
+        "title": "Account Settings",
+        "description": "Manage your profile information and security.",
+        "phone": "Phone Number",
+        "password": {
+            "title": "Change Password",
+            "current": "Current Password",
+            "new": "New Password",
+            "confirm": "Confirm Password",
+            "update": "Update Password",
+            "mismatch": "Passwords do not match"
+        },
+        "nationalIdImage": "National ID Image"
+    },
+    "employee": {
+        "title": "Employee Portal",
+        "dashboard": "Overview",
+        "requests": "Request Management",
+        "complaints": "Complaints",
+        "appointments": "Appointments",
+        "archive": "Archive",
+        "actions": "Actions",
+        "recentPending": "Recent Pending Requests",
+        "requestsPage": {
+            "title": "Request Management",
+            "filter": {
+                "all": "All Requests",
+                "pending": "Pending Only"
+            },
+            "table": {
+                "requestNo": "Request No",
+                "applicant": "Applicant",
+                "type": "Type",
+                "date": "Date",
+                "status": "Status"
+            },
+            "empty": "No requests found"
+        }
+    },
+    "public": {
+        "about": {
+            "title": "About Municipality",
+            "description": "Historical overview and vision of Abasan Alkabera Municipality",
+            "historyTitle": "History",
+            "historyText": "Abasan Alkabera Municipality was established to serve citizens and provide developed infrastructure. The city is considered one of the most important cities in Khan Yunis governorate, distinguished by its authentic history and continuous development.",
+            "visionTitle": "Our Vision",
+            "visionText": "Towards a modern sustainable city providing high quality of life for its residents.",
+            "missionTitle": "Our Mission",
+            "missionText": "Providing excellent municipal services with transparency and efficiency to achieve sustainable development.",
+            "foundedYear": "Established",
+            "population": "Population"
+        },
+        "contact": {
+            "title": "Contact Us",
+            "subtitle": "We are here to answer your inquiries and assist you.",
+            "address": "Address",
+            "addressDetails": "Palestine, Gaza Strip\nAbasan Alkabera, Main Street\nMunicipality Building",
+            "phone": "Phone",
+            "email": "Email",
+            "addressValue": "Abasan Alkabera, Salah Al-Din St",
+            "openingHours": "Opening Hours",
+            "workingDays": "Saturday - Thursday",
+            "workingTime": "8:00 AM - 2:00 PM",
+            "socialMedia": "Social Media",
+            "formTitle": "Send us a message",
+            "name": "Name",
+            "namePlaceholder": "Full Name",
+            "emailPlaceholder": "example@domain.com",
+            "subject": "Subject",
+            "subjectPlaceholder": "Message Subject",
+            "message": "Message",
+            "messagePlaceholder": "Write your message here...",
+            "send": "Send Message"
+        },
+        "news": {
+            "title": "Municipality News",
+            "subtitle": "Follow the latest news and events of Abasan Alkabera Municipality",
+            "latest": "Latest News",
+            "readMore": "Read More",
+            "back": "Back to News",
+            "share": "Share this news:"
+        },
+        "track": {
+            "title": "Track Your Request",
+            "subtitle": "Enter your reference number to check the status of your request or complaint.",
+            "placeholder": "e.g., REQ-2025-0001",
+            "search": "Check Status",
+            "check": "Check",
+            "result": {
+                "found": "Reference Found",
+                "notFound": "No record found with this number",
+                "status": "Current Status",
+                "date": "Submission Date",
+                "type": "Type"
+            }
+        }
+    },
+    "admin": {
+        "title": "Admin Dashboard",
+        "dashboard": "Dashboard",
+        "analytics": {
+            "title": "Analytics Dashboard",
+            "requestsByType": "Requests by Type",
+            "complaintsByType": "Complaints by Type",
+            "complaintsByCategory": "Complaints by Category",
+            "requestsByStatus": "Requests by Status",
+            "usersByRole": "Users by Role"
+        },
+        "users": "Users",
+        "requests": "Requests",
+        "complaints": "Complaints",
+        "appointments": "Appointments",
+        "projects": "Projects",
+        "careers": "Careers",
+        "news": "News",
+        "exportUsers": "Export Users",
+        "exportRequests": "Export Requests",
+        "activeSessions": "Active Sessions",
+        "messages": "Messages",
+        "settings": "Settings",
+        "actions": "Actions",
+        "logs": "Audit Logs",
+        "servicesMenu": "Manage Services",
+        "services": {
+            "add": "Add New Service",
+            "description": "Create a new service request type.",
+            "editTitle": "Edit Service",
+            "editDescription": "Update service details and status.",
+            "deleteTitle": "Delete Service",
+            "deleteConfirm": "Are you sure you want to delete {name}? This action cannot be undone.",
+            "BUILDING_PERMIT": "Building Permit",
+            "RENOVATION_PERMIT": "Renovation Permit",
+            "DEMOLITION_PERMIT": "Demolition Permit",
+            "LAND_DIVISION": "Land Division",
+            "OTHER": "Other Service"
+        },
+        "createUser": {
+            "title": "Add New User",
+            "button": "Add New User",
+            "description": "Enter the new employee details accurately to grant system access.",
+            "name": "Full Name",
+            "email": "Email",
+            "password": "Password",
+            "role": "Role / Position",
+            "roleDescription": "Permissions determine which sections the employee can access.",
+            "cancel": "Cancel",
+            "submit": "Create Account",
+            "success": "User created successfully",
+            "error": "Failed to create user",
+            "roles": {
+                "EMPLOYEE": "Employee",
+                "ENGINEER": "Engineer",
+                "ACCOUNTANT": "Accountant",
+                "PR_MANAGER": "PR Manager",
+                "ADMIN": "System Admin",
+                "CITIZEN": "Citizen"
+            }
+        },
+        "overview": "System Overview",
+        "growth": "from last month",
+        "chartPlaceholder": "Statistics Chart Area (Coming Soon)",
+        "usersPage": {
+            "table": {
+                "title": "Users List",
+                "status": "Status",
+                "joinedAt": "Joined At",
+                "role": "Role",
+                "roles": {
+                    "CITIZEN": "Citizen",
+                    "EMPLOYEE": "Employee",
+                    "SUPERVISOR": "Supervisor",
+                    "ADMIN": "Admin",
+                    "SUPER_ADMIN": "Super Admin",
+                    "ENGINEER": "Engineer",
+                    "ACCOUNTANT": "Accountant",
+                    "PR_MANAGER": "PR Manager"
+                }
+            },
+            "roleDialog": {
+                "title": "Change User Role",
+                "description": "Changing role for user:",
+                "cancel": "Cancel",
+                "save": "Save Changes",
+                "success": "Role updated successfully",
+                "error": "Failed to update role"
+            }
+        },
+        "newsPage": {
+            "title": "News Management",
+            "list": "News List",
+            "add": "Add New News",
+            "empty": "No news available. Add a new news item.",
+            "table": {
+                "titleAr": "Title (Arabic)",
+                "titleEn": "Title (English)",
+                "status": "Status",
+                "date": "Date",
+                "actions": "Actions",
+                "published": "Published",
+                "draft": "Draft",
+                "delete": "Delete",
+                "deleteConfirmTitle": "Delete News",
+                "deleteConfirmDesc": "Are you sure you want to delete this news? This action cannot be undone.",
+                "deleteSuccess": "News deleted successfully"
+            },
+            "form": {
+                "title": "Add New News",
+                "editTitle": "Edit News",
+                "arabicContent": "Arabic Content",
+                "englishContent": "English Content",
+                "titleArLabel": "Title (Arabic)",
+                "titleArPlaceholder": "News title in Arabic",
+                "contentArLabel": "Content (Arabic)",
+                "contentArPlaceholder": "News content in Arabic...",
+                "titleEnLabel": "Title (English)",
+                "titleEnPlaceholder": "News title in English",
+                "contentEnLabel": "Content (English)",
+                "contentEnPlaceholder": "News content in English...",
+                "media": "Media (Images)",
+                "imagesLabel": "Gallery Images",
+                "settings": "Settings & Publishing",
+                "excerptLabel": "Short Excerpt (Optional)",
+                "excerptPlaceholder": "Appears in cards...",
+                "publishLabel": "Publish News",
+                "publishDesc": "News will be visible to public immediately",
+                "featuredLabel": "Featured News",
+                "featuredDesc": "Appears in the main slider",
+                "cancel": "Cancel",
+                "save": "Save News",
+                "saving": "Saving...",
+                "success": "News created successfully",
+                "error": "Error creating news"
+            }
+        },
+        "settingsPage": {
+            "subtitle": "Manage platform settings and appearance",
+            "fonts": {
+                "title": "Font Customization",
+                "description": "Choose appropriate fonts for the platform in Arabic and English",
+                "arabicLabel": "Arabic Font (Titles & Body)",
+                "arabicPlaceholder": "Select Arabic Font",
+                "arabicExample": "Example: In the name of God, the Most Gracious, the Most Merciful",
+                "englishLabel": "English Font (Latin)",
+                "englishPlaceholder": "Select English Font",
+                "englishExample": "Example: The quick brown fox jumps over the lazy dog",
+                "success": "Font updated successfully",
+                "error": "Error updating font"
+            },
+            "aboutImage": {
+                "title": "\"About Municipality\" Image",
+                "description": "Control the image displayed on the \"About Municipality\" page.",
+                "noImage": "No custom image (Default image is used)",
+                "success": "Image updated successfully",
+                "removeSuccess": "Image removed, default restored",
+                "error": "Error saving image",
+                "removeError": "Failed to remove image",
+                "uploadError": "Upload failed"
+            },
+            "suggestions": {
+                "title": "Future Dashboard Development Suggestions",
+                "logo": "**Logo Management:** Ability to upload and change Logo and Favicon directly.",
+                "social": "**Social Media Links:** Section to enter Facebook, Twitter, etc. links to appear in the Footer.",
+                "hero": "**Hero Slider:** Control images and text appearing in the main user interface.",
+                "maintenance": "**Maintenance Mode:** Button to temporarily close the site and show a \"Under Maintenance\" page.",
+                "analytics": "**Analytics:** Direct integration with Google Analytics or simplified visit statistics."
+            },
+            "theme": {
+                "title": "System Theme",
+                "description": "Choose the general theme for the platform (affects all users)",
+                "default": "Default (Blue)",
+                "green": "Abasan (Green)",
+                "success": "Theme updated successfully",
+                "error": "Failed to update theme"
+            },
+            "profile": "Personal Profile Settings",
+            "backup": {
+                "title": "System Backup",
+                "description": "Download a full backup of the system database (Users, Requests, Complaints, etc.)",
+                "download": "Download Full Backup",
+                "downloading": "Generating Backup...",
+                "success": "Backup generated successfully"
+            }
+        },
+        "logsPage": {
+            "title": "Audit Logs",
+            "subtitle": "Latest System Activities",
+            "table": {
+                "action": "Action",
+                "actor": "Actor",
+                "details": "Details",
+                "date": "Date",
+                "ip": "IP Address",
+                "empty": "No audit logs found"
+            }
+        },
+        "messagesPage": {
+            "title": "Messages",
+            "search": "Search...",
+            "noConversations": "No conversations found",
+            "selectConversation": "Select a conversation to start",
+            "typeReply": "Write your reply here...",
+            "supportAgent": "Support Agent",
+            "loading": "Loading messages..."
+        }
+    },
+    "services": {
+        "title": "Services Directory",
+        "subtitle": "Explore digital services provided by Abasan Alkabera Municipality to citizens",
+        "applyNow": "Apply Now",
+        "categories": {
+            "engineering": "Engineering Services",
+            "financial": "Financial Services",
+            "general": "General Services",
+            "maintenance": "Maintenance & Lighting",
+            "environment": "Health & Environment"
+        },
+        "appointments": {
+            "pageTitle": "My Appointments",
+            "newAppointment": "Book Appointment",
+            "empty": {
+                "title": "No appointments found",
+                "description": "You haven't booked any appointment yet.",
+                "button": "Book New Appointment"
+            },
+            "book": {
+                "title": "Book New Appointment",
+                "details": "Booking Details",
+                "subtitle": "Choose the service and time suitable for your visit.",
+                "serviceType": "Service Type",
+                "selectService": "Select Service",
+                "date": "Date",
+                "time": "Time",
+                "selectTime": "Select Time",
+                "notes": "Additional Notes (Optional)",
+                "notesPlaceholder": "Any details you'd like to add before the appointment?",
+                "submit": "Confirm Booking",
+                "submitting": "Booking...",
+                "success": "Appointment booked successfully, pending confirmation",
+                "types": {
+                    "BUILDING_PERMIT": "Building Permit Review",
+                    "RENOVATION_PERMIT": "Renovation Permit",
+                    "DEMOLITION_PERMIT": "Demolition Permit",
+                    "LAND_DIVISION": "Land Division",
+                    "COMPLAINT_FOLLOWUP": "Complaint Follow-up",
+                    "MAYOR_MEETING": "Mayor Meeting",
+                    "ENGINEERING": "Engineering Dept",
+                    "FINANCE": "Finance Dept",
+                    "OTHER": "Other"
+                }
+            },
+            "status": {
+                "SCHEDULED": "Scheduled",
+                "CONFIRMED": "Confirmed",
+                "COMPLETED": "Completed",
+                "CANCELLED": "Cancelled",
+                "NO_SHOW": "No Show"
+            },
+            "actions": {
+                "cancel": "Cancel Booking",
+                "cancelConfirmTitle": "Cancel Appointment",
+                "cancelConfirmDesc": "Are you sure you want to cancel this appointment? This action cannot be undone.",
+                "confirmCancel": "Yes, Cancel",
+                "back": "Keep Appointment",
+                "cancelSuccess": "Appointment cancelled successfully"
+            }
+        },
+        "complaints": {
+            "pageTitle": "Complaints & Suggestions",
+            "newComplaint": "New Complaint",
+            "myComplaints": "My Complaints",
+            "empty": {
+                "title": "No complaints found",
+                "description": "You haven't submitted any complaints or suggestions yet.",
+                "button": "Submit Complaint Now"
+            },
+            "response": "Municipality Response:",
+            "status": {
+                "OPEN": "Open",
+                "IN_PROGRESS": "In Progress",
+                "RESOLVED": "Resolved",
+                "CLOSED": "Closed"
+            },
+            "viewDetails": "View Details",
+            "backToComplaints": "Back to Complaints",
+            "complaintDetails": "Complaint Details",
+            "complaintInfo": "Complaint Information",
+            "attachments": "Attachments",
+            "noAttachments": "No attachments",
+            "categories": {
+                "ROADS": "Roads & Sidewalks",
+                "WATER": "Water",
+                "ELECTRICITY": "Electricity",
+                "SEWAGE": "Sewage",
+                "GARBAGE": "Cleanliness",
+                "PARKS": "Parks",
+                "NOISE": "Noise",
+                "OTHER": "Other"
+            },
+            "form": {
+                "title": "Submit Complaint or Suggestion",
+                "subtitle": "Please fill out the form below. Your complaint will be handled confidentially.",
+                "subjectLabel": "Complaint Title",
+                "subjectPlaceholder": "Example: Water outage in Northern District",
+                "categoryLabel": "Category",
+                "categoryPlaceholder": "Select Category",
+                "locationLabel": "Location",
+                "locationPlaceholder": "Street name or nearby landmark",
+                "mapLabel": "Location on Map",
+                "imageLabel": "Attach Image (Optional)",
+                "imagePlaceholder": "Select image...",
+                "selectedFile": "Selected File",
+                "detailsLabel": "Details",
+                "detailsPlaceholder": "Explain the issue in detail...",
+                "detailsHint": "Please provide as much detail as possible to help us solve the issue.",
+                "submit": "Submit Complaint",
+                "submitting": "Sending...",
+                "success": "Complaint submitted successfully",
+                "noFileChosen": "No file chosen"
+            }
+        },
+        "payments": {
+            "comingSoon": {
+                "title": "Payment Service Coming Soon",
+                "description": "We are currently working on developing the electronic payment gateway to facilitate your transactions.",
+                "back": "Back to Dashboard"
+            }
+        },
+        "items": {
+            "buildingPermit": {
+                "title": "Building Permit",
+                "description": "Issue a new building licence or add floors"
+            },
+            "complaints": {
+                "title": "Submit Complaint",
+                "description": "Report violations or service issues",
+                "status": {
+                    "OPEN": "Open",
+                    "IN_PROGRESS": "In Progress",
+                    "RESOLVED": "Resolved",
+                    "CLOSED": "Closed"
+                }
+            },
+            "appointments": {
+                "title": "Book Appointment",
+                "description": "Book an appointment with Mayor or Engineering Dept"
+            },
+            "payments": {
+                "title": "Bill Payments",
+                "description": "Inquire about dues and pay electronically"
+            },
+            "lighting": {
+                "title": "Lighting Maintenance",
+                "description": "Request repair or installation of street light"
+            },
+            "water": {
+                "title": "Water Services",
+                "description": "New water subscription or line maintenance"
+            },
+            "garding": {
+                "title": "Gardening",
+                "description": "Tree trimming or pavement planting requests"
+            },
+            "waste": {
+                "title": "Waste Services",
+                "description": "Request waste container or debris removal"
+            }
+        }
+    },
+    "footer": {
+        "copyright": "© {year} Abasan Alkabera Municipality - All Rights Reserved",
+        "quickLinks": "Quick Links",
+        "contactUs": "Contact Us",
+        "followUs": "Follow Us"
+    },
+    "chat": {
+        "title": "Technical Support",
+        "welcome": "Welcome! How can we help you today?",
+        "placeholder": "Type your message...",
+        "guestWelcome": "Welcome to Auto-Support",
+        "guestDesc": "Browse common questions below, or login to chat with an agent.",
+        "commonQuestions": "Common Questions",
+        "endChat": "End Chat"
+    }
+}

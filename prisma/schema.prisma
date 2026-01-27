@@ -1,0 +1,511 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================
+// المستخدمون - Users
+// ============================================
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  phone         String?   @unique
+  nationalId    String?   @unique
+  name          String
+  nameEn        String?
+  role          Role      @default(CITIZEN)
+  emailVerified Boolean   @default(false)
+  image         String?
+  nationalIdImage String?
+  failedLoginAttempts Int @default(0)
+  isBanned      Boolean   @default(false)
+  banReason     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  requests     Request[]
+  complaints   Complaint[]
+  appointments Appointment[]
+  payments     Payment[]
+  sessions     Session[]
+  accounts     Account[]
+  comments     Comment[]
+  
+  // System Relations
+  auditLogs    AuditLog[] @relation("Actor")
+  notifications Notification[]
+  messages      RequestMessage[]
+}
+
+enum Role {
+  CITIZEN
+  EMPLOYEE
+  SUPERVISOR
+  ADMIN
+  SUPER_ADMIN
+  ENGINEER
+  ACCOUNTANT
+  PR_MANAGER
+}
+
+// ============================================
+// جلسات المصادقة - Auth Sessions
+// ============================================
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token        String   @unique
+  expiresAt    DateTime
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId         String
+  providerId        String
+  accessToken       String?
+  refreshToken      String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope             String?
+  idToken           String?
+  password          String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ============================================
+// طلبات تصاريح البناء - Building Permits
+// ============================================
+// ============================================
+// أنواع الخدمات - Service Types
+// ============================================
+model ServiceType {
+  id            String   @id @default(cuid())
+  slug          String   @unique // e.g., BUILDING_PERMIT
+  nameAr        String
+  nameEn        String
+  descriptionAr String?
+  descriptionEn String?
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ============================================
+// طلبات تصاريح البناء - Building Permits
+// ============================================
+model Request {
+  id          String        @id @default(cuid())
+  requestNo   String        @unique @default(cuid())
+  type        String        // References ServiceType.slug
+  status      RequestStatus @default(PENDING)
+  
+  // بيانات العقار
+  propertyAddress String
+  plotNumber      String?
+  basinNumber     String?
+  description     String?
+  
+  // بيانات مقدم الطلب
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  
+  // Relations
+  documents   Document[]
+  notes       Note[]
+  messages    RequestMessage[]
+  
+  // Timestamps
+  submittedAt DateTime?
+  reviewedAt  DateTime?
+  completedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+
+
+enum RequestStatus {
+  DRAFT
+  PENDING
+  UNDER_REVIEW
+  NEEDS_DOCUMENTS
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+// ============================================
+// الشكاوى والمقترحات - Complaints
+// ============================================
+model Complaint {
+  id          String          @id @default(cuid())
+  complaintNo String          @unique @default(cuid())
+  title       String
+  description String
+  category    ComplaintCategory
+  status      ComplaintStatus @default(OPEN)
+  priority    Priority        @default(MEDIUM)
+  
+  // Location
+  location    String?
+  latitude    Float?
+  longitude   Float?
+  imageUrl    String?
+  
+  // Relations
+  userId      String
+  user        User            @relation(fields: [userId], references: [id])
+  responses   Response[]
+  
+  // Timestamps
+  resolvedAt  DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+enum ComplaintCategory {
+  ROADS
+  WATER
+  ELECTRICITY
+  SEWAGE
+  GARBAGE
+  PARKS
+  NOISE
+  OTHER
+}
+
+enum ComplaintStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Response {
+  id          String    @id @default(cuid())
+  content     String
+  complaintId String
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  responderId String
+  createdAt   DateTime  @default(now())
+}
+
+// ============================================
+// المواعيد - Appointments
+// ============================================
+model Appointment {
+  id          String            @id @default(cuid())
+  serviceType String
+  date        DateTime
+  timeSlot    String
+  status      AppointmentStatus @default(SCHEDULED)
+  notes       String?
+  
+  // Relations
+  userId      String
+  user        User              @relation(fields: [userId], references: [id])
+  
+  // Timestamps
+  confirmedAt DateTime?
+  completedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+// ============================================
+// الفواتير والمدفوعات - Payments
+// ============================================
+model Payment {
+  id            String        @id @default(cuid())
+  paymentNo     String        @unique @default(cuid())
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("ILS")
+  status        PaymentStatus @default(PENDING)
+  type          PaymentType
+  description   String?
+  
+  // Relations
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  
+  // Payment details
+  transactionId String?
+  paidAt        DateTime?
+  dueDate       DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentType {
+  BUILDING_FEE
+  SERVICE_FEE
+  PENALTY
+  TAX
+  OTHER
+}
+
+// ============================================
+// الأخبار والإعلانات - News
+// ============================================
+model News {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  titleAr     String
+  titleEn     String
+  contentAr   String
+  contentEn   String
+  excerpt     String?
+  images      String[]
+  category    String?
+  tags        String[]
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  publishedAt DateTime?
+  authorId    String?
+  comments    Comment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  newsId    String
+  news      News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  guestName String?
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// المستندات والملفات - Documents
+// ============================================
+model Document {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  type      String
+  size      Int?
+  requestId String
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// الملاحظات - Notes
+// ============================================
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  internal  Boolean  @default(false)  // ملاحظة داخلية للموظفين فقط
+  requestId String
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  authorId  String
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// إعدادات النظام - Settings
+// ============================================
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("string")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// سجلات التدقيق - Audit Logs
+// ============================================
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  details   String?
+  actorId   String
+  actor     User     @relation("Actor", fields: [actorId], references: [id])
+  targetId  String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// التنبيهات - Notifications
+// ============================================
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+// ============================================
+// المشاريع - Projects
+// ============================================
+model Project {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  titleAr         String
+  titleEn         String
+  descriptionAr   String
+  descriptionEn   String
+  status          ProjectStatus @default(PLANNED)
+  budget          Decimal?  @db.Decimal(15, 2)
+  contractor      String?
+  startDate       DateTime?
+  endDate         DateTime?
+  images          String[]
+  completionPercentage Int  @default(0)
+  location        String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+// ============================================
+// الوظائف - Jobs / Careers
+// ============================================
+model Job {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  titleAr         String
+  titleEn         String
+  department      String?
+  type            JobType   @default(FULL_TIME)
+  descriptionAr   String
+  descriptionEn   String
+  requirementsAr  String
+  requirementsEn  String
+  deadline        DateTime
+  isActive        Boolean   @default(true)
+  applications    JobApplication[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+  INTERNSHIP
+}
+
+model JobApplication {
+  id            String    @id @default(cuid())
+  jobId         String
+  job           Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicantName String
+  email         String
+  phone         String
+  cvUrl         String?
+  message       String?
+  status        ApplicationStatus @default(PENDING)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  SHORTLISTED
+  REJECTED
+  ACCEPTED
+}
+
+// ... (existing code)
+
+// ============================================
+// تنبيهات الطوارئ - Emergency Alerts
+// ============================================
+model Alert {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      AlertType @default(INFO)
+  isActive  Boolean  @default(true)
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum AlertType {
+  INFO
+  WARNING
+  DANGER
+  SUCCESS
+}
+
+// ============================================
+// محادثات الطلبات - Request Messages
+// ============================================
+model RequestMessage {
+  id        String   @id @default(cuid())
+  content   String
+  requestId String
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id])
+  createdAt DateTime @default(now())
+}

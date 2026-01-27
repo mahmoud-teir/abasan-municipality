@@ -1,0 +1,25 @@
+.desktopNav {
+    display: none;
+}
+
+.mobileOnly {
+    display: block;
+}
+
+.desktopOnly {
+    display: none;
+}
+
+@media (min-width: 1200px) {
+    .desktopNav {
+        display: flex !important;
+    }
+
+    .mobileOnly {
+        display: none !important;
+    }
+
+    .desktopOnly {
+        display: flex !important;
+    }
+}

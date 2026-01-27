@@ -1,0 +1,692 @@
+{
+    "metadata": {
+        "title": "بلدية عبسان الكبيرة",
+        "description": "المنصة الرقمية الرسمية لبلدية عبسان الكبيرة"
+    },
+    "nav": {
+        "website": "الموقع الرئيسي",
+        "notifications": "التنبيهات",
+        "markAllRead": "تحديد الكل كمقروء",
+        "noNotifications": "لا توجد تنبيهات جديدة",
+        "home": "الرئيسية",
+        "about": "عن البلدية",
+        "services": "الخدمات",
+        "projects": "المشاريع",
+        "careers": "الوظائف",
+        "news": "الأخبار",
+        "track": "متابعة الطلبات",
+        "contact": "اتصل بنا",
+        "login": "تسجيل الدخول",
+        "register": "إنشاء حساب",
+        "dashboard": "لوحة التحكم",
+        "logout": "تسجيل الخروج",
+        "admin": "الإدارة",
+        "verification": "تأكيد الهوية"
+    },
+    "home": {
+        "hero": {
+            "title": "بلدية عبسان الكبيرة",
+            "subtitle": "نحو خدمات بلدية رقمية متميزة",
+            "cta": "ابدأ الآن",
+            "learnMore": "تعرف علينا"
+        },
+        "services": {
+            "title": "خدماتنا الرقمية",
+            "buildingPermit": "تصاريح البناء",
+            "complaints": "الشكاوى والمقترحات",
+            "appointments": "حجز المواعيد",
+            "payments": "الفواتير والمدفوعات",
+            "cardDescription": "استفد من خدماتنا الإلكترونية بسهولة وسرعة دون الحاجة لزيارة البلدية.",
+            "startService": "ابدأ الخدمة"
+        },
+        "stats": {
+            "title": "إحصائيات البلدية",
+            "citizens": "مواطن مسجل",
+            "requests": "طلب منجز",
+            "services": "خدمة متاحة",
+            "support": "دعم متواصل"
+        },
+        "news": {
+            "title": "آخر الأخبار",
+            "viewAll": "عرض الكل",
+            "subtitle": "تابع أحدث أخبار وفعاليات بلدية عبسان الكبيرة",
+            "readMore": "اقرأ المزيد"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "تسجيل الدخول",
+            "subtitle": "أدخل بياناتك للوصول إلى حسابك",
+            "email": "البريد الإلكتروني",
+            "emailOrNationalId": "البريد الإلكتروني أو رقم الهوية",
+            "emailPlaceholder": "name@example.com",
+            "password": "كلمة المرور",
+            "passwordPlaceholder": "••••••••",
+            "rememberMe": "تذكرني",
+            "forgotPassword": "نسيت كلمة المرور؟",
+            "submit": "تسجيل الدخول",
+            "noAccount": "ليس لديك حساب؟",
+            "registerNow": "سجل الآن",
+            "loading": "جاري تسجيل الدخول...",
+            "success": "تم تسجيل الدخول بنجاح",
+            "error": "حدث خطأ أثناء تسجيل الدخول"
+        },
+        "forgotPassword": {
+            "title": "نسيت كلمة المرور؟",
+            "description": "أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور.",
+            "emailLabel": "البريد الإلكتروني",
+            "emailPlaceholder": "name@example.com",
+            "submit": "إرسال الرابط",
+            "backToLogin": "عودة لتسجيل الدخول",
+            "successTitle": "تم الإرسال بنجاح",
+            "successDescription": "تحقق من بريدك الإلكتروني للحصول على رابط إعادة تعيين كلمة المرور.",
+            "emailSentSuccess": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+            "submitError": "حدث خطأ ما"
+        },
+        "register": {
+            "title": "إنشاء حساب جديد",
+            "subtitle": "أنشئ حساباً جديداً للاستفادة من الخدمات الإلكترونية",
+            "name": "الاسم الكامل",
+            "namePlaceholder": "الاسم الرباعي",
+            "email": "البريد الإلكتروني",
+            "phone": "رقم الهاتف",
+            "phonePlaceholder": "059xxxxxxx",
+            "nationalId": "رقم الهوية",
+            "nationalIdPlaceholder": "رقم الهوية",
+            "password": "كلمة المرور",
+            "passwordPlaceholder": "••••••••",
+            "confirmPassword": "تأكيد كلمة المرور",
+            "confirmPasswordPlaceholder": "••••••••",
+            "submit": "إنشاء حساب",
+            "hasAccount": "لديك حساب بالفعل؟",
+            "loginNow": "سجل دخولك",
+            "success": "تم إنشاء الحساب بنجاح",
+            "error": "فشل إنشاء الحساب",
+            "passwordsDoNotMatch": "كلمات المرور غير متطابقة"
+        },
+        "autoLogout": {
+            "title": "تسجيل خروج تلقائي",
+            "description": "تم تسجيل الخروج بسبب عدم النشاط"
+        }
+    },
+    "dashboard": {
+        "welcome": "مرحباً، {name}",
+        "myRequests": "طلباتي",
+        "newRequest": "طلب جديد",
+        "newComplaint": "شكوى جديدة",
+        "appointments": "المواعيد",
+        "complaints": "الشكاوى",
+        "payments": "الفواتير",
+        "settings": "الإعدادات",
+        "subtitle": "مرحباً بك في لوحة الخدمات الإلكترونية الخاصة بك",
+        "quickServices": "خدمات سريعة",
+        "mock": {
+            "requestTitle": "طلب تصريح بناء #REQ-{id}",
+            "timeAgo": "منذ {days} أيام"
+        }
+    },
+    "requests": {
+        "status": {
+            "draft": "مسودة",
+            "pending": "قيد الانتظار",
+            "underReview": "قيد المراجعة",
+            "needsDocuments": "يحتاج مستندات",
+            "approved": "تمت الموافقة",
+            "rejected": "مرفوض",
+            "cancelled": "ملغي",
+            "DRAFT": "مسودة",
+            "PENDING": "قيد الانتظار",
+            "UNDER_REVIEW": "قيد المراجعة",
+            "NEEDS_DOCUMENTS": "يحتاج مستندات",
+            "APPROVED": "تمت الموافقة",
+            "REJECTED": "مرفوض",
+            "CANCELLED": "ملغي",
+            "COMPLETED": "مكتمل"
+        },
+        "types": {
+            "building": "تصريح بناء",
+            "renovation": "ترميم",
+            "demolition": "هدم",
+            "division": "إفراز أرض",
+            "other": "أخرى"
+        },
+        "type": "نوع الطلب",
+        "selectType": "اختر نوع الطلب",
+        "address": "عنوان العقار",
+        "addressPlaceholder": "الحي، الشارع، تفاصيل أخرى",
+        "basinNumber": "رقم الحوض",
+        "plotNumber": "رقم القطعة",
+        "description": "وصف الطلب",
+        "descriptionPlaceholder": "اكتب وصفاً مختصراً للطلب...",
+        "createSuccess": "تم إنشاء الطلب بنجاح",
+        "newRequestDescription": "قم بتعبئة النموذج لتقديم طلب جديد",
+        "details": "تفاصيل الطلب",
+        "date": "تاريخ الطلب",
+        "applicant": "مقدم الطلب",
+        "reviewNotes": "ملاحظات المراجعة",
+        "reviewNotesPlaceholder": "أضف ملاحظات للمواطن (مطلوب في حالة الرفض أو طلب التعديل)",
+        "requestActions": {
+            "startReview": "بدء المراجعة",
+            "approve": "موافقة",
+            "reject": "رفض",
+            "requestChanges": "طلب وثائق / تعديل",
+            "cancel": "إلغاء الطلب",
+            "cancelTitle": "إلغاء الطلب",
+            "cancelConfirm": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+            "cancelButton": "نعم، إلغاء الطلب"
+        },
+        "documents": {
+            "title": "المرفقات",
+            "download": "اضغط للتحميل",
+            "defaultName": "مستند بي دي اف",
+            "uploadLabel": "المرفقات (مخططات، هوية، سند ملكية)",
+            "uploadSuccess": "تم رفع الملفات بنجاح",
+            "uploadError": "حدث خطأ: {error}",
+            "uploadedList": "الملفات المرفقة:"
+        },
+        "noDescription": "لا يوجد وصف"
+    },
+    "common": {
+        "loading": "جاري التحميل...",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "delete": "حذف",
+        "edit": "تعديل",
+        "view": "عرض",
+        "search": "بحث",
+        "filter": "تصفية",
+        "noResults": "لا توجد نتائج",
+        "error": "حدث خطأ",
+        "success": "تمت العملية بنجاح",
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "settings": "الإعدادات",
+        "archive": "الأرشيف",
+        "comingSoon": "هذه الميزة ستتوفر قريباً...",
+        "upload": "رفع ملف",
+        "imageSelected": "تم اختيار الصورة"
+    },
+    "settings": {
+        "title": "إعدادات الحساب",
+        "description": "إدارة معلوماتك الشخصية والأمان.",
+        "phone": "رقم الهاتف",
+        "password": {
+            "title": "تغيير كلمة المرور",
+            "current": "كلمة المرور الحالية",
+            "new": "كلمة المرور الجديدة",
+            "confirm": "تأكيد كلمة المرور",
+            "update": "تحديث كلمة المرور",
+            "mismatch": "كلمتا المرور غير متطابقتين"
+        },
+        "nationalIdImage": "صورة الهوية"
+    },
+    "employee": {
+        "title": "بوابة الموظفين",
+        "dashboard": "نظرة عامة",
+        "requests": "إدارة الطلبات",
+        "complaints": "الشكاوى",
+        "appointments": "إدارة المواعيد",
+        "archive": "الأرشيف",
+        "actions": "إجراءات",
+        "recentPending": "أحدث الطلبات المعلقة",
+        "requestsPage": {
+            "title": "إدارة الطلبات",
+            "filter": {
+                "all": "كل الطلبات",
+                "pending": "قيد الانتظار"
+            },
+            "table": {
+                "requestNo": "رقم الطلب",
+                "applicant": "مقدم الطلب",
+                "type": "النوع",
+                "date": "التاريخ",
+                "status": "الحالة"
+            },
+            "empty": "لا توجد طلبات"
+        }
+    },
+    "public": {
+        "about": {
+            "title": "عن البلدية",
+            "description": "نبذة تاريخية ورؤية بلدية عبسان الكبيرة",
+            "historyTitle": "نبذة تاريخية",
+            "historyText": "تأسست بلدية عبسان الكبيرة لخدمة المواطنين وتوفير بنية تحتية متطورة. تعتبر المدينة من أهم مدن محافظة خانيونس، وتتميز بتاريخها العريق ومسيرة التطوير المستمرة فيها.",
+            "visionTitle": "رؤيتنا",
+            "visionText": "نحو مدينة عصرية مستدامة توفر جودة حياة عالية لسكانها.",
+            "missionTitle": "رسالتنا",
+            "missionText": "تقديم خدمات بلدية متميزة بشفافية وكفاءة لتحقيق التنمية المستدامة.",
+            "foundedYear": "سنة التأسيس",
+            "population": "نسمة"
+        },
+        "contact": {
+            "title": "تواصل معنا",
+            "subtitle": "نحن هنا للإجابة على استفساراتكم ومساعدتكم.",
+            "address": "العنوان",
+            "addressDetails": "فلسطين، قطاع غزة\nعبسان الكبيرة، الشارع العام\nمبنى البلدية",
+            "phone": "الهاتف",
+            "email": "البريد الإلكتروني",
+            "addressValue": "عبسان الكبيرة، شارع صلاح الدين",
+            "openingHours": "أوقات العمل",
+            "workingDays": "السبت - الخميس",
+            "workingTime": "8:00 صباحاً - 2:00 مساءً",
+            "socialMedia": "تواصل اجتماعي",
+            "formTitle": "أرسل لنا رسالة",
+            "name": "الاسم",
+            "namePlaceholder": "الاسم الكامل",
+            "emailPlaceholder": "example@domain.com",
+            "subject": "الموضوع",
+            "subjectPlaceholder": "عنوان الرسالة",
+            "message": "الرسالة",
+            "messagePlaceholder": "اكتب رسالتك هنا...",
+            "send": "إرسال الرسالة"
+        },
+        "news": {
+            "title": "أخبار البلدية",
+            "subtitle": "تابع أحدث أخبار وفعاليات بلدية عبسان الكبيرة",
+            "latest": "آخر الأخبار",
+            "readMore": "اقرأ المزيد",
+            "back": "عودة للأخبار",
+            "share": "شارك هذا الخبر:"
+        },
+        "track": {
+            "title": "تتبع حالة الطلب",
+            "subtitle": "أدخل رقم المرجع للاستعلام عن حالة طلبك أو شكواك.",
+            "placeholder": "مثال: REQ-2025-0001",
+            "search": "فحص الحالة",
+            "check": "فحص",
+            "result": {
+                "found": "تفاصيل الطلب",
+                "notFound": "لا يوجد سجل بهذا الرقم",
+                "status": "الحالة الحالية",
+                "date": "تاريخ التقديم",
+                "type": "النوع"
+            }
+        }
+    },
+    "admin": {
+        "title": "لوحة الإدارة",
+        "dashboard": "الرئيسية",
+        "analytics": {
+            "title": "لوحة التحليلات",
+            "requestsByType": "الطلبات حسب النوع",
+            "complaintsByType": "الشكاوى حسب النوع",
+            "complaintsByCategory": "الشكاوى حسب التصنيف",
+            "requestsByStatus": "الطلبات حسب الحالة",
+            "usersByRole": "المستخدمين حسب الصلاحية"
+        },
+        "users": "المستخدمين",
+        "requests": "الطلبات",
+        "complaints": "الشكاوى",
+        "appointments": "المواعيد",
+        "projects": "المشاريع",
+        "careers": "الوظائف",
+        "news": "الأخبار",
+        "exportUsers": "تصدير المستخدمين",
+        "exportRequests": "تصدير الطلبات",
+        "activeSessions": "الجلسات النشطة",
+        "messages": "الرسائل",
+        "settings": "الإعدادات",
+        "actions": "الإجراءات",
+        "logs": "سجلات التدقيق",
+        "servicesMenu": "إدارة الخدمات",
+        "services": {
+            "add": "إضافة خدمة جديدة",
+            "description": "إنشاء نوع طلب خدمة جديد.",
+            "editTitle": "تعديل الخدمة",
+            "editDescription": "تحديث تفاصيل وحالة الخدمة.",
+            "deleteTitle": "حذف الخدمة",
+            "deleteConfirm": "هل أنت متأكد من حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+            "BUILDING_PERMIT": "رخصة بناء",
+            "RENOVATION_PERMIT": "رخصة ترميم",
+            "DEMOLITION_PERMIT": "رخصة هدم",
+            "LAND_DIVISION": "فرز أراضي",
+            "OTHER": "خدمة أخرى"
+        },
+        "createUser": {
+            "title": "إضافة مستخدم جديد",
+            "button": "إضافة مستخدم جديد",
+            "description": "أدخل بيانات الموظف الجديد بدقة لمنحه صلاحيات الوصول للنظام.",
+            "name": "الاسم الكامل",
+            "email": "البريد الإلكتروني",
+            "password": "كلمة المرور",
+            "role": "نوع الصلاحية / الوظيفة",
+            "roleDescription": "تحدد الصلاحية الأقسام التي يمكن للموظف الوصول إليها في لوحة التحكم.",
+            "cancel": "إلغاء",
+            "submit": "إنشاء الحساب",
+            "success": "تم إنشاء المستخدم بنجاح",
+            "error": "فشل إنشاء المستخدم",
+            "roles": {
+                "EMPLOYEE": "موظف عام (Employee)",
+                "ENGINEER": "مهندس (Engineer)",
+                "ACCOUNTANT": "محاسب (Accountant)",
+                "PR_MANAGER": "علاقات عامة (PR Manager)",
+                "ADMIN": "مسؤول نظام (Admin)",
+                "CITIZEN": "مواطن (Citizen)"
+            }
+        },
+        "overview": "نظرة عامة على النظام",
+        "growth": "مقارنة بالشهر الماضي",
+        "chartPlaceholder": "منطقة الرسم البياني للإحصائيات (قريباً)",
+        "usersPage": {
+            "table": {
+                "title": "قائمة المستخدمين",
+                "status": "الحالة",
+                "joinedAt": "تاريخ الانضمام",
+                "role": "الصلاحية",
+                "roles": {
+                    "CITIZEN": "مواطن",
+                    "EMPLOYEE": "موظف",
+                    "SUPERVISOR": "مشرف",
+                    "ADMIN": "مسؤول",
+                    "SUPER_ADMIN": "مسؤول عام",
+                    "ENGINEER": "مهندس",
+                    "ACCOUNTANT": "محاسب",
+                    "PR_MANAGER": "مدير علاقات عامة"
+                }
+            },
+            "roleDialog": {
+                "title": "تغيير صلاحية المستخدم",
+                "description": "تغيير الصلاحية للمستخدم:",
+                "cancel": "إلغاء",
+                "save": "حفظ التغييرات",
+                "success": "تم تحديث الصلاحية بنجاح",
+                "error": "فشل تغيير الصلاحية"
+            }
+        },
+        "newsPage": {
+            "title": "إدارة الأخبار",
+            "list": "قائمة الأخبار",
+            "add": "إضافة خبر جديد",
+            "empty": "لا توجد أخبار حالياً. قم بإضافة خبر جديد.",
+            "table": {
+                "titleAr": "العنوان (عربي)",
+                "titleEn": "العنوان (English)",
+                "status": "الحالة",
+                "date": "التاريخ",
+                "actions": "الإجراءات",
+                "published": "منشور",
+                "draft": "مسودة",
+                "delete": "حذف",
+                "deleteConfirmTitle": "حذف الخبر",
+                "deleteConfirmDesc": "هل أنت متأكد من رغبتك في حذف هذا الخبر؟ لا يمكن التراجع عن هذا الإجراء.",
+                "deleteSuccess": "تم حذف الخبر بنجاح"
+            },
+            "form": {
+                "title": "إضافة خبر جديد",
+                "editTitle": "تعديل الخبر",
+                "arabicContent": "المحتوى العربي",
+                "englishContent": "English Content",
+                "titleArLabel": "العنوان (عربي)",
+                "titleArPlaceholder": "عنوان الخبر بالعربية",
+                "contentArLabel": "المحتوى (عربي)",
+                "contentArPlaceholder": "نص الخبر بالعربية...",
+                "titleEnLabel": "Title (English)",
+                "titleEnPlaceholder": "News title in English",
+                "contentEnLabel": "Content (English)",
+                "contentEnPlaceholder": "News content in English...",
+                "media": "الوسائط (الصور)",
+                "imagesLabel": "صور المعرض",
+                "settings": "الإعدادات والنشر",
+                "excerptLabel": "ملخص قصير (اختياري)",
+                "excerptPlaceholder": "يظهر في البطاقات...",
+                "publishLabel": "نشر الخبر",
+                "publishDesc": "الخبر سيظهر للعامة فوراً",
+                "featuredLabel": "خبر مميز",
+                "featuredDesc": "يظهر في الشريط الرئيسي",
+                "cancel": "إلغاء",
+                "save": "حفظ الخبر",
+                "saving": "جاري الحفظ...",
+                "success": "تم إنشاء الخبر بنجاح",
+                "error": "حدث خطأ أثناء إنشاء الخبر"
+            }
+        },
+        "settingsPage": {
+            "subtitle": "تحكم في إعدادات المنصة والمظهر العام",
+            "fonts": {
+                "title": "تخصيص الخطوط",
+                "description": "قم باختيار الخطوط المناسبة للمنصة للغتين العربية والإنجليزية",
+                "arabicLabel": "الخط العربي (العناوين والنصوص)",
+                "arabicPlaceholder": "اختر الخط العربي",
+                "arabicExample": "مثال: بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+                "englishLabel": "الخط الإنجليزي (لاتيني)",
+                "englishPlaceholder": "اختر الخط الإنجليزي",
+                "englishExample": "مثال: The quick brown fox jumps over the lazy dog",
+                "success": "تم تحديث الخط بنجاح",
+                "error": "حدث خطأ أثناء تحديث الخط"
+            },
+            "aboutImage": {
+                "title": "صورة \"عن البلدية\"",
+                "description": "تحكم في الصورة التي تظهر في صفحة \"عن البلدية\".",
+                "noImage": "لا توجد صورة مخصصة (يتم استخدام الصورة الافتراضية)",
+                "success": "تم تحديث الصورة بنجاح",
+                "removeSuccess": "تم إزالة الصورة واستعادة الافتراضية",
+                "error": "حدث خطأ أثناء حفظ الصورة",
+                "removeError": "فشل الحذف",
+                "uploadError": "فشل الرفع"
+            },
+            "suggestions": {
+                "title": "مقترحات لتطوير لوحة التحكم مستقبلاً",
+                "logo": "**إدارة شعار الموقع (Logo Management):** إمكانية رفع وتغيير الشعار والـ Favicon مباشرة.",
+                "social": "**روابط التواصل الاجتماعي:** قسم لإدخال روابط الفيسبوك، تويتر، وغيرها لتظهر في التذييل (Footer).",
+                "hero": "**صور القائمة الرئيسية (Hero Slider):** التحكم في الصور والنصوص التي تظهر في واجهة المستخدم الرئيسية.",
+                "maintenance": "**وضع الصيانة (Maintenance Mode):** زر لإغلاق الموقع مؤقتاً وعرض صفحة \"تحت الصيانة\" للزوار.",
+                "analytics": "**تحليل الزوار (Analytics):** ربط مباشر مع Google Analytics أو عرض إحصائيات مبسطة للزيارات."
+            },
+            "theme": {
+                "title": "مظهر النظام",
+                "description": "اختر المظهر العام للمنصة (يؤثر على جميع المستخدمين)",
+                "default": "الافتراضي (الأزرق)",
+                "green": "عبسان (الأخضر)",
+                "success": "تم تحديث المظهر بنجاح",
+                "error": "فشل تحديث المظهر"
+            },
+            "profile": "إعدادات الحساب الشخصي",
+            "backup": {
+                "title": "النسخ الاحتياطي للنظام",
+                "description": "تحميل نسخة احتياطية كاملة من قاعدة بيانات النظام (المستخدمين، الطلبات، الشكاوى، وغيرها)",
+                "download": "تحميل نسخة احتياطية كاملة",
+                "downloading": "جاري تجهيز النسخة...",
+                "success": "تم إنشاء النسخة الاحتياطية بنجاح"
+            }
+        },
+        "logsPage": {
+            "title": "سجلات التدقيق",
+            "subtitle": "أحدث النشاطات في النظام",
+            "table": {
+                "action": "الإجراء",
+                "actor": "المستخدم",
+                "details": "التفاصيل",
+                "date": "التاريخ",
+                "ip": "عنوان IP",
+                "empty": "لا توجد سجلات حتى الآن"
+            }
+        },
+        "messagesPage": {
+            "title": "الرسائل",
+            "search": "بحث...",
+            "noConversations": "لا توجد محادثات",
+            "selectConversation": "اختر محادثة للبدء",
+            "typeReply": "اكتب ردك هنا...",
+            "supportAgent": "موظف الدعم",
+            "loading": "جاري تحميل الرسائل..."
+        }
+    },
+    "services": {
+        "title": "دليل الخدمات",
+        "subtitle": "تعرف على الخدمات الإلكترونية التي تقدمها بلدية عبسان الكبيرة للمواطنين",
+        "applyNow": "تقديم طلب",
+        "categories": {
+            "engineering": "الخدمات الهندسية",
+            "financial": "الخدمات المالية",
+            "general": "خدمات عامة",
+            "maintenance": "الصيانة والإنارة",
+            "environment": "الصحة والبيئة"
+        },
+        "appointments": {
+            "pageTitle": "مواعيدي",
+            "newAppointment": "حجز موعد",
+            "empty": {
+                "title": "لا توجد مواعيد",
+                "description": "لم تقم بحجز أي موعد حتى الآن.",
+                "button": "حجز موعد جديد"
+            },
+            "book": {
+                "title": "حجز موعد جديد",
+                "details": "تفاصيل الحجز",
+                "subtitle": "اختر الخدمة والوقت المناسب لك لزيارة البلدية.",
+                "serviceType": "نوع الخدمة",
+                "selectService": "اختر الخدمة",
+                "date": "التاريخ",
+                "time": "الوقت",
+                "selectTime": "اختر الوقت",
+                "notes": "ملاحظات إضافية (اختياري)",
+                "notesPlaceholder": "هل هناك تفاصيل تود إضافتها قبل الموعد؟",
+                "submit": "تأكيد الحجز",
+                "submitting": "جاري الحجز...",
+                "success": "تم حجز الموعد بنجاح، بانتظار التأكيد",
+                "types": {
+                    "BUILDING_PERMIT": "مراجعة رخصة بناء",
+                    "RENOVATION_PERMIT": "رخصة ترميم",
+                    "DEMOLITION_PERMIT": "رخصة هدم",
+                    "LAND_DIVISION": "فرز أراضي",
+                    "COMPLAINT_FOLLOWUP": "متابعة شكوى",
+                    "MAYOR_MEETING": "لقاء رئيس البلدية",
+                    "ENGINEERING": "الدائرة الهندسية",
+                    "FINANCE": "الدائرة المالية",
+                    "OTHER": "أخرى"
+                }
+            },
+            "status": {
+                "SCHEDULED": "مجدول",
+                "CONFIRMED": "مؤكد",
+                "COMPLETED": "مكتمل",
+                "CANCELLED": "ملغي",
+                "NO_SHOW": "عدم حضور"
+            },
+            "actions": {
+                "cancel": "إلغاء الحجز",
+                "cancelConfirmTitle": "إلغاء الموعد",
+                "cancelConfirmDesc": "هل أنت متأكد من رغبتك في إلغاء هذا الموعد؟ لا يمكن التراجع عن هذا الإجراء.",
+                "confirmCancel": "نعم، إلغاء",
+                "back": "المحافظة على الموعد",
+                "cancelSuccess": "تم إلغاء الموعد بنجاح"
+            }
+        },
+        "complaints": {
+            "pageTitle": "الشكاوى والمقترحات",
+            "newComplaint": "شكوى جديدة",
+            "myComplaints": "شكاويّ",
+            "empty": {
+                "title": "لا توجد شكاوى",
+                "description": "لم تقم بتقديم أي شكوى أو مقترح بعد.",
+                "button": "تقديم شكوى الآن"
+            },
+            "response": "رد البلدية:",
+            "status": {
+                "OPEN": "جديدة",
+                "IN_PROGRESS": "قيد المعالجة",
+                "RESOLVED": "تم الحل",
+                "CLOSED": "مغلقة"
+            },
+            "viewDetails": "عرض التفاصيل",
+            "backToComplaints": "عودة للقائمة",
+            "complaintDetails": "تفاصيل الشكوى",
+            "complaintInfo": "معلومات الشكوى",
+            "attachments": "المرفقات",
+            "noAttachments": "لا توجد مرفقات",
+            "categories": {
+                "ROADS": "طرق وأرصفة",
+                "WATER": "مياه",
+                "ELECTRICITY": "كهرباء",
+                "SEWAGE": "صرف صحي",
+                "GARBAGE": "نظافة",
+                "PARKS": "حدائق",
+                "NOISE": "إزعاج",
+                "OTHER": "أخرى"
+            },
+            "form": {
+                "title": "تقديم شكوى أو مقترح",
+                "subtitle": "يرجى تعبئة النموذج أدناه. سيتم التعامل مع شكواكم بسرية تامة.",
+                "subjectLabel": "عنوان الشكوى",
+                "subjectPlaceholder": "مثال: انقطاع المياه في الحي الشمالي",
+                "categoryLabel": "التصنيف",
+                "categoryPlaceholder": "اختر التصنيف",
+                "locationLabel": "الموقع",
+                "locationPlaceholder": "اسم الشارع أو المعلم القريب",
+                "mapLabel": "الموقع على الخريطة",
+                "imageLabel": "إرفاق صورة (اختياري)",
+                "imagePlaceholder": "اختر صورة...",
+                "selectedFile": "الملف المختار",
+                "detailsLabel": "التفاصيل",
+                "detailsPlaceholder": "اشرح المشكلة بالتفصيل...",
+                "detailsHint": "يرجى ذكر أكبر قدر ممكن من التفاصيل لمساعدتنا في الحل.",
+                "submit": "إرسال الشكوى",
+                "submitting": "جاري الإرسال...",
+                "success": "تم إرسال الشكوى بنجاح",
+                "noFileChosen": "لم يتم اختيار ملف"
+            }
+        },
+        "payments": {
+            "comingSoon": {
+                "title": "خدمة الفواتير قريباً",
+                "description": "نعمل حالياً على تطوير بوابة الدفع الإلكتروني لتسهيل معاملاتكم.",
+                "back": "عودة للرئيسية"
+            }
+        },
+        "items": {
+            "buildingPermit": {
+                "title": "طلب تصريح بناء",
+                "description": "إصدار رخصة بناء جديد أو إضافة طوابق"
+            },
+            "complaints": {
+                "title": "تقديم شكوى",
+                "description": "الإبلاغ عن مخالفات أو مشاكل في الخدمات",
+                "status": {
+                    "OPEN": "جديدة",
+                    "IN_PROGRESS": "قيد المعالجة",
+                    "RESOLVED": "تم الحل",
+                    "CLOSED": "مغلقة"
+                }
+            },
+            "appointments": {
+                "title": "حجز موعد",
+                "description": "حجز موعد لمقابلة رئيس البلدية أو قسم الهندسة"
+            },
+            "payments": {
+                "title": "تسديد الفواتير",
+                "description": "الاستعلام عن المستحقات وتسديدها إلكترونياً"
+            },
+            "lighting": {
+                "title": "صيانة إنارة",
+                "description": "طلب إصلاح أو تركيب وحده إنارة في الحي"
+            },
+            "water": {
+                "title": "خدمات المياه",
+                "description": "طلب اشتراك مياه جديد أو صيانة خطوط"
+            },
+            "garding": {
+                "title": "الحدائق والتشجير",
+                "description": "طلبات قص الأشجار أو زراعة الأرصفة"
+            },
+            "waste": {
+                "title": "خدمات النظافة",
+                "description": "طلب حاوية نفايات أو ترحيل مخلفات"
+            }
+        }
+    },
+    "footer": {
+        "copyright": "© {year} بلدية عبسان الكبيرة - جميع الحقوق محفوظة",
+        "quickLinks": "روابط سريعة",
+        "contactUs": "تواصل معنا",
+        "followUs": "تابعنا"
+    },
+    "chat": {
+        "title": "الدعم الفني",
+        "welcome": "مرحباً بك! كيف يمكننا مساعدتك اليوم؟",
+        "placeholder": "اكتب رسالتك...",
+        "guestWelcome": "مرحباً بك في الدعم الآلي",
+        "guestDesc": "تصفح الأسئلة الشائعة أدناه، أو سجل الدخول للتحدث مع موظف.",
+        "commonQuestions": "أسئلة شائعة",
+        "endChat": "إنهاء المحادثة"
+    }
+}
