@@ -43,7 +43,10 @@ export const auth = betterAuth({
         },
     },
     trustedOrigins: [
-        process.env.NEXT_PUBLIC_APP_URL ? (process.env.NEXT_PUBLIC_APP_URL.startsWith('http') ? process.env.NEXT_PUBLIC_APP_URL : `https://${process.env.NEXT_PUBLIC_APP_URL}`) : 'http://localhost:3000',
+        process.env.NEXT_PUBLIC_APP_URL ? (
+            (process.env.NEXT_PUBLIC_APP_URL.startsWith('http') ? process.env.NEXT_PUBLIC_APP_URL : `https://${process.env.NEXT_PUBLIC_APP_URL}`)
+                .replace(/\/(en|ar)\/?$/, '')
+        ) : 'http://localhost:3000',
     ],
     plugins: [banPlugin]
 });
