@@ -27,11 +27,11 @@ export const auth = betterAuth({
     },
     user: {
         additionalFields: {
-            role: {
-                type: 'string',
-                defaultValue: 'CITIZEN',
-                required: false,
-            },
+            // role: {
+            //     type: 'string',
+            //     defaultValue: 'CITIZEN',
+            //     required: false,
+            // },
             phone: {
                 type: 'string',
                 required: false,
@@ -41,6 +41,9 @@ export const auth = betterAuth({
                 required: false,
             },
         },
+    },
+    logger: {
+        level: "debug",
     },
     trustedOrigins: [
         process.env.NEXT_PUBLIC_APP_URL ? (
