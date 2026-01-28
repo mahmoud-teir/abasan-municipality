@@ -40,8 +40,8 @@ export default function RegisterPage() {
                 email,
                 password,
                 name,
-                phone: phone || undefined,
-                nationalId: nationalId || undefined,
+                phone,
+                nationalId,
                 callbackURL: '/citizen/dashboard',
             } as any, {
                 onRequest: () => {
@@ -52,7 +52,6 @@ export default function RegisterPage() {
                     router.push('/citizen/dashboard');
                 },
                 onError: (ctx) => {
-                    console.error('Registration Error Details:', ctx);
                     toast.error(ctx.error.message || 'Error creating account');
                 }
             });

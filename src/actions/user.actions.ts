@@ -72,8 +72,7 @@ export async function createUser(data: any) {
         headers: await headers()
     });
 
-    const user = session?.user as any;
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+    if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
         return { success: false, error: 'Unauthorized' };
     }
 
@@ -127,13 +126,12 @@ export async function updateUserRole(userId: string, role: string) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || user.role !== 'SUPER_ADMIN') {
+        if (!session || session.user.role !== 'SUPER_ADMIN') {
             return { success: false, error: 'غير مصرح لك بتغيير الصلاحيات (Super Admin Required)' };
         }
 
         // Prevent changing own role
-        if (user.id === validated.userId) {
+        if (session.user.id === validated.userId) {
             return { success: false, error: 'لا يمكنك تغيير صلاحيتك بنفسك' };
         }
 
@@ -159,8 +157,7 @@ export async function verifyUser(userId: string, isVerified: boolean) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -176,8 +173,8 @@ export async function verifyUser(userId: string, isVerified: boolean) {
         // 2. If I am the user (Self Verification), I can verify myself ONLY IF I am a CITIZEN.
         // 3. Otherwise, Forbidden.
 
-        const isSuperAdmin = user.role === 'SUPER_ADMIN';
-        const isSelf = user.id === userId;
+        const isSuperAdmin = session.user.role === 'SUPER_ADMIN';
+        const isSelf = session.user.id === userId;
         const isCitizen = targetUser.role === 'CITIZEN' || targetUser.role === null; // Default to citizen if null
 
         if (isSuperAdmin) {
@@ -229,8 +226,7 @@ export async function unbanUser(userId: string) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -260,13 +256,12 @@ export async function banUser(userId: string, reason?: string) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
         // Prevent banning self
-        if (user.id === userId) {
+        if (session.user.id === userId) {
             return { success: false, error: 'Cannot ban yourself' };
         }
 
@@ -296,7 +291,7 @@ export async function banUser(userId: string, reason?: string) {
         });
 
         const targetUserEmail = target?.email || 'N/A';
-        const actorName = user.name;
+        const actorName = session.user.name;
 
         admins.map(admin =>
             createNotification({

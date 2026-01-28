@@ -85,8 +85,7 @@ export async function createProject(data: any) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -136,8 +135,7 @@ export async function updateProject(id: string, data: any) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -177,8 +175,7 @@ export async function deleteProject(id: string) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 

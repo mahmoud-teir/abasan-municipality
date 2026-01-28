@@ -23,8 +23,7 @@ export default async function AuditLogsPage() {
         headers: await headers()
     });
 
-    const user = session?.user as any;
-    if (user?.role !== 'SUPER_ADMIN' && user?.role !== 'ADMIN') {
+    if (session?.user?.role !== 'SUPER_ADMIN' && session?.user?.role !== 'ADMIN') {
         redirect('/admin');
         // Ideally show an error or 403 page
     }

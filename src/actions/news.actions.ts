@@ -141,6 +141,7 @@ export async function updateNews(
         const news = await prisma.news.update({
             where: { id },
             data: {
+                ...data,
                 publishedAt: data.published ? new Date() : undefined,
             },
         });
@@ -164,8 +165,7 @@ export async function deleteNews(id: string) {
             headers: await headers()
         });
 
-        const user = session?.user as any;
-        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
