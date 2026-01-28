@@ -48,7 +48,8 @@ export default async function UsersPage({ searchParams }: Props) {
         redirect('/login');
     }
 
-    const currentUserRole = session.user.role;
+    const user = session.user as any;
+    const currentUserRole = user.role;
     const isAdmin = currentUserRole === 'ADMIN' || currentUserRole === 'SUPER_ADMIN';
 
     // Fetch users (simple fetch, could add pagination later)

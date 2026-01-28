@@ -99,7 +99,8 @@ export async function createJob(data: any) {
             headers: await headers()
         });
 
-        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+        const user = session?.user as any;
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -141,7 +142,8 @@ export async function updateJob(id: string, data: any) {
             headers: await headers()
         });
 
-        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+        const user = session?.user as any;
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -179,7 +181,8 @@ export async function getJobApplications(jobId: string) {
             headers: await headers()
         });
 
-        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+        const user = session?.user as any;
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -204,7 +207,8 @@ export async function getAdminJobs() {
             headers: await headers()
         });
 
-        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+        const user = session?.user as any;
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -230,7 +234,8 @@ export async function deleteJob(id: string) {
             headers: await headers()
         });
 
-        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+        const user = session?.user as any;
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 

@@ -27,7 +27,8 @@ export default async function EmployeeComplaintDetailsPage({ params }: PageProps
         headers: await headers()
     });
 
-    if (!session || session.user.role === 'CITIZEN') {
+    const user = session?.user as any;
+    if (!user || user.role === 'CITIZEN') {
         redirect('/login');
     }
 

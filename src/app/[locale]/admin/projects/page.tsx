@@ -43,7 +43,8 @@ export default async function AdminProjectsPage({ searchParams, params }: Props)
         headers: await headers()
     });
 
-    if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+    const user = session?.user as any;
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
         redirect('/login');
     }
 

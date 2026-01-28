@@ -42,7 +42,8 @@ export default async function LocaleLayout({ children, params }: Props) {
 
     // Check Maintenance Mode
     if (maintenanceMode === 'true') {
-        const userRole = session?.user?.role;
+        const user = session?.user as any;
+        const userRole = user?.role;
         const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
 
         if (!isAdmin) {

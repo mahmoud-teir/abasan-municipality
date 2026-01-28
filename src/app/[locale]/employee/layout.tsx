@@ -17,11 +17,12 @@ export default async function EmployeeLayout({
         redirect('/login');
     }
 
-    if (session.user.role !== 'EMPLOYEE' &&
-        session.user.role !== 'ADMIN' &&
-        session.user.role !== 'SUPER_ADMIN' &&
-        session.user.role !== 'ENGINEER' &&
-        session.user.role !== 'SUPERVISOR'
+    const user = session.user as any;
+    if (user.role !== 'EMPLOYEE' &&
+        user.role !== 'ADMIN' &&
+        user.role !== 'SUPER_ADMIN' &&
+        user.role !== 'ENGINEER' &&
+        user.role !== 'SUPERVISOR'
     ) {
         notFound();
     }
