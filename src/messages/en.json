@@ -104,7 +104,9 @@
             "error": "Failed to create account",
             "passwordsDoNotMatch": "Passwords do not match",
             "phoneLengthError": "Phone number must be exactly 10 digits",
-            "nationalIdLengthError": "National ID must be exactly 9 digits"
+            "nationalIdLengthError": "National ID must be exactly 9 digits",
+            "phoneExistsError": "This phone number is already registered",
+            "nationalIdExistsError": "This National ID is already registered"
         },
         "autoLogout": {
             "title": "Auto Logout",

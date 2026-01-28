@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { signUp } from '@/lib/auth/auth-client';
+import { checkPhoneUsage, checkNationalIdUsage } from '@/actions/auth-checks';
 import { toast } from 'sonner';
 import { Loader2, Lock, Mail, User, Phone, FileText } from 'lucide-react';
 
@@ -47,6 +48,25 @@ export default function RegisterPage() {
             toast.error(t('nationalIdLengthError') || 'رقم الهوية يجب أن يكون 9 أرقام');
             setIsLoading(false);
             return;
+        }
+
+        // Check for duplicates
+        if (phone) {
+            const phoneExists = await checkPhoneUsage(phone);
+            if (phoneExists) {
+                toast.error(t('phoneExistsError') || 'رقم الهاتف مستخدم بالفعل');
+                setIsLoading(false);
+                return;
+            }
+        }
+
+        if (nationalId) {
+            const nidExists = await checkNationalIdUsage(nationalId);
+            if (nidExists) {
+                toast.error(t('nationalIdExistsError') || 'رقم الهوية مستخدم بالفعل');
+                setIsLoading(false);
+                return;
+            }
         }
 
 

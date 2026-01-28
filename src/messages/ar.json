@@ -104,7 +104,9 @@
             "error": "فشل إنشاء الحساب",
             "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
             "phoneLengthError": "رقم الهاتف يجب أن يتكون من 10 أرقام",
-            "nationalIdLengthError": "رقم الهوية يجب أن يتكون من 9 أرقام"
+            "nationalIdLengthError": "رقم الهوية يجب أن يتكون من 9 أرقام",
+            "phoneExistsError": "رقم الهاتف مستخدم بالفعل",
+            "nationalIdExistsError": "رقم الهوية مستخدم بالفعل"
         },
         "autoLogout": {
             "title": "تسجيل خروج تلقائي",
