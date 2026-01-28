@@ -11,7 +11,8 @@ export async function generateBackup() {
             headers: await headers()
         });
 
-        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+        const user = session?.user as any;
+        if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -37,7 +38,7 @@ export async function generateBackup() {
             metadata: {
                 version: '1.0',
                 generatedAt: new Date().toISOString(),
-                generatedBy: session.user.email,
+                generatedBy: session?.user.email || 'system',
             },
             data: {
                 users,
