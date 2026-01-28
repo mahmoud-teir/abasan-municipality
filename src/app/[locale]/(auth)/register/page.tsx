@@ -40,8 +40,8 @@ export default function RegisterPage() {
                 email,
                 password,
                 name,
-                phone,
-                nationalId,
+                phone: phone || undefined,
+                nationalId: nationalId || undefined,
                 callbackURL: '/citizen/dashboard',
             } as any, {
                 onRequest: () => {
