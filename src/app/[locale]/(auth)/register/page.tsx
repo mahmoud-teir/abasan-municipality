@@ -29,19 +29,34 @@ export default function RegisterPage() {
         const phone = formData.get('phone') as string;
         const nationalId = formData.get('nationalId') as string;
 
+
         if (password !== confirmPassword) {
             toast.error(t('passwordsDoNotMatch') || 'Password mismatch');
             setIsLoading(false);
             return;
         }
 
+        // Validate optional fields if provided
+        if (phone && phone.length !== 10) {
+            toast.error(t('phoneLengthError') || 'رقم الهاتف يجب أن يكون 10 أرقام');
+            setIsLoading(false);
+            return;
+        }
+
+        if (nationalId && nationalId.length !== 9) {
+            toast.error(t('nationalIdLengthError') || 'رقم الهوية يجب أن يكون 9 أرقام');
+            setIsLoading(false);
+            return;
+        }
+
+
         try {
             await signUp.email({
                 email,
                 password,
                 name,
-                phone: phone || null,
-                nationalId: nationalId || null,
+                phone: phone || undefined,
+                nationalId: nationalId || undefined,
                 callbackURL: '/citizen/dashboard',
             } as any, {
                 onRequest: () => {
@@ -52,8 +67,7 @@ export default function RegisterPage() {
                     router.push('/citizen/dashboard');
                 },
                 onError: (ctx) => {
-                    console.error("Registration Error Details:", ctx);
-                    toast.error(ctx.error.message || 'Error creating account');
+                    toast.error(ctx.error?.message || 'Error creating account');
                 }
             });
 
