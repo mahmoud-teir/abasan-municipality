@@ -450,18 +450,6 @@
         },
         "settingsPage": {
             "subtitle": "تحكم في إعدادات المنصة والمظهر العام",
-            "fonts": {
-                "title": "تخصيص الخطوط",
-                "description": "قم باختيار الخطوط المناسبة للمنصة للغتين العربية والإنجليزية",
-                "arabicLabel": "الخط العربي (العناوين والنصوص)",
-                "arabicPlaceholder": "اختر الخط العربي",
-                "arabicExample": "مثال: بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
-                "englishLabel": "الخط الإنجليزي (لاتيني)",
-                "englishPlaceholder": "اختر الخط الإنجليزي",
-                "englishExample": "مثال: The quick brown fox jumps over the lazy dog",
-                "success": "تم تحديث الخط بنجاح",
-                "error": "حدث خطأ أثناء تحديث الخط"
-            },
             "aboutImage": {
                 "title": "صورة \"عن البلدية\"",
                 "description": "تحكم في الصورة التي تظهر في صفحة \"عن البلدية\".",

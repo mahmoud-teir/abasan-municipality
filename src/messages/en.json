@@ -450,18 +450,6 @@
         },
         "settingsPage": {
             "subtitle": "Manage platform settings and appearance",
-            "fonts": {
-                "title": "Font Customization",
-                "description": "Choose appropriate fonts for the platform in Arabic and English",
-                "arabicLabel": "Arabic Font (Titles & Body)",
-                "arabicPlaceholder": "Select Arabic Font",
-                "arabicExample": "Example: In the name of God, the Most Gracious, the Most Merciful",
-                "englishLabel": "English Font (Latin)",
-                "englishPlaceholder": "Select English Font",
-                "englishExample": "Example: The quick brown fox jumps over the lazy dog",
-                "success": "Font updated successfully",
-                "error": "Error updating font"
-            },
             "aboutImage": {
                 "title": "\"About Municipality\" Image",
                 "description": "Control the image displayed on the \"About Municipality\" page.",

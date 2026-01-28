@@ -1,16 +1,6 @@
 import {
     Cairo,
-    Tajawal,
-    IBM_Plex_Sans_Arabic,
-    Noto_Kufi_Arabic,
-    Almarai,
-    Amiri,
-    Readex_Pro,
     Outfit,
-    Inter,
-    Roboto,
-    Open_Sans,
-    Lato,
 } from "next/font/google";
 
 // Arabic Fonts
@@ -20,11 +10,13 @@ const cairo = Cairo({
     variable: "--font-cairo",
 });
 
+/*
 const tajawal = Tajawal({
     subsets: ["arabic"],
     weight: ["200", "300", "400", "500", "700", "800", "900"],
     variable: "--font-tajawal",
 });
+*/
 
 /*
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
@@ -34,6 +26,7 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
 });
 */
 
+/*
 const notoKufiArabic = Noto_Kufi_Arabic({
     subsets: ["arabic"],
     weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -57,6 +50,7 @@ const readexPro = Readex_Pro({
     weight: ["200", "300", "400", "500", "600", "700"],
     variable: "--font-readex-pro",
 });
+*/
 
 // English Fonts
 const outfit = Outfit({
@@ -64,6 +58,7 @@ const outfit = Outfit({
     variable: "--font-outfit",
 });
 
+/*
 const inter = Inter({
     subsets: ["latin"],
     variable: "--font-inter",
@@ -85,6 +80,7 @@ const lato = Lato({
     weight: ["100", "300", "400", "700", "900"],
     variable: "--font-lato",
 });
+*/
 
 // Reduced to essentials for build stability
 export const ARABIC_FONTS = {
