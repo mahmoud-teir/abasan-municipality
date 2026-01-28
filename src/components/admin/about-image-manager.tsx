@@ -7,18 +7,14 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { updateSystemSetting } from "@/actions/settings.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ImageIcon, X } from "lucide-react";
 import Image from "next/image";
-import { UploadButton } from "@/lib/uploadthing"; // Assuming you have a helper or use generateUploadButton
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
-
-// You might need to import UploadButton from @uploadthing/react directly if not wrapped
 import { generateUploadButton } from "@uploadthing/react";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
 
@@ -34,9 +30,15 @@ export function AboutImageManager({ currentImageUrl }: Props) {
     const [isPending, startTransition] = useTransition();
     const [preview, setPreview] = useState<string | null>(currentImageUrl || null);
 
+    // Sync state with props when server-side data changes
+    useEffect(() => {
+        setPreview(currentImageUrl || null);
+    }, [currentImageUrl]);
+
     const handleUploadComplete = async (res: any[]) => {
         if (res && res.length > 0) {
             const url = res[0].url;
+            console.log("Upload complete, URL:", url);
             setPreview(url);
 
             startTransition(async () => {
@@ -77,15 +79,28 @@ export function AboutImageManager({ currentImageUrl }: Props) {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 bg-slate-50/50">
+                <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-[2rem] p-8 bg-slate-50/50">
                     {preview ? (
-                        <div className="relative w-full max-w-md aspect-video rounded-lg overflow-hidden shadow-md">
+                        <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-xl border border-white/20 ring-1 ring-black/5">
+                            {/* Blurred Background */}
                             <Image
                                 src={preview}
-                                alt="About Preview"
+                                alt="Background"
                                 fill
-                                className="object-cover"
+                                className="object-cover blur-xl scale-110 opacity-40"
+                                unoptimized
                             />
+
+                            {/* Main Image */}
+                            <div className="relative w-full h-full p-4">
+                                <Image
+                                    src={preview}
+                                    alt="About Preview"
+                                    fill
+                                    className="object-contain drop-shadow-lg"
+                                    unoptimized
+                                />
+                            </div>
                             <Button
                                 size="icon"
                                 variant="destructive"
@@ -105,7 +120,7 @@ export function AboutImageManager({ currentImageUrl }: Props) {
 
                     <div className="mt-6">
                         <UploadBtn
-                            endpoint="documentUploader"
+                            endpoint="newsImageUploader"
                             onClientUploadComplete={handleUploadComplete}
                             onUploadError={(error: Error) => {
                                 toast.error(`${t('uploadError')}: ${error.message}`);

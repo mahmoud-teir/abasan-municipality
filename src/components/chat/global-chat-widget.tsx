@@ -47,6 +47,12 @@ export function GlobalChatWidget() {
     usePresence(session?.user?.id);
     const { notifyTyping } = useTyping(conversationId || undefined, session?.user?.id);
 
+    // Prevent hydration mismatch
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     // Initialize conversation on open
     useEffect(() => {
         if (isOpen && session?.user && !conversationId) {
@@ -85,6 +91,8 @@ export function GlobalChatWidget() {
             markMessagesAsRead({ conversationId: conversationId as any, userId: session.user.id });
         }
     }, [isOpen, conversationId, session?.user?.id, markMessagesAsRead]);
+
+    if (!mounted) return null;
 
     // Hide for Admins
     if (session && ((session.user as any).role === 'ADMIN' || (session.user as any).role === 'SUPER_ADMIN')) {
@@ -193,7 +201,11 @@ export function GlobalChatWidget() {
                                 <div className="bg-white p-4 rounded-lg shadow-sm border text-center">
                                     <p className="font-semibold mb-2">{t('guestWelcome')}</p>
                                     <p className="text-sm text-muted-foreground mb-4">{t('guestDesc')}</p>
-                                    <Link href="/login" className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-9 px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                                    <Link
+                                        href="/login"
+                                        className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground h-9 px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90"
+                                        onClick={() => setIsOpen(false)}
+                                    >
                                         <LogIn className="w-4 h-4" />
                                         {tAuth('login.submit')}
                                     </Link>

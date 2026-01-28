@@ -9,8 +9,11 @@ import { getSystemSetting } from '@/actions/settings.actions';
 import { AboutImageManager } from '@/components/admin/about-image-manager';
 import { FontSelector } from '@/components/admin/font-selector';
 import { BackupCard } from '@/components/admin/settings/backup-card';
-import { Lightbulb, MessageCircle } from 'lucide-react';
+import { Lightbulb, MessageCircle, MonitorPlay } from 'lucide-react';
 import Link from 'next/link';
+import { MaintenanceToggle } from '@/components/admin/settings/maintenance-toggle';
+import { SocialLinksForm } from '@/components/admin/settings/social-links-form';
+import { LogoManager } from '@/components/admin/settings/logo-manager';
 
 export default async function AdminSettingsPage() {
     const t = await getTranslations();
@@ -20,11 +23,32 @@ export default async function AdminSettingsPage() {
 
     if (!session) redirect('/login');
 
-    const [theme, fontArabic, fontEnglish, aboutImage] = await Promise.all([
+    const [
+        theme,
+        fontArabic,
+        fontEnglish,
+        aboutImage,
+        maintenanceMode,
+        siteLogo,
+        siteFavicon,
+        facebook,
+        twitter,
+        instagram,
+        youtube,
+        website
+    ] = await Promise.all([
         getSystemSetting('theme'),
         getSystemSetting('font_arabic'),
         getSystemSetting('font_english'),
         getSystemSetting('about_image_url'),
+        getSystemSetting('maintenance_mode'),
+        getSystemSetting('site_logo'),
+        getSystemSetting('site_favicon'),
+        getSystemSetting('social_facebook'),
+        getSystemSetting('social_twitter'),
+        getSystemSetting('social_instagram'),
+        getSystemSetting('social_youtube'),
+        getSystemSetting('social_website'),
     ]);
 
     return (
@@ -39,31 +63,65 @@ export default async function AdminSettingsPage() {
             </div>
 
             <div className="grid gap-8">
-                <ThemeSelector currentTheme={theme} />
-
+                {/* Critical Actions Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <FontSelector
-                        currentArabicFont={fontArabic}
-                        currentEnglishFont={fontEnglish}
-                    />
-                    <AboutImageManager currentImageUrl={aboutImage} />
-                    <AboutImageManager currentImageUrl={aboutImage} />
+                    <MaintenanceToggle initialValue={maintenanceMode || 'false'} />
+                    <LogoManager logoUrl={siteLogo || ''} faviconUrl={siteFavicon || ''} />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <Link href="/admin/settings/faq" className="block">
-                        <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 hover:bg-slate-100 hover:border-primary/50 transition-all cursor-pointer h-full">
-                            <div className="flex items-center gap-4 mb-4">
-                                <div className="p-3 bg-white border shadow-sm rounded-lg text-primary">
-                                    <MessageCircle className="w-6 h-6" />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <SocialLinksForm initialLinks={{
+                        facebook: facebook || '',
+                        twitter: twitter || '',
+                        instagram: instagram || '',
+                        youtube: youtube || '',
+                        website: website || ''
+                    }} />
+                    <div className="space-y-8">
+                        <ThemeSelector currentTheme={theme} />
+                        <FontSelector
+                            currentArabicFont={fontArabic}
+                            currentEnglishFont={fontEnglish}
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <AboutImageManager currentImageUrl={aboutImage} />
+
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <Link href="/admin/settings/faq" className="block h-full">
+                                <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 hover:bg-slate-100 hover:border-primary/50 transition-all cursor-pointer h-full">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="p-3 bg-white border shadow-sm rounded-lg text-primary">
+                                            <MessageCircle className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-lg text-slate-900">Chat Responses</h3>
+                                            <p className="text-sm text-muted-foreground">Manage bot FAQs</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="font-bold text-lg text-slate-900">Chat Responses</h3>
-                                    <p className="text-sm text-muted-foreground">Manage bot FAQs</p>
+                            </Link>
+
+                            <Link href="/admin/settings/hero" className="block h-full">
+                                <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 hover:bg-slate-100 hover:border-primary/50 transition-all cursor-pointer h-full">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="p-3 bg-white border shadow-sm rounded-lg text-primary">
+                                            <MonitorPlay className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-lg text-slate-900">Hero Slider</h3>
+                                            <p className="text-sm text-muted-foreground">Manage Homepage</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
-                    </Link>
+
+                        <BackupCard />
+                    </div>
                 </div>
 
                 <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-6">
@@ -83,8 +141,6 @@ export default async function AdminSettingsPage() {
                         </div>
                     </div>
                 </div>
-
-                <BackupCard />
 
                 <div className="border-t pt-8">
                     <h2 className="text-xl font-semibold mb-4">{t('admin.settingsPage.profile')}</h2>

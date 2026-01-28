@@ -34,16 +34,12 @@ const resetPasswordSchema = z
 
 type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
-export default function ResetPasswordPage() {
+import { Suspense } from 'react';
+
+function ResetPasswordForm() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const searchParams = useSearchParams(); // Expect ?token=... only for better-auth
-    // better-auth might put token in query or as part of verification link.
-
-    // Actually, better-auth verification links are usually like /reset-password?token=xyz
-    // Wait, let's check if the client method needs token explicitly or if it handles it.
-    // client.resetPassword({ newPassword, token }) needs token.
-
+    const searchParams = useSearchParams();
     const token = searchParams.get('token');
 
     const form = useForm<ResetPasswordInput>({
@@ -96,50 +92,58 @@ export default function ResetPasswordPage() {
     }
 
     return (
+        <Card className="w-full max-w-md">
+            <CardHeader>
+                <CardTitle>إعادة تعيين كلمة المرور</CardTitle>
+                <CardDescription>
+                    أدخل كلمة المرور الجديدة لحسابك.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>كلمة المرور الجديدة</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="********" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>تأكيد كلمة المرور</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="********" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit" className="w-full" disabled={loading}>
+                            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'حفظ كلمة المرور'}
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
         <div className="flex min-h-screen items-center justify-center p-4 bg-slate-50">
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle>إعادة تعيين كلمة المرور</CardTitle>
-                    <CardDescription>
-                        أدخل كلمة المرور الجديدة لحسابك.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>كلمة المرور الجديدة</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="********" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="confirmPassword"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>تأكيد كلمة المرور</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="********" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button type="submit" className="w-full" disabled={loading}>
-                                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'حفظ كلمة المرور'}
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
+            <Suspense fallback={<Loader2 className="h-8 w-8 animate-spin text-primary" />}>
+                <ResetPasswordForm />
+            </Suspense>
         </div>
     );
 }

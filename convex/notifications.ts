@@ -60,3 +60,21 @@ export const markAllRead = mutation({
         }
     },
 });
+export const sendBatch = mutation({
+    args: {
+        notifications: v.array(v.object({
+            userId: v.string(),
+            title: v.string(),
+            message: v.string(),
+            link: v.optional(v.string())
+        }))
+    },
+    handler: async (ctx, args) => {
+        for (const notification of args.notifications) {
+            await ctx.db.insert("notifications", {
+                ...notification,
+                read: false,
+            });
+        }
+    },
+});

@@ -5,7 +5,7 @@ import { useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { updateAppointmentStatus } from '@/actions/appointment.actions';
+import { updateAppointmentStatus, cancelAppointment } from '@/actions/appointment.actions';
 import {
     AlertDialog,
     AlertDialogAction,

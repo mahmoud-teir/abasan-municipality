@@ -294,12 +294,12 @@ export async function banUser(userId: string, reason?: string) {
         const actorName = session.user.name;
 
         admins.map(admin =>
-            createNotification(
-                admin.id,
-                'User Banned Manually',
-                `Admin ${actorName} banned user ${targetUserEmail}. Reason: ${reason || 'N/A'}`,
-                `/admin/users?search=${encodeURIComponent(targetUserEmail)}`
-            )
+            createNotification({
+                userId: admin.id,
+                title: 'User Banned Manually',
+                message: `Admin ${actorName} banned user ${targetUserEmail}. Reason: ${reason || 'N/A'}`,
+                link: `/admin/users?search=${encodeURIComponent(targetUserEmail)}`
+            })
         );
 
         revalidatePath('/admin/users');

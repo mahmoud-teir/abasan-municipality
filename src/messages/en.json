@@ -204,7 +204,11 @@
         "archive": "Archive",
         "comingSoon": "This feature is coming soon...",
         "upload": "Upload File",
-        "imageSelected": "Image Selected"
+        "imageSelected": "Image Selected",
+        "maintenance": {
+            "title": "Under Maintenance",
+            "description": "We are currently performing scheduled maintenance. Please check back later."
+        }
     },
     "settings": {
         "title": "Account Settings",
@@ -328,6 +332,9 @@
         "settings": "Settings",
         "actions": "Actions",
         "logs": "Audit Logs",
+        "notifications": "Notification Center",
+        "alerts": "Emergency Alerts",
+        "media": "Media Library",
         "servicesMenu": "Manage Services",
         "services": {
             "add": "Add New Service",
@@ -437,7 +444,8 @@
                 "save": "Save News",
                 "saving": "Saving...",
                 "success": "News created successfully",
-                "error": "Error creating news"
+                "error": "Error creating news",
+                "cleaning": "Cleaning up..."
             }
         },
         "settingsPage": {
@@ -471,6 +479,43 @@
                 "hero": "**Hero Slider:** Control images and text appearing in the main user interface.",
                 "maintenance": "**Maintenance Mode:** Button to temporarily close the site and show a \"Under Maintenance\" page.",
                 "analytics": "**Analytics:** Direct integration with Google Analytics or simplified visit statistics."
+            },
+            "social": {
+                "title": "Social Media Links",
+                "description": "Manage the social media links displayed in the website footer.",
+                "save": "Save Changes",
+                "saving": "Saving...",
+                "success": "Social media links updated successfully"
+            },
+            "fonts": {
+                "title": "Fonts",
+                "description": "Customize the fonts used throughout the application.",
+                "arabicLabel": "Arabic Font (Primary)",
+                "arabicPlaceholder": "Select Arabic font",
+                "arabicExample": "Used for Arabic content (Right-to-Left)",
+                "englishLabel": "English Font (Secondary)",
+                "englishPlaceholder": "Select English font",
+                "englishExample": "Used for English content (Left-to-Right)",
+                "success": "Fonts updated successfully",
+                "error": "Failed to update fonts"
+            },
+            "branding": {
+                "title": "Branding & Logos",
+                "description": "Upload and manage your site logo and favicon.",
+                "logo": "Site Logo",
+                "uploadLogo": "Upload Logo",
+                "favicon": "Favicon",
+                "uploadFavicon": "Upload Favicon",
+                "success": "Branding assets updated successfully"
+            },
+            "maintenance": {
+                "title": "Maintenance Mode",
+                "description": "Enable maintenance mode to disable public access to the site.",
+                "enabledSuccess": "Maintenance mode enabled successfully",
+                "disabledSuccess": "Maintenance mode disabled successfully",
+                "error": "Failed to update maintenance settings",
+                "activeMessage": "The site is currently in maintenance mode. Only admins can access.",
+                "inactiveMessage": "The site is currently active and visible to all users."
             },
             "theme": {
                 "title": "System Theme",

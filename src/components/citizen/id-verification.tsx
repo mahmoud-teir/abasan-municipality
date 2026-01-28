@@ -87,7 +87,7 @@ export function IdVerification() {
     };
 
     const handleScan = async () => {
-        if (!capturedFile || !session?.user?.nationalId) {
+        if (!capturedFile || !(session?.user as any)?.nationalId) {
             toast.error('Please capture an ID image first.');
             return;
         }
@@ -103,18 +103,21 @@ export function IdVerification() {
             console.log('Recognized text:', text);
             await worker.terminate();
 
-            const nationalId = session.user.nationalId;
+            const nationalId = (session?.user as any)?.nationalId;
             const cleanText = text.replace(/\s+/g, '');
 
             if (cleanText.includes(nationalId)) {
                 toast.success('Identity Verified Successfully!');
+                if (!session?.user?.id) return;
                 const result = await verifyUser(session.user.id, true);
 
                 if (result.success) {
                     await refetch();
                     router.refresh();
                     setTimeout(() => {
-                        router.push(getDashboardLink(session.user.role));
+                        if (session?.user) {
+                            router.push(getDashboardLink((session.user as any).role));
+                        }
                     }, 2000);
                 } else {
                     toast.error('Failed to update status on server.');
@@ -139,7 +142,7 @@ export function IdVerification() {
                 </div>
                 <h2 className="text-2xl font-bold text-green-700">Account Verified</h2>
                 <p className="text-muted-foreground">Your identity has been verified successfully.</p>
-                <Button onClick={() => router.push(getDashboardLink(session.user.role))}>Go to Dashboard</Button>
+                <Button onClick={() => session?.user && router.push(getDashboardLink((session.user as any).role))}>Go to Dashboard</Button>
             </div>
         );
     }
@@ -152,7 +155,7 @@ export function IdVerification() {
                     Identity Verification (Camera Only)
                 </CardTitle>
                 <CardDescription>
-                    Please use your camera to take a clear photo of your National ID ({session?.user?.nationalId}).
+                    Please use your camera to take a clear photo of your National ID ({(session?.user as any)?.nationalId}).
                     <strong> Use good lighting.</strong>
                 </CardDescription>
             </CardHeader>

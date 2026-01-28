@@ -33,7 +33,7 @@ export default function LoginPage() {
             if (result.success && result.email) {
                 identifier = result.email;
             } else {
-                toast.error('National ID not found' || t('invalidNationalId'));
+                toast.error(t('invalidNationalId'));
                 setIsLoading(false);
                 return;
             }

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Search, Send, User, MessageSquare } from 'lucide-react';
+import { Search, Send, User, MessageSquare, Trash2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useSession } from '@/lib/auth/auth-client';
 import { cn } from '@/lib/utils';
@@ -20,13 +20,14 @@ import { Paperclip, Loader2 } from 'lucide-react';
 import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { playNotificationSound } from '@/lib/sounds';
+import { toast } from 'sonner';
 
 export default function AdminMessagesPage() {
     const t = useTranslations();
     const { data: session } = useSession();
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
     const [reply, setReply] = useState('');
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const conversations = useQuery(api.conversations.list);
     const messages = useQuery(api.messages.list, selectedConversationId ? { conversationId: selectedConversationId } : "skip");
@@ -36,10 +37,10 @@ export default function AdminMessagesPage() {
     );
 
     const sendMessage = useMutation(api.messages.send);
+    const deleteMessage = useMutation(api.messages.deleteMessage);
     const markRead = useMutation(api.conversations.markAsRead);
     const markMessagesAsRead = useMutation(api.messagesActions.markAsRead);
     const generateUploadUrl = useMutation(api.upload.generateUploadUrl);
-    const closeConversation = useMutation(api.conversations.close);
     const deleteConversation = useMutation(api.conversations.deleteConversation);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -81,6 +82,31 @@ export default function AdminMessagesPage() {
             senderImage: session.user.image || undefined
         });
         setReply('');
+    };
+
+    const handleDeleteConversation = async () => {
+        if (!selectedConversationId || !window.confirm(t('admin.messagesPage.confirmDelete'))) return;
+
+        setIsDeleting(true);
+        try {
+            await deleteConversation({ conversationId: selectedConversationId as any });
+            setSelectedConversationId(null);
+            toast.success('تم حذف المحادثة بنجاح');
+        } catch (error) {
+            toast.error('حدث خطأ أثناء الحذف');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleDeleteMessage = async (messageId: string) => {
+        if (!window.confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return;
+        try {
+            await deleteMessage({ messageId: messageId as any });
+            toast.success('تم حذف الرسالة بنجاح');
+        } catch (error) {
+            toast.error('حدث خطأ أثناء الحذف');
+        }
     };
 
     return (
@@ -160,15 +186,27 @@ export default function AdminMessagesPage() {
                             {(() => {
                                 const activeConv = conversations?.find((c: any) => c._id === selectedConversationId);
                                 return (
-                                    <div className="flex items-center gap-3">
-                                        <Avatar>
-                                            <AvatarFallback>{activeConv?.participantName.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <h3 className="font-bold">{activeConv?.participantName}</h3>
-                                            <p className="text-xs text-muted-foreground">{activeConv?.participantEmail || 'No email'}</p>
+                                    <>
+                                        <div className="flex items-center gap-3">
+                                            <Avatar>
+                                                <AvatarFallback>{activeConv?.participantName.charAt(0)}</AvatarFallback>
+                                            </Avatar>
+                                            <div>
+                                                <h3 className="font-bold">{activeConv?.participantName}</h3>
+                                                <p className="text-xs text-muted-foreground">{activeConv?.participantEmail || 'No email'}</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                                            onClick={handleDeleteConversation}
+                                            disabled={isDeleting}
+                                            title="حذف المحادثة"
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                        </Button>
+                                    </>
                                 );
                             })()}
                         </div>
@@ -182,36 +220,51 @@ export default function AdminMessagesPage() {
                                     {messages.map((msg: any) => {
                                         const isMe = msg.senderRole === 'ADMIN' || msg.senderRole === 'SUPER_ADMIN';
                                         return (
-                                            <div key={msg._id} className={cn("flex w-full flex-col", isMe ? "items-end" : "items-start")}>
-                                                <div className={cn(
-                                                    "max-w-[70%] px-4 py-3 rounded-2xl text-sm shadow-sm",
-                                                    isMe ? "bg-primary text-white rounded-br-none" : "bg-white border rounded-bl-none"
-                                                )}>
-                                                    {msg.contentType === 'image' && msg.fileUrl ? (
-                                                        <div className="mb-2">
-                                                            <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
-                                                                <Image
-                                                                    src={msg.fileUrl}
-                                                                    alt={msg.fileName || 'Image'}
-                                                                    width={200}
-                                                                    height={200}
-                                                                    className="rounded-md object-cover max-h-[200px] w-auto bg-slate-100"
-                                                                />
-                                                            </a>
-                                                        </div>
-                                                    ) : msg.contentType === 'file' && msg.fileUrl ? (
-                                                        <div className="mb-2">
-                                                            <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 underline">
-                                                                <Paperclip className="w-4 h-4" />
-                                                                {msg.fileName || 'Attachment'}
-                                                            </a>
-                                                        </div>
-                                                    ) : null}
-                                                    <p>{msg.content}</p>
-                                                    <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-start" : "text-end")}>
-                                                        {formatDistanceToNow(new Date(msg._creationTime))}
-                                                    </span>
+                                            <div key={msg._id} className={cn("flex w-full flex-col group", isMe ? "items-end" : "items-start")}>
+                                                <div className={cn("flex items-end gap-2 max-w-[80%]", isMe ? "flex-row-reverse" : "flex-row")}>
+                                                    <div className={cn(
+                                                        "px-4 py-3 rounded-2xl text-sm shadow-sm relative",
+                                                        isMe ? "bg-primary text-white rounded-br-none" : "bg-white border rounded-bl-none"
+                                                    )}>
+                                                        {msg.contentType === 'image' && msg.fileUrl ? (
+                                                            <div className="mb-2">
+                                                                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer">
+                                                                    <Image
+                                                                        src={msg.fileUrl}
+                                                                        alt={msg.fileName || 'Image'}
+                                                                        width={200}
+                                                                        height={200}
+                                                                        className="rounded-md object-cover max-h-[200px] w-auto bg-slate-100"
+                                                                        unoptimized
+                                                                    />
+                                                                </a>
+                                                            </div>
+                                                        ) : msg.contentType === 'file' && msg.fileUrl ? (
+                                                            <div className="mb-2">
+                                                                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 underline">
+                                                                    <Paperclip className="w-4 h-4" />
+                                                                    {msg.fileName || 'Attachment'}
+                                                                </a>
+                                                            </div>
+                                                        ) : null}
+                                                        <p>{msg.content}</p>
+                                                        <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-start" : "text-end")}>
+                                                            {formatDistanceToNow(new Date(msg._creationTime))}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Delete Button (Only visible on hover) */}
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                                                        onClick={() => handleDeleteMessage(msg._id)}
+                                                        title="حذف الرسالة"
+                                                    >
+                                                        <Trash2 className="w-3 h-3" />
+                                                    </Button>
                                                 </div>
+
                                                 {isMe && (
                                                     <div className="flex items-center gap-1 mt-0.5 px-1">
                                                         <span className="text-[10px] text-muted-foreground">{msg.read ? '✓✓' : '✓'}</span>
@@ -243,7 +296,7 @@ export default function AdminMessagesPage() {
                                     className="hidden"
                                     onChange={async (e) => {
                                         const file = e.target.files?.[0];
-                                        if (!file || !selectedConversationId) return;
+                                        if (!file || !selectedConversationId || !session?.user) return;
 
                                         setIsUploading(true);
                                         try {

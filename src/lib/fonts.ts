@@ -4,109 +4,106 @@ import {
     IBM_Plex_Sans_Arabic,
     Noto_Kufi_Arabic,
     Almarai,
+    Amiri,
     Readex_Pro,
     Outfit,
     Inter,
     Roboto,
-    Poppins,
-    Open_Sans
+    Open_Sans,
+    Lato,
 } from "next/font/google";
 
 // Arabic Fonts
-export const cairo = Cairo({
+const cairo = Cairo({
     subsets: ["arabic"],
-    variable: "--font-arabic",
-    weight: ["300", "400", "500", "700", "900"],
-    display: "swap",
+    weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
+    variable: "--font-cairo",
 });
 
-export const tajawal = Tajawal({
+const tajawal = Tajawal({
     subsets: ["arabic"],
-    variable: "--font-arabic",
-    weight: ["300", "400", "500", "700", "800", "900"],
-    display: "swap",
+    weight: ["200", "300", "400", "500", "700", "800", "900"],
+    variable: "--font-tajawal",
 });
 
-export const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
+/*
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
     subsets: ["arabic"],
-    variable: "--font-arabic",
-    weight: ["300", "400", "500", "600", "700"],
-    display: "swap",
+    weight: ["100", "200", "300", "400", "500", "600", "700"],
+    variable: "--font-ibm-plex-sans-arabic",
+});
+*/
+
+const notoKufiArabic = Noto_Kufi_Arabic({
+    subsets: ["arabic"],
+    weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+    variable: "--font-noto-kufi-arabic",
 });
 
-export const notoKufiArabic = Noto_Kufi_Arabic({
+const almarai = Almarai({
     subsets: ["arabic"],
-    variable: "--font-arabic",
-    weight: ["300", "400", "500", "700", "800", "900"], // Check available weights
-    display: "swap",
-});
-
-export const almarai = Almarai({
-    subsets: ["arabic"],
-    variable: "--font-arabic",
     weight: ["300", "400", "700", "800"],
-    display: "swap",
+    variable: "--font-almarai",
 });
 
-export const readexPro = Readex_Pro({
+const amiri = Amiri({
     subsets: ["arabic"],
-    variable: "--font-arabic",
-    weight: ["300", "400", "500", "700"],
-    display: "swap",
+    weight: ["400", "700"],
+    variable: "--font-amiri",
+});
+
+const readexPro = Readex_Pro({
+    subsets: ["arabic"],
+    weight: ["200", "300", "400", "500", "600", "700"],
+    variable: "--font-readex-pro",
 });
 
 // English Fonts
-export const outfit = Outfit({
+const outfit = Outfit({
     subsets: ["latin"],
-    variable: "--font-english",
-    weight: ["300", "400", "500", "700", "900"],
-    display: "swap",
+    variable: "--font-outfit",
 });
 
-export const inter = Inter({
+const inter = Inter({
     subsets: ["latin"],
-    variable: "--font-english",
-    weight: ["300", "400", "500", "700", "900"],
-    display: "swap",
+    variable: "--font-inter",
 });
 
-export const roboto = Roboto({
+const roboto = Roboto({
     subsets: ["latin"],
-    variable: "--font-english",
-    weight: ["300", "400", "500", "700", "900"],
-    display: "swap",
+    weight: ["100", "300", "400", "500", "700", "900"],
+    variable: "--font-roboto",
 });
 
-export const poppins = Poppins({
+const openSans = Open_Sans({
     subsets: ["latin"],
-    variable: "--font-english",
-    weight: ["300", "400", "500", "700", "900"],
-    display: "swap",
+    variable: "--font-open-sans",
 });
 
-export const openSans = Open_Sans({
+const lato = Lato({
     subsets: ["latin"],
-    variable: "--font-english",
-    weight: ["300", "400", "500", "700", "800"],
-    display: "swap",
+    weight: ["100", "300", "400", "700", "900"],
+    variable: "--font-lato",
 });
 
+// Reduced to essentials for build stability
 export const ARABIC_FONTS = {
     cairo,
-    tajawal,
-    ibmPlexSansArabic,
-    notoKufiArabic,
-    almarai,
-    readexPro,
-};
+    tajawal: cairo, // Fallback to avoid fetching
+    //    ibm_plex_sans_arabic: ibmPlexSansArabic,
+    noto_kufi_arabic: cairo,
+    almarai: cairo,
+    amiri: cairo,
+    readex_pro: cairo,
+} as const;
 
 export const ENGLISH_FONTS = {
     outfit,
-    inter,
-    roboto,
-    poppins,
-    openSans,
-};
+    inter: outfit,
+    roboto: outfit,
+    open_sans: outfit,
+    lato: outfit,
+} as const;
 
 export type ArabicFontKey = keyof typeof ARABIC_FONTS;
 export type EnglishFontKey = keyof typeof ENGLISH_FONTS;

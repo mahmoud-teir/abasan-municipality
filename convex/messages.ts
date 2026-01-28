@@ -81,3 +81,10 @@ export const send = mutation({
         }
     },
 });
+
+export const deleteMessage = mutation({
+    args: { messageId: v.id("messages") },
+    handler: async (ctx, args) => {
+        await ctx.db.delete(args.messageId);
+    },
+});

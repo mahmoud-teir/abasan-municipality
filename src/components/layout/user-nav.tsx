@@ -60,7 +60,7 @@ export function UserNav() {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push(getSettingsLink(session.user.role))}>
+                <DropdownMenuItem onClick={() => router.push(getSettingsLink((session.user as any).role))}>
                     <Settings className="mr-2 h-4 w-4" />
                     {t('nav.dashboard')} ({t('dashboard.settings')})
                 </DropdownMenuItem>

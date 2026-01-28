@@ -4,7 +4,7 @@ import { api } from '../../convex/_generated/api';
 
 export function useTyping(conversationId: string | undefined, userId: string | undefined) {
     const setTyping = useMutation(api.typing.setTyping);
-    const timeoutRef = useRef<NodeJS.Timeout>();
+    const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
     const notifyTyping = useCallback(() => {
         if (!conversationId || !userId) return;

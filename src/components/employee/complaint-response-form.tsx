@@ -16,7 +16,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { useSession } from '@/lib/auth/client';
+import { useSession } from '@/lib/auth/auth-client';
 
 interface ComplaintResponseFormProps {
     complaintId: string;

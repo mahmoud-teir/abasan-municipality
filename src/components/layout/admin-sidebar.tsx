@@ -19,7 +19,10 @@ import {
     Layers,
     Briefcase,
     Globe,
-    Calendar
+    Calendar,
+    Bell,
+    Image,
+    Siren
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { useState, useEffect } from 'react';
@@ -31,14 +34,17 @@ const sidebarItems = [
     { icon: LayoutDashboard, label: 'admin.dashboard', href: '/admin' },
     { icon: Users, label: 'admin.users', href: '/admin/users' },
     { icon: Newspaper, label: 'admin.news', href: '/admin/news' },
+    { icon: Siren, label: "admin.alerts", href: "/admin/alerts" },
     { icon: FileText, label: 'admin.requests', href: '/admin/requests' },
     { icon: MessageSquare, label: 'admin.complaints', href: '/admin/complaints' },
     { icon: MessageCircle, label: 'admin.messages', href: '/admin/messages' },
-    { icon: Calendar, label: 'admin.appointments', href: '/admin/appointments' }, // Added
+    { icon: Calendar, label: 'admin.appointments', href: '/admin/appointments' },
     { icon: Briefcase, label: 'admin.projects', href: '/admin/projects' },
     { icon: Users, label: 'admin.careers', href: '/admin/careers' },
     { icon: Layers, label: 'admin.servicesMenu', href: '/admin/services' },
+    { icon: Bell, label: 'admin.notifications', href: '/admin/notifications' },
     { icon: History, label: 'admin.logs', href: '/admin/logs' },
+    { icon: Image, label: 'admin.media', href: '/admin/media' },
     { icon: Settings, label: 'admin.settings', href: '/admin/settings' },
 ];
 
@@ -74,7 +80,7 @@ export function AdminSidebar() {
                 <span className="font-bold text-lg">{t('admin.title')}</span>
             </div>
 
-            <div className="flex-1 py-6 px-4 space-y-2">
+            <div className="flex-1 py-6 px-4 space-y-2 overflow-y-auto scrollbar-custom [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700/30 dark:[&::-webkit-scrollbar-thumb]:bg-slate-700/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-600 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-track]:bg-transparent">
                 {sidebarItems.map((item) => {
                     const isProtected = item.label === 'admin.logs' || item.label === 'admin.servicesMenu';
 
@@ -130,18 +136,18 @@ export function AdminSidebar() {
     return (
         <>
             {/* Desktop Sidebar */}
-            <aside className="max-md:hidden flex w-72 flex-col fixed inset-y-0 z-50">
+            <aside className="desktop-sidebar hidden md:flex w-72 flex-col fixed inset-y-0 z-50">
                 <SidebarContent />
             </aside>
 
             {/* Mobile Sidebar */}
             <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="md:hidden fixed top-4 start-4 z-50">
+                    <Button variant="ghost" size="icon" className="mobile-trigger md:hidden fixed top-4 start-4 z-50 bg-background/80 backdrop-blur-sm border shadow-sm">
                         <Menu className="w-6 h-6" />
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="p-0 w-72 bg-slate-900 border-slate-800">
+                <SheetContent side="left" className="p-0 w-72 bg-slate-900 border-slate-800 md:hidden">
                     <SheetTitle className="sr-only">Admin Navigation Menu</SheetTitle>
                     <SidebarContent />
                 </SheetContent>

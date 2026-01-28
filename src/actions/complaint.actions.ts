@@ -166,7 +166,7 @@ export async function getComplaintById(complaintId: string) {
             include: {
                 responses: true,
                 user: {
-                    select: { name: true, email: true, phone: true }
+                    select: { name: true, email: true, phone: true, nationalId: true }
                 }
             }
         });
@@ -210,12 +210,12 @@ export async function updateComplaintStatus(
         // Trigger Notification
         if (complaint.userId) {
             const statusMsg = status === 'RESOLVED' ? 'تم حل شكواك' : status === 'IN_PROGRESS' ? 'شكواك قيد المعالجة' : 'تم تحديث حالة شكواك';
-            await createNotification(
-                complaint.userId,
-                'تحديث على الشكوى',
-                `${statusMsg}: ${complaint.title}`,
-                `/citizen/complaints/${complaintId}`
-            );
+            await createNotification({
+                userId: complaint.userId,
+                title: 'تحديث على الشكوى',
+                message: `${statusMsg}: ${complaint.title}`,
+                link: `/citizen/complaints/${complaintId}`
+            });
         }
 
         revalidatePath('/citizen/complaints');

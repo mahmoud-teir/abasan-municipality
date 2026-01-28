@@ -5,23 +5,40 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useSession } from '@/lib/auth/auth-client';
-import { useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import { playNotificationSound } from '@/lib/sounds';
 
 export function NotificationBell() {
     const { data: session } = useSession();
     const [open, setOpen] = useState(false);
+    const prevUnreadCountRef = useRef<number>(0);
 
     // Convex hooks
     const notifications = useQuery(api.notifications.list, session?.user?.id ? { userId: session.user.id } : "skip");
     const unreadCount = useQuery(api.notifications.unreadCount, session?.user?.id ? { userId: session.user.id } : "skip");
     const markRead = useMutation(api.notifications.markRead);
     const markAllRead = useMutation(api.notifications.markAllRead);
+
+    // Play sound on new unread notification
+    useEffect(() => {
+        if (unreadCount !== undefined) {
+            // If count increased and it's not the very first load (or if it is, maybe we don't want to beep immediately on page refresh)
+            // Let's safe guard: if prev was 0 and now is > 0, it might be initial load.
+            // But usually initial load starts undefined -> number. 
+            // If we want to avoid initial beep, we can check if prevUnreadCountRef.current is not null?
+            // Simple approach: if unreadCount > prevUnreadCountRef.current, play sound.
+            if (unreadCount > prevUnreadCountRef.current) {
+                playNotificationSound();
+            }
+            prevUnreadCountRef.current = unreadCount;
+        }
+    }, [unreadCount]);
 
     const handleRead = async (notification: any) => {
         if (!notification.read) {
@@ -39,7 +56,7 @@ export function NotificationBell() {
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "relative")}>
+            <PopoverTrigger aria-haspopup="dialog" className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "relative")}>
                 <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                 {(unreadCount || 0) > 0 && (
                     <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse ring-2 ring-white dark:ring-slate-950" />

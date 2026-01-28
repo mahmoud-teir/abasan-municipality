@@ -509,3 +509,49 @@ model RequestMessage {
   sender    User     @relation(fields: [senderId], references: [id])
   createdAt DateTime @default(now())
 }
+
+// ============================================
+// شريط العرض الرئيسي - Hero Slider
+// ============================================
+model HeroSlide {
+  id          String   @id @default(cuid())
+  titleAr     String
+  titleEn     String
+  subtitleAr  String?
+  subtitleEn  String?
+  imageUrl    String
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ============================================
+// إدارة الوسائط - Media Management
+// ============================================
+model MediaFile {
+  id        String   @id @default(cuid())
+  url       String
+  key       String   @unique // UploadThing key or unique identifier
+  filename  String
+  size      Int
+  type      String   // 'image', 'document', 'video'
+  uploadedBy String
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// تحسين محركات البحث - SEO Management
+// ============================================
+model SeoPage {
+  id            String   @id @default(cuid())
+  routeKey      String   @unique // e.g., 'home', 'about', 'services'
+  titleAr       String
+  titleEn       String
+  descriptionAr String
+  descriptionEn String
+  keywordsAr    String?
+  keywordsEn    String?
+  ogImage       String?
+  updatedAt     DateTime @updatedAt
+}

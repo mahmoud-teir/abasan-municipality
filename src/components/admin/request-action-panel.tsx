@@ -70,7 +70,7 @@ export default function RequestActionPanel({ request, user }: Props) {
                             <div className="flex justify-between items-start">
                                 <CardTitle>{t('requests.details')}</CardTitle>
                                 <Badge variant="outline" className={(statusColors as any)[request.status]}>
-                                    {t(`requests.status.${request.status.toLowerCase().replace(/_([a-z])/g, (g) => g[1].toUpperCase())}`)}
+                                    {t(`requests.status.${request.status.toLowerCase().replace(/_([a-z])/g, (g: string) => g[1].toUpperCase())}`)}
                                 </Badge>
                             </div>
                         </CardHeader>

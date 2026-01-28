@@ -7,8 +7,19 @@ export const notificationSound = "data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUz
 export const playNotificationSound = () => {
     try {
         const audio = new Audio('/sounds/notification.mp3');
-        audio.play().catch(e => console.log('Audio play failed (interaction needed first)', e));
+        audio.volume = 0.5; // Set volume to 50% to be less intrusive
+
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                // Auto-play was prevented
+                // Show a UI element to let the user manually start playback if needed, 
+                // or just log it for debugging.
+                console.warn('Notification sound blocked by browser autoplay policy:', error);
+            });
+        }
     } catch (error) {
-        console.error('Error playing sound', error);
+        console.error('Error initializing sound:', error);
     }
 };

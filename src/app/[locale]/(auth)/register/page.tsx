@@ -43,7 +43,7 @@ export default function RegisterPage() {
                 phone,
                 nationalId,
                 callbackURL: '/citizen/dashboard',
-            }, {
+            } as any, {
                 onRequest: () => {
                     // creating user...
                 },

@@ -25,10 +25,13 @@ import { Loader2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { ImageUpload } from '@/components/shared/image-upload';
+import { useState } from 'react';
+import { deleteMediaByKeys } from '@/actions/media.actions';
 
 export default function CreateNewsPage() {
     const t = useTranslations();
     const router = useRouter();
+    const [uploadedKeys, setUploadedKeys] = useState<string[]>([]);
 
     const form = useForm<CreateNewsInput>({
         resolver: zodResolver(createNewsSchema),
@@ -171,6 +174,10 @@ export default function CreateNewsPage() {
                                                 value={field.value}
                                                 onChange={field.onChange}
                                                 onRemove={(url) => field.onChange((field.value || []).filter((current) => current !== url))}
+                                                onUploadComplete={(res) => {
+                                                    const newKeys = res.map((r: any) => r.key);
+                                                    setUploadedKeys(prev => [...prev, ...newKeys]);
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -251,8 +258,19 @@ export default function CreateNewsPage() {
                     </Card>
 
                     <div className="flex justify-end gap-4">
-                        <Button variant="outline" asChild>
-                            <Link href="/admin/news">{t('admin.newsPage.form.cancel')}</Link>
+                        <Button
+                            variant="outline"
+                            type="button"
+                            onClick={async () => {
+                                if (uploadedKeys.length > 0) {
+                                    toast.loading(t('admin.newsPage.form.cleaning') || 'Cleaning up...');
+                                    await deleteMediaByKeys(uploadedKeys);
+                                    toast.dismiss();
+                                }
+                                router.push('/admin/news');
+                            }}
+                        >
+                            {t('admin.newsPage.form.cancel')}
                         </Button>
                         <Button type="submit" disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting ? (

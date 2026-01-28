@@ -160,3 +160,24 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Explicit Sidebar Visibility Overrides */
+@media (max-width: 768px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+
+  .mobile-trigger {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-sidebar {
+    display: flex !important;
+  }
+
+  .mobile-trigger {
+    display: none !important;
+  }
+}

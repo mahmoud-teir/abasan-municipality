@@ -59,12 +59,12 @@ export const POST = async (req: NextRequest) => {
                             select: { id: true }
                         });
                         const notificationPromises = admins.map(admin =>
-                            createNotification(
-                                admin.id,
-                                'Security Warning: Suspicious Activity',
-                                `User ${body.email} has failed to login 5 times. Monitoring recommended.`,
-                                `/admin/users?search=${encodeURIComponent(body.email)}`
-                            )
+                            createNotification({
+                                userId: admin.id,
+                                title: 'Security Warning: Suspicious Activity',
+                                message: `User ${body.email} has failed to login 5 times. Monitoring recommended.`,
+                                link: `/admin/users?search=${encodeURIComponent(body.email)}`
+                            })
                         );
                         await Promise.all(notificationPromises);
                     }
@@ -90,12 +90,12 @@ export const POST = async (req: NextRequest) => {
                         });
 
                         const notificationPromises = admins.map(admin =>
-                            createNotification(
-                                admin.id,
-                                'Security Alert: User Banned',
-                                `User ${body.email} has been auto-banned after 10 failed login attempts.`,
-                                `/admin/users?search=${encodeURIComponent(body.email)}`
-                            )
+                            createNotification({
+                                userId: admin.id,
+                                title: 'Security Alert: User Banned',
+                                message: `User ${body.email} has been auto-banned after 10 failed login attempts.`,
+                                link: `/admin/users?search=${encodeURIComponent(body.email)}`
+                            })
                         );
 
                         await Promise.all(notificationPromises);

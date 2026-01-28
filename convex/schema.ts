@@ -84,4 +84,23 @@ export default defineSchema({
     }).index("by_status", ["status"])
         .index("by_date", ["date"])
         .index("by_citizenId", ["citizenId"]),
+
+    auditLogs: defineTable({
+        action: v.string(), // e.g. 'delete_user', 'update_settings'
+        actorId: v.string(), // User ID of who performed the action
+        actorName: v.string(),
+        resourceId: v.optional(v.string()), // ID of the object affected
+        resourceType: v.optional(v.string()), // 'user', 'post', 'setting'
+        details: v.optional(v.string()), // JSON string or text details
+        timestamp: v.number(),
+    }).index("by_timestamp", ["timestamp"]),
+
+    broadcasts: defineTable({
+        title: v.string(),
+        message: v.string(),
+        type: v.string(), // 'info', 'warning', 'success'
+        audience: v.string(), // 'all', 'employees', 'citizens'
+        sentBy: v.string(), // Admin ID
+        timestamp: v.number(),
+    }).index("by_timestamp", ["timestamp"]),
 });

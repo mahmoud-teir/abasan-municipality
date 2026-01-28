@@ -22,12 +22,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { createProject, updateProject } from '@/actions/project.actions'; // Assuming this exists or will exist
+import { createProject, updateProject } from '@/actions/project.actions';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Loader2, X, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { UploadButton } from '@/lib/uploadthing';
+import { deleteMediaByKeys } from '@/actions/media.actions';
 
 const projectSchema = z.object({
     titleAr: z.string().min(1, 'العنوان العربي مطلوب'),
@@ -35,12 +36,12 @@ const projectSchema = z.object({
     descriptionAr: z.string().min(1, 'الوصف العربي مطلوب'),
     descriptionEn: z.string().min(1, 'English description is required'),
     status: z.enum(['PLANNED', 'IN_PROGRESS', 'COMPLETED', 'ON_HOLD', 'CANCELLED']),
-    budget: z.string().optional(), // Input as string, convert to number in action
+    budget: z.string().optional(),
     contractor: z.string().optional(),
-    startDate: z.string().optional(), // Date input returns string "YYYY-MM-DD"
+    startDate: z.string().optional(),
     endDate: z.string().optional(),
     images: z.array(z.string()).optional(),
-    completionPercentage: z.string().optional(), // Input range/number returns string sometimes
+    completionPercentage: z.string().optional(),
     location: z.string().optional(),
 });
 
@@ -48,14 +49,14 @@ type ProjectFormValues = z.infer<typeof projectSchema>;
 
 type Props = {
     locale: string;
-    project?: any; // Replace with Project type
+    project?: any;
 };
 
 export function ProjectForm({ locale, project }: Props) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [images, setImages] = useState<string[]>(project?.images || []);
-
+    const [uploadedKeys, setUploadedKeys] = useState<string[]>([]);
     const isAr = locale === 'ar';
 
     const form = useForm<ProjectFormValues>({
@@ -288,52 +289,87 @@ export function ProjectForm({ locale, project }: Props) {
 
                 {/* Image Upload */}
                 <div className="space-y-4">
-                    <FormLabel className="block">{isAr ? 'صور المشروع' : 'Project Images'}</FormLabel>
-                    <div className="flex flex-wrap gap-4">
+                    <FormLabel className="block text-base font-semibold">{isAr ? 'صور المشروع' : 'Project Images'}</FormLabel>
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {images.map((img, index) => (
-                            <div key={index} className="relative w-32 h-32 rounded-lg overflow-hidden border">
-                                <Image src={img} alt="Project" fill className="object-cover" />
-                                <button
-                                    type="button"
-                                    onClick={() => removeImage(index)}
-                                    className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
+                            <div key={index} className="group relative aspect-square rounded-xl overflow-hidden border bg-slate-100 shadow-sm">
+                                <Image
+                                    src={img}
+                                    alt={`Project Image ${index + 1}`}
+                                    fill
+                                    className="object-cover transition-transform group-hover:scale-105"
+                                    unoptimized
+                                />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <button
+                                        type="button"
+                                        onClick={() => removeImage(index)}
+                                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-transform hover:scale-110 shadow-lg"
+                                        title={isAr ? "حذف الصورة" : "Remove Image"}
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         ))}
-                        <div className="w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <div className="aspect-square relative border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-slate-100 hover:border-primary/50 transition-colors group overflow-hidden">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
+                                <div className="p-3 bg-white rounded-full shadow-sm group-hover:shadow-md transition-shadow mb-2">
+                                    <Upload className="w-5 h-5 text-slate-500 group-hover:text-primary transition-colors" />
+                                </div>
+                                <span className="text-xs font-medium text-slate-500 group-hover:text-primary transition-colors">{isAr ? 'رفع صورة' : 'Upload'}</span>
+                            </div>
+
                             <UploadButton
-                                endpoint="imageUploader"
+                                endpoint="newsImageUploader"
                                 onClientUploadComplete={(res) => {
                                     if (res && res[0]) {
+                                        const newKeys = res.map(r => r.key);
+                                        setUploadedKeys(prev => [...prev, ...newKeys]);
                                         setImages(prev => [...prev, res[0].url]);
-                                        toast.success("Image uploaded");
+                                        toast.success(isAr ? "تم رفع الصورة" : "Image uploaded");
                                     }
                                 }}
                                 onUploadError={(error: Error) => {
                                     toast.error(`Error: ${error.message}`);
                                 }}
                                 appearance={{
-                                    button: "bg-transparent text-slate-500 hover:text-slate-700 w-full h-full",
-                                    allowedContent: "hidden"
-                                }}
-                                content={{
-                                    button: <div className="flex flex-col items-center"><Upload className="w-6 h-6 mb-2" /><span className="text-xs">Upload</span></div>
+                                    button: "w-full h-full bg-transparent border-none opacity-0 absolute inset-0 z-20 cursor-pointer",
+                                    allowedContent: "hidden",
+                                    container: "w-full h-full"
                                 }}
                             />
                         </div>
                     </div>
+                    <p className="text-xs text-muted-foreground">
+                        {isAr
+                            ? 'يمكنك رفع صور متعددة. الصيغ المدعومة: JPG، PNG، WEBP.'
+                            : 'You can upload multiple images. Supported formats: JPG، PNG، WEBP.'}
+                    </p>
                 </div>
 
                 <div className="flex justify-end pt-6 border-t">
-                    <Button type="button" variant="outline" onClick={() => router.back()} className="me-4">{isAr ? 'إلغاء' : 'Cancel'}</Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={async () => {
+                            if (uploadedKeys.length > 0) {
+                                toast.loading(isAr ? 'جاري التنظيف...' : 'Cleaning up...');
+                                await deleteMediaByKeys(uploadedKeys);
+                                toast.dismiss();
+                            }
+                            router.back();
+                        }}
+                        className="me-4"
+                    >
+                        {isAr ? 'إلغاء' : 'Cancel'}
+                    </Button>
                     <Button type="submit" disabled={loading}>
                         {loading && <Loader2 className="w-4 h-4 me-2 animate-spin" />}
                         {project ? (isAr ? 'حفظ التعديلات' : 'Save Changes') : (isAr ? 'إنشاء المشاريع' : 'Create Project')}
                     </Button>
                 </div>
             </form>
-        </Form>
+        </Form >
     );
 }

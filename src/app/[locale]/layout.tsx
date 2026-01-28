@@ -6,6 +6,10 @@ import { locales, type Locale } from '@/i18n';
 import { AutoLogoutProvider } from "@/components/providers/auto-logout-provider";
 import { AlertBanner } from '@/components/ui/alert-banner';
 import { GlobalChatWidget } from '@/components/chat/global-chat-widget';
+import { getSystemSetting } from '@/actions/settings.actions';
+import { auth } from '@/lib/auth/auth';
+import { headers } from 'next/headers';
+import { MaintenanceScreen } from '@/components/shared/maintenance-screen';
 
 type Props = {
     children: React.ReactNode;
@@ -27,8 +31,31 @@ export default async function LocaleLayout({ children, params }: Props) {
     // Enable static rendering
     setRequestLocale(locale);
 
-    // Get messages for the current locale
-    const messages = await getMessages();
+    // Fetch data in parallel
+    const [messages, maintenanceMode, session] = await Promise.all([
+        getMessages(),
+        getSystemSetting('maintenance_mode'),
+        auth.api.getSession({
+            headers: await headers()
+        })
+    ]);
+
+    // Check Maintenance Mode
+    if (maintenanceMode === 'true') {
+        const userRole = session?.user?.role;
+        const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
+
+        if (!isAdmin) {
+            const isRTL = locale === 'ar';
+            return (
+                <div dir={isRTL ? 'rtl' : 'ltr'} lang={locale}>
+                    <NextIntlClientProvider messages={messages} locale={locale}>
+                        <MaintenanceScreen />
+                    </NextIntlClientProvider>
+                </div>
+            );
+        }
+    }
 
     const isRTL = locale === 'ar';
 

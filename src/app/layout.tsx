@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
 import "@uploadthing/react/styles.css";
@@ -18,13 +18,24 @@ export const metadata: Metadata = {
   keywords: ["بلدية", "عبسان الكبيرة", "خدمات", "تصاريح", "municipality", "abasan"],
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   // Fetch settings
-  const [theme, fontArabicKey, fontEnglishKey] = await Promise.all([
+  // Fetch settings
+  const [
+    theme,
+    fontArabicKey,
+    fontEnglishKey,
+  ] = await Promise.all([
     getSystemSetting('theme'),
     getSystemSetting('font_arabic'),
     getSystemSetting('font_english'),
@@ -38,7 +49,16 @@ export default async function RootLayout({
 
   return (
     <html suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${arabicFont.variable} ${englishFont.variable} font-sans antialiased ${themeClass}`}>
+      <body
+        suppressHydrationWarning
+        className={`${arabicFont.variable} ${englishFont.variable} font-sans antialiased ${themeClass}`}
+        style={
+          {
+            '--font-arabic': `var(${arabicFont.variable})`,
+            '--font-english': `var(${englishFont.variable})`,
+          } as React.CSSProperties
+        }
+      >
         <ConvexClientProvider>
           {children}
           <Toaster position="top-center" richColors />

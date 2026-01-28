@@ -17,7 +17,8 @@ import {
 import prisma from '@/lib/db/prisma';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-
+import { getActiveHeroSlides } from '@/actions/hero.actions';
+import { HeroSlider } from '@/components/home/hero-slider';
 type Props = {
     params: Promise<{ locale: string }>;
 };
@@ -54,30 +55,32 @@ export default async function HomePage({ params }: Props) {
         { icon: Headphones, value: '24/7', key: 'support' },
     ];
 
+    const categoryMap: Record<string, string> = {
+        'أخبار عامة': 'General News',
+        'بيئة و تراخيص': 'Environment & Permits',
+        'تراخيص بيئة': 'Environment Permits',
+        'الصحة والبيئة': 'Health & Environment',
+        'مشاريع': 'Projects',
+        'فعاليات': 'Events',
+        'إعلانات': 'Announcements',
+        'خدمات': 'Services',
+        'تراخيص': 'Permits',
+        'بيئة': 'Environment'
+    };
+
+    // Fetch Active Hero Slides
+    const heroSlides = await getActiveHeroSlides();
+
     return (
         <main className="min-h-screen">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-primary/90 to-primary py-20 md:py-32 overflow-hidden">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <HeroSlider
+                slides={heroSlides}
+                defaultTitle={t('home.hero.title')}
+                defaultSubtitle={t('home.hero.subtitle')}
+                locale={locale}
+            />
 
-                <div className="container mx-auto px-4 text-center text-white relative z-10">
-                    <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
-                        {t('home.hero.title')}
-                    </h1>
-                    <p className="text-xl md:text-2xl mb-10 opacity-90 font-light max-w-2xl mx-auto">
-                        {t('home.hero.subtitle')}
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button asChild size="lg" variant="secondary" className="font-bold px-8 shadow-lg hover:shadow-xl transition-all">
-                            <Link href="/citizen/dashboard">{t('home.hero.cta')}</Link>
-                        </Button>
-                        <Button asChild size="lg" variant="outline" className="bg-white/10 border-white text-white hover:bg-white/20 backdrop-blur-sm px-8">
-                            <Link href="/about">{t('home.hero.learnMore')}</Link>
-                        </Button>
-                    </div>
-                </div>
-            </section>
 
             {/* Services Section */}
             <section className="py-16 md:py-24 bg-muted/30">
@@ -184,19 +187,7 @@ export default async function HomePage({ params }: Props) {
                                         {item.category && (
                                             <Badge className="absolute top-4 right-4 bg-white/90 text-slate-900 hover:bg-white backdrop-blur-sm shadow-sm border-none px-3 py-1 text-xs font-medium rounded-full cursor-default">
                                                 {locale === 'en' ? (
-                                                    // Simple mapping for common categories
-                                                    {
-                                                        'أخبار عامة': 'General News',
-                                                        'بيئة و تراخيص': 'Environment & Permits',
-                                                        'تراخيص بيئة': 'Environment Permits',
-                                                        'الصحة والبيئة': 'Health & Environment',
-                                                        'مشاريع': 'Projects',
-                                                        'فعاليات': 'Events',
-                                                        'إعلانات': 'Announcements',
-                                                        'خدمات': 'Services',
-                                                        'تراخيص': 'Permits',
-                                                        'بيئة': 'Environment'
-                                                    }[item.category.trim()] || item.category
+                                                    categoryMap[(item.category as string).trim()] || item.category
                                                 ) : item.category}
                                             </Badge>
                                         )}

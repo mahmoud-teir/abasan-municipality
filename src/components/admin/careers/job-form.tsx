@@ -39,7 +39,7 @@ const jobSchema = z.object({
     requirementsAr: z.string().min(1, 'المتطلبات العربية مطلوبة'),
     requirementsEn: z.string().min(1, 'English requirements are required'),
     deadline: z.string().min(1, 'Deadline is required'),
-    isActive: z.boolean().default(true),
+    isActive: z.boolean(),
 });
 
 type JobFormValues = z.infer<typeof jobSchema>;
@@ -66,7 +66,7 @@ export function JobForm({ locale, job }: Props) {
             requirementsAr: job?.requirementsAr || '',
             requirementsEn: job?.requirementsEn || '',
             deadline: job?.deadline ? new Date(job.deadline).toISOString().split('T')[0] : '',
-            isActive: job ? job.isActive : true,
+            isActive: job?.isActive ?? true,
         },
     });
 
@@ -250,10 +250,12 @@ export function JobForm({ locale, job }: Props) {
                                 </FormDescription>
                             </div>
                             <FormControl>
-                                <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                />
+                                <div style={{ direction: 'ltr' }}>
+                                    <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </div>
                             </FormControl>
                         </FormItem>
                     )}

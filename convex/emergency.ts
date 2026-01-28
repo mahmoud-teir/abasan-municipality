@@ -44,10 +44,27 @@ export const resolve = mutation({
     args: {
         id: v.id("emergency_alerts"),
     },
+    // ... existing code ...
     handler: async (ctx, args) => {
         await ctx.db.patch(args.id, {
             isActive: false,
             resolvedAt: Date.now(),
         });
+    },
+});
+
+export const deleteAlert = mutation({
+    args: { id: v.id("emergency_alerts") },
+    handler: async (ctx, args) => {
+        await ctx.db.delete(args.id);
+    },
+});
+
+export const list = query({
+    handler: async (ctx) => {
+        return await ctx.db
+            .query("emergency_alerts")
+            .order("desc")
+            .take(20);
     },
 });

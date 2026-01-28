@@ -44,14 +44,27 @@ export default async function AboutPage() {
                         </div>
                     </div>
                 </div>
-                <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative h-[500px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white/20 ring-1 ring-black/5">
+                    {/* Blurred Background for ambiance */}
                     <Image
                         src={imageSrc}
-                        alt={t('title')}
+                        alt="Background ambiance"
                         fill
-                        className="object-cover hover:scale-105 transition-transform duration-700"
-                        priority
+                        className="object-cover blur-2xl scale-110 opacity-50"
+                        unoptimized
                     />
+
+                    {/* Main sharp image */}
+                    <div className="relative h-full w-full p-6">
+                        <Image
+                            src={imageSrc}
+                            alt={t('title')}
+                            fill
+                            className="object-contain drop-shadow-xl"
+                            priority
+                            unoptimized
+                        />
+                    </div>
                 </div>
             </section>
 

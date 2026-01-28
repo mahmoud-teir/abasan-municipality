@@ -50,9 +50,11 @@ export async function getDailyRequestStats() {
         }
 
         rawRequests.forEach(req => {
-            const key = format(new Date(req.submittedAt), 'yyyy-MM-dd');
-            if (statsMap.has(key)) {
-                statsMap.set(key, (statsMap.get(key) || 0) + 1);
+            if (req.submittedAt) {
+                const key = format(new Date(req.submittedAt), 'yyyy-MM-dd');
+                if (statsMap.has(key)) {
+                    statsMap.set(key, (statsMap.get(key) || 0) + 1);
+                }
             }
         });
 
