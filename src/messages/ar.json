@@ -102,7 +102,9 @@
             "loginNow": "سجل دخولك",
             "success": "تم إنشاء الحساب بنجاح",
             "error": "فشل إنشاء الحساب",
-            "passwordsDoNotMatch": "كلمات المرور غير متطابقة"
+            "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+            "phoneLengthError": "رقم الهاتف يجب أن يتكون من 10 أرقام",
+            "nationalIdLengthError": "رقم الهوية يجب أن يتكون من 9 أرقام"
         },
         "autoLogout": {
             "title": "تسجيل خروج تلقائي",

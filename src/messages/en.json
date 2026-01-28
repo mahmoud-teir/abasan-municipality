@@ -102,7 +102,9 @@
             "loginNow": "Login now",
             "success": "Account created successfully",
             "error": "Failed to create account",
-            "passwordsDoNotMatch": "Passwords do not match"
+            "passwordsDoNotMatch": "Passwords do not match",
+            "phoneLengthError": "Phone number must be exactly 10 digits",
+            "nationalIdLengthError": "National ID must be exactly 9 digits"
         },
         "autoLogout": {
             "title": "Auto Logout",
