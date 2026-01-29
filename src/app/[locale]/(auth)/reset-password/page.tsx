@@ -17,30 +17,29 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { authClient } from '@/lib/auth/auth-client';
-import { useState, useEffect } from 'react';
+import { useState, Suspense } from 'react';
 import { toast } from 'sonner';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-const resetPasswordSchema = z
-    .object({
-        password: z.string().min(8, 'Password must be at least 8 characters'),
-        confirmPassword: z.string(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords don't match",
-        path: ['confirmPassword'],
-    });
-
-type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
-
-import { Suspense } from 'react';
-
 function ResetPasswordForm() {
+    const t = useTranslations('auth.resetPassword');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
+
+    const resetPasswordSchema = z
+        .object({
+            password: z.string().min(8, t('passwordLengthError')),
+            confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+            message: t('passwordsDontMatch'),
+            path: ['confirmPassword'],
+        });
+
+    type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
     const form = useForm<ResetPasswordInput>({
         resolver: zodResolver(resetPasswordSchema),
@@ -52,7 +51,7 @@ function ResetPasswordForm() {
 
     async function onSubmit(data: ResetPasswordInput) {
         if (!token) {
-            toast.error('Invalid token');
+            toast.error(t('invalidTokenError'));
             return;
         }
 
@@ -66,11 +65,11 @@ function ResetPasswordForm() {
             if (error) {
                 toast.error(error.message);
             } else {
-                toast.success('تم تغيير كلمة المرور بنجاح');
+                toast.success(t('success'));
                 router.push('/login');
             }
         } catch (err) {
-            toast.error('Something went wrong');
+            toast.error(t('error'));
         } finally {
             setLoading(false);
         }
@@ -81,9 +80,9 @@ function ResetPasswordForm() {
             <div className="flex min-h-screen items-center justify-center p-4 bg-slate-50">
                 <Card className="w-full max-w-md text-center">
                     <CardContent className="pt-6">
-                        <p className="text-red-600 mb-4">رابط غير صالح أو منتهي الصلاحية.</p>
+                        <p className="text-red-600 mb-4">{t('invalidToken')}</p>
                         <Button asChild>
-                            <Link href="/forgot-password">طلب رابط جديد</Link>
+                            <Link href="/forgot-password">{t('requestNewLink')}</Link>
                         </Button>
                     </CardContent>
                 </Card>
@@ -94,9 +93,9 @@ function ResetPasswordForm() {
     return (
         <Card className="w-full max-w-md">
             <CardHeader>
-                <CardTitle>إعادة تعيين كلمة المرور</CardTitle>
+                <CardTitle>{t('title')}</CardTitle>
                 <CardDescription>
-                    أدخل كلمة المرور الجديدة لحسابك.
+                    {t('description')}
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -107,9 +106,9 @@ function ResetPasswordForm() {
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>كلمة المرور الجديدة</FormLabel>
+                                    <FormLabel>{t('passwordLabel')}</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="********" {...field} />
+                                        <Input type="password" placeholder={t('passwordPlaceholder')} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -120,16 +119,16 @@ function ResetPasswordForm() {
                             name="confirmPassword"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>تأكيد كلمة المرور</FormLabel>
+                                    <FormLabel>{t('confirmPasswordLabel')}</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="********" {...field} />
+                                        <Input type="password" placeholder={t('passwordPlaceholder')} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <Button type="submit" className="w-full" disabled={loading}>
-                            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'حفظ كلمة المرور'}
+                            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t('submit')}
                         </Button>
                     </form>
                 </Form>

@@ -84,6 +84,21 @@
             "emailSentSuccess": "Password reset link sent to your email",
             "submitError": "Something went wrong"
         },
+        "resetPassword": {
+            "title": "Reset Password",
+            "description": "Enter your new password for your account.",
+            "passwordLabel": "New Password",
+            "confirmPasswordLabel": "Confirm Password",
+            "passwordPlaceholder": "********",
+            "submit": "Save Password",
+            "invalidToken": "Invalid or expired link.",
+            "requestNewLink": "Request New Link",
+            "success": "Password changed successfully",
+            "error": "Something went wrong",
+            "passwordsDontMatch": "Passwords don't match",
+            "passwordLengthError": "Password must be at least 8 characters",
+            "invalidTokenError": "Invalid token"
+        },
         "register": {
             "title": "Create New Account",
             "subtitle": "Create a new account to benefit from e-services",

@@ -84,6 +84,21 @@
             "emailSentSuccess": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
             "submitError": "حدث خطأ ما"
         },
+        "resetPassword": {
+            "title": "إعادة تعيين كلمة المرور",
+            "description": "أدخل كلمة المرور الجديدة لحسابك.",
+            "passwordLabel": "كلمة المرور الجديدة",
+            "confirmPasswordLabel": "تأكيد كلمة المرور",
+            "passwordPlaceholder": "********",
+            "submit": "حفظ كلمة المرور",
+            "invalidToken": "رابط غير صالح أو منتهي الصلاحية.",
+            "requestNewLink": "طلب رابط جديد",
+            "success": "تم تغيير كلمة المرور بنجاح",
+            "error": "حدث خطأ ما",
+            "passwordsDontMatch": "كلمات المرور غير متطابقة",
+            "passwordLengthError": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+            "invalidTokenError": "رمز غير صالح"
+        },
         "register": {
             "title": "إنشاء حساب جديد",
             "subtitle": "أنشئ حساباً جديداً للاستفادة من الخدمات الإلكترونية",
