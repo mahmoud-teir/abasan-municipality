@@ -131,7 +131,7 @@ export function Header() {
                             </SheetTrigger>
                             <SheetContent side="right">
                                 <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                                <div className="flex flex-col gap-6 mt-8">
+                                <div className="flex flex-col gap-6 mt-8 h-[calc(100vh-80px)] overflow-y-auto pb-8 scrollbar-custom [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 [&::-webkit-scrollbar-track]:bg-transparent">
                                     <nav className="flex flex-col gap-2">
                                         {links.map((link) => (
                                             <Link
