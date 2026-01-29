@@ -14,6 +14,14 @@ export const sendResetPasswordEmail = async ({
         return { error: 'Email service not configured' };
     }
 
+    // Fix for production if BETTER_AUTH_URL is mistakenly set to localhost
+    let resetUrl = url;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+    if (appUrl && !appUrl.includes('localhost') && url.includes('localhost:3000')) {
+        resetUrl = url.replace('http://localhost:3000', appUrl);
+    }
+
     try {
         const { data, error } = await resend.emails.send({
             from: 'Abasan Municipality <onboarding@resend.dev>',
@@ -24,7 +32,7 @@ export const sendResetPasswordEmail = async ({
                     <h2>Reset Your Password</h2>
                     <p>You requested a password reset for your Abasan Municipality account.</p>
                     <p>Click the button below to reset your password:</p>
-                    <a href="${url}" style="background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
+                    <a href="${resetUrl}" style="background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">
                         Reset Password
                     </a>
                     <p>If you didn't request this, you can safely ignore this email.</p>
