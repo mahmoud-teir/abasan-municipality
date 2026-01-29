@@ -1,88 +1,40 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { createWorker } from 'tesseract.js';
-import { Loader2, ScanFace, Camera, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Loader2, ScanFace, Camera, CheckCircle2, Upload } from 'lucide-react';
 import { useSession } from '@/lib/auth/auth-client';
 import { verifyUser } from '@/actions/user.actions';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getDashboardLink } from '@/lib/role-utils';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export function IdVerification() {
     const { data: session, refetch } = useSession();
     const router = useRouter();
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const [stream, setStream] = useState<MediaStream | null>(null);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [capturedFile, setCapturedFile] = useState<File | null>(null);
-    const [cameraActive, setCameraActive] = useState(false);
     const [scanning, setScanning] = useState(false);
 
-    // Cleanup stream on unmount
-    useEffect(() => {
-        return () => {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-        };
-    }, [stream]);
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setCapturedFile(file);
 
-    const startCamera = async () => {
-        try {
-            setCapturedImage(null);
-            setCapturedFile(null);
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' } // Prefer back camera on mobile
-            });
-            setStream(mediaStream);
-            if (videoRef.current) {
-                videoRef.current.srcObject = mediaStream;
-            }
-            setCameraActive(true);
-        } catch (error) {
-            console.error(error);
-            toast.error('Could not access camera. Please allow camera permissions.');
-        }
-    };
-
-    const stopCamera = () => {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            setStream(null);
-        }
-        setCameraActive(false);
-    };
-
-    const capturePhoto = () => {
-        if (videoRef.current && canvasRef.current) {
-            const video = videoRef.current;
-            const canvas = canvasRef.current;
-            const context = canvas.getContext('2d');
-
-            if (context) {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                const dataUrl = canvas.toDataURL('image/png');
-                setCapturedImage(dataUrl);
-
-                // Convert to File object for Tesseract
-                canvas.toBlob((blob) => {
-                    if (blob) {
-                        const file = new File([blob], "id-capture.png", { type: "image/png" });
-                        setCapturedFile(file);
-                    }
-                }, 'image/png');
-
-                stopCamera();
-            }
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                if (ev.target?.result) {
+                    setCapturedImage(ev.target.result as string);
+                }
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -152,60 +104,45 @@ export function IdVerification() {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <ScanFace className="w-6 h-6 text-primary" />
-                    Identity Verification (Camera Only)
+                    Identity Verification
                 </CardTitle>
                 <CardDescription>
                     Please use your camera to take a clear photo of your National ID ({(session?.user as any)?.nationalId}).
-                    <strong> Use good lighting.</strong>
+                    <strong> Ensure the ID number is clearly visible.</strong>
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div className="relative rounded-lg overflow-hidden bg-black/10 aspect-video flex items-center justify-center border-2 border-dashed">
+                <div className="space-y-4">
+                    <div className="relative rounded-lg overflow-hidden bg-slate-100 border-2 border-dashed border-slate-300 aspect-video flex flex-col items-center justify-center group hover:bg-slate-50 transition-colors">
+                        {capturedImage ? (
+                            <>
+                                <Image src={capturedImage} alt="Captured ID" fill className="object-contain" />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <p className="text-white font-medium">Click to retake</p>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex flex-col items-center p-8 text-center text-muted-foreground">
+                                <Camera className="w-12 h-12 mb-4 opacity-50" />
+                                <p>Click to open Camera</p>
+                            </div>
+                        )}
 
-                    {!cameraActive && !capturedImage && (
-                        <div className="flex flex-col items-center p-8 text-center text-muted-foreground">
-                            <Camera className="w-12 h-12 mb-4 opacity-50" />
-                            <p>Camera permission required</p>
-                        </div>
-                    )}
+                        {/* Native File Input covering the area */}
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            onChange={handleFileChange}
+                        />
+                    </div>
 
-                    {/* Live Video Feed */}
-                    <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        className={`absolute inset-0 w-full h-full object-cover ${!cameraActive ? 'hidden' : ''}`}
-                    />
-
-                    {/* Captured Image Preview */}
-                    {capturedImage && !cameraActive && (
-                        <div className="absolute inset-0 w-full h-full bg-background">
-                            <Image src={capturedImage} alt="Captured ID" fill className="object-contain" />
-                        </div>
-                    )}
-
-                    {/* Hidden Canvas for capture processing */}
-                    <canvas ref={canvasRef} className="hidden" />
-                </div>
-
-                <div className="flex gap-4">
-                    {!cameraActive && !capturedImage && (
-                        <Button className="w-full" onClick={startCamera}>
-                            <Camera className="mr-2 h-4 w-4" /> Start Camera
-                        </Button>
-                    )}
-
-                    {cameraActive && (
-                        <Button className="w-full" variant="destructive" onClick={capturePhoto}>
-                            <ScanFace className="mr-2 h-4 w-4" /> Capture Photo
-                        </Button>
-                    )}
-
-                    {capturedImage && !scanning && (
-                        <Button className="w-full" variant="outline" onClick={startCamera}>
-                            <RefreshCw className="mr-2 h-4 w-4" /> Retake
-                        </Button>
-                    )}
+                    <div className="flex justify-center">
+                        <p className="text-xs text-muted-foreground text-center">
+                            Tap the box above to open your camera. Make sure your National ID is legible.
+                        </p>
+                    </div>
                 </div>
 
                 {capturedImage && (
