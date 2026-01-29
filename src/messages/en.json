@@ -69,7 +69,8 @@
             "registerNow": "Register now",
             "loading": "Logging in...",
             "success": "Logged in successfully",
-            "error": "An error occurred during login"
+            "error": "An error occurred during login",
+            "invalidNationalId": "Invalid National ID"
         },
         "forgotPassword": {
             "title": "Forgot Password?",

@@ -38,6 +38,43 @@ export function IdVerification() {
         }
     };
 
+    const preprocessImage = (file: File): Promise<string> => {
+        return new Promise((resolve) => {
+            const img = new window.Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                if (!ctx) {
+                    resolve(URL.createObjectURL(file));
+                    return;
+                }
+
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+
+                // Simple grayscale + contrast
+                for (let i = 0; i < data.length; i += 4) {
+                    const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                    // Boost contrast
+                    const contrastFactor = 1.2; // Increase contrast by 20%
+                    const newColor = ((avg - 128) * contrastFactor) + 128;
+
+                    data[i] = newColor;     // red
+                    data[i + 1] = newColor; // green
+                    data[i + 2] = newColor; // blue
+                }
+
+                ctx.putImageData(imageData, 0, 0);
+                resolve(canvas.toDataURL('image/jpeg'));
+            };
+            img.src = URL.createObjectURL(file);
+        });
+    };
+
     const handleScan = async () => {
         if (!capturedFile || !(session?.user as any)?.nationalId) {
             toast.error('Please capture an ID image first.');
@@ -47,18 +84,36 @@ export function IdVerification() {
         setScanning(true);
 
         try {
+            // Helper to clean text: keep only digits
+            const clean = (str: string) => str.replace(/[^0-9]/g, '');
+            const targetId = clean((session?.user as any)?.nationalId);
+
+            if (!targetId) {
+                toast.error('Your profile does not have a valid National ID to check against.');
+                setScanning(false);
+                return;
+            }
+
             const worker = await createWorker('eng');
 
-            const ret = await worker.recognize(capturedFile);
-            const text = ret.data.text;
+            // 1. Try with original image
+            let ret = await worker.recognize(capturedFile);
+            let text = ret.data.text;
+            let found = clean(text).includes(targetId);
 
-            console.log('Recognized text:', text);
+            // 2. If failed, try with preprocessed image
+            if (!found) {
+                console.log('Direct scan failed, trying preprocessed image...');
+                const preprocessedDataUrl = await preprocessImage(capturedFile);
+                ret = await worker.recognize(preprocessedDataUrl);
+                text = ret.data.text;
+                found = clean(text).includes(targetId);
+            }
+
+            console.log('Final Recognized text:', text);
             await worker.terminate();
 
-            const nationalId = (session?.user as any)?.nationalId;
-            const cleanText = text.replace(/\s+/g, '');
-
-            if (cleanText.includes(nationalId)) {
+            if (found) {
                 toast.success('Identity Verified Successfully!');
                 if (!session?.user?.id) return;
                 const result = await verifyUser(session.user.id, true);
