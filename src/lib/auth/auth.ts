@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import prisma from '@/lib/db/prisma';
 import { banPlugin } from './plugins/ban-plugin';
+import { sendResetPasswordEmail } from '@/lib/email';
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -11,10 +12,10 @@ export const auth = betterAuth({
         enabled: true,
         requireEmailVerification: false, // Set to true in production
         sendResetPassword: async ({ user, url }) => {
-            console.log('----------------------------------------');
-            console.log(`Reset Password Link for ${user.email}:`);
-            console.log(url);
-            console.log('----------------------------------------');
+            await sendResetPasswordEmail({
+                email: user.email,
+                url,
+            });
         },
     },
     session: {
