@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
     async function onSubmit(data: ForgotPasswordInput) {
         setLoading(true);
         try {
-            const { error } = await (authClient as any).forgetPassword({
+            const { error } = await (authClient as any).requestPasswordReset({
                 email: data.email,
                 redirectTo: '/reset-password', // This will be appended to the reset link
             });

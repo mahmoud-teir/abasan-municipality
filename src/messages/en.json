@@ -726,5 +726,34 @@
         "guestDesc": "Browse common questions below, or login to chat with an agent.",
         "commonQuestions": "Common Questions",
         "endChat": "End Chat"
+    },
+    "privacy": {
+        "title": "Privacy Policy",
+        "lastUpdated": "Last Updated: January 2026",
+        "intro": "At Abasan Alkabera Municipality, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information when you use our digital services.",
+        "collection": {
+            "title": "Information We Collect",
+            "text": "We collect information that you provide directly to us, such as when you create an account, submit a request, or contact us. This may include your name, national ID, email address, phone number, and any documents you upload."
+        },
+        "usage": {
+            "title": "How We Use Information",
+            "text": "We use your information to provide and improve our services, process your requests (such as building permits or complaints), communicate with you, and ensure the security of our platform."
+        },
+        "sharing": {
+            "title": "Information Sharing",
+            "text": "We do not sell your personal information. We may share your information with other government entities only when necessary to process your requests or as required by law."
+        },
+        "security": {
+            "title": "Data Security",
+            "text": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction."
+        },
+        "cookies": {
+            "title": "Cookies",
+            "text": "We use cookies to enhance your experience on our website. You can control cookie preferences through your browser settings."
+        },
+        "contact": {
+            "title": "Contact Us",
+            "text": "If you have any questions about this Privacy Policy, please contact us at info@abasan.mun.ps."
+        }
     }
 }

@@ -49,6 +49,7 @@ export function Footer({ socialLinks }: FooterProps) {
                             <li><Link href="/services" className="hover:text-primary transition-colors flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>{tNav('services')}</Link></li>
                             <li><Link href="/news" className="hover:text-primary transition-colors flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>{tNav('news')}</Link></li>
                             <li><Link href="/contact" className="hover:text-primary transition-colors flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>{tNav('contact')}</Link></li>
+                            <li><Link href="/privacy" className="hover:text-primary transition-colors flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>{useTranslations('privacy')('title')}</Link></li>
                         </ul>
                     </div>
 
