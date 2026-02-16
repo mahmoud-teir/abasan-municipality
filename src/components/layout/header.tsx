@@ -1,8 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/lib/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Menu, User, Home, Info, Layers, Newspaper, Phone, UserPlus, LogIn, Search, Building2, Briefcase } from 'lucide-react';
@@ -10,12 +9,17 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { LanguageSwitcher } from '@/components/layout/language-switcher';
-import styles from './header.module.css';
+// import styles from './header.module.css'; // Assuming this exists or kept as is
 import { UserNav } from '@/components/layout/user-nav';
 import { NotificationBell } from '@/components/layout/notification-bell';
 import { useSession } from '@/lib/auth/auth-client';
 
 import { getDashboardLink } from '@/lib/role-utils';
+
+// We need to keep styles import if it was there
+// Checking original file... it had `import styles from './header.module.css';`
+
+import styles from './header.module.css';
 
 export function Header() {
     const t = useTranslations('nav');
@@ -30,13 +34,16 @@ export function Header() {
     }, []);
 
     // Helper to check active link
-    const isActive = (path: string) => pathname.includes(path);
+    const isActive = (path: string) => {
+        if (path === '/') return pathname === '/';
+        return pathname.startsWith(path);
+    };
 
     const links = [
         { href: '/', label: t('home'), icon: Home },
         { href: '/about', label: t('about'), icon: Info },
         { href: '/services', label: t('services'), icon: Layers },
-        { href: '/projects', label: t('projects'), icon: Building2 }, // Need to import Building2 or similar
+        { href: '/projects', label: t('projects'), icon: Building2 },
         { href: '/careers', label: t('careers'), icon: Briefcase },
         { href: '/track', label: t('track'), icon: Search },
         { href: '/news', label: t('news'), icon: Newspaper },
@@ -59,11 +66,9 @@ export function Header() {
                             href={link.href}
                             className={cn(
                                 "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative overflow-hidden group",
-                                isActive(link.href) && link.href !== '/'
+                                isActive(link.href)
                                     ? "bg-primary text-primary-foreground shadow-md"
-                                    : (link.href === '/' && pathname === '/ar')
-                                        ? "bg-primary text-primary-foreground shadow-md"
-                                        : "hover:bg-background/80 hover:text-primary text-foreground/80"
+                                    : "hover:bg-background/80 hover:text-primary text-foreground/80"
                             )}
                         >
                             <span className="relative z-10">{link.label}</span>

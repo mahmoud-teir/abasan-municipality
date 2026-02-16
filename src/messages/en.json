@@ -23,6 +23,22 @@
         "track": "Track Status",
         "verification": "Identity Verification"
     },
+    "verification": {
+        "title": "Identity Verification",
+        "description": "Please use your camera to take a clear photo of your National ID.",
+        "ensureVisible": "Ensure the ID number is clearly visible.",
+        "clickToRetake": "Click to retake",
+        "clickToOpen": "Click to open Camera",
+        "tapHint": "Tap the box above to open your camera. Make sure your National ID is legible.",
+        "submit": "Submit Verification",
+        "scanningHint": "Scanning... This may take a moment.",
+        "verified": "Account Verified",
+        "verifiedDescription": "Your identity has been verified successfully.",
+        "goToDashboard": "Go to Dashboard",
+        "missingNationalIdTitle": "National ID Required",
+        "missingNationalIdDescription": "You need to set your National ID number in your profile settings before you can verify your identity.",
+        "goToSettings": "Go to Profile Settings"
+    },
     "home": {
         "hero": {
             "title": "Abasan Alkabera Municipality",

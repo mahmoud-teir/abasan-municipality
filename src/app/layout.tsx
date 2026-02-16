@@ -41,7 +41,16 @@ export default async function RootLayout({
     getSystemSetting('font_english'),
   ]);
 
-  const themeClass = theme === 'green' ? 'theme-green' : '';
+  const getThemeClass = (theme: string | null) => {
+    if (!theme || theme === 'default') return 'theme-blue'; // Default is now explicitly blue class or variables
+    if (theme === 'green') return 'theme-green';
+    if (theme === 'red') return 'theme-red';
+    if (theme === 'violet') return 'theme-violet';
+    if (theme === 'orange') return 'theme-orange';
+    return '';
+  };
+
+  const themeClass = getThemeClass(theme);
 
   // Resolve fonts (default to Cairo and Outfit)
   const arabicFont = ARABIC_FONTS[(fontArabicKey as ArabicFontKey) || 'cairo'] || ARABIC_FONTS.cairo;

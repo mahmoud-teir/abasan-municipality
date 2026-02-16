@@ -19,7 +19,7 @@ import { Loader2, ArrowLeft } from 'lucide-react';
 import { authClient } from '@/lib/auth/auth-client';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import Link from 'next/link';
+import { Link } from '@/lib/navigation';
 
 const forgotPasswordSchema = z.object({
     email: z.string().email('Please enter a valid email address'),

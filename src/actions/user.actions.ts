@@ -149,7 +149,15 @@ export async function updateUserRole(userId: string, role: string) {
 }
 
 /**
- * Verify User (Manual Identity Verification)
+ * Verify User (Identity Verification)
+ * 
+ * NOTE: The `emailVerified` field is used as the identity verification status
+ * (not just email verification). This is by design — the field serves as the
+ * single "account verified" flag checked by VerificationGuard and admin panel.
+ * 
+ * Authorization:
+ * - SUPER_ADMIN / ADMIN: Can verify/unverify any user
+ * - CITIZEN (self): Can verify themselves via OCR (id-verification component)
  */
 export async function verifyUser(userId: string, isVerified: boolean) {
     try {
@@ -157,7 +165,7 @@ export async function verifyUser(userId: string, isVerified: boolean) {
             headers: await headers()
         });
 
-        if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN')) {
+        if (!session) {
             return { success: false, error: 'Unauthorized' };
         }
 
@@ -168,21 +176,16 @@ export async function verifyUser(userId: string, isVerified: boolean) {
 
         if (!targetUser) return { success: false, error: 'User not found' };
 
-        // Logic:
-        // 1. If I am SUPER_ADMIN, I can verify anyone.
-        // 2. If I am the user (Self Verification), I can verify myself ONLY IF I am a CITIZEN.
-        // 3. Otherwise, Forbidden.
-
-        const isSuperAdmin = session.user.role === 'SUPER_ADMIN';
+        const isAdmin = session.user.role === 'SUPER_ADMIN' || session.user.role === 'ADMIN';
         const isSelf = session.user.id === userId;
-        const isCitizen = targetUser.role === 'CITIZEN' || targetUser.role === null; // Default to citizen if null
+        const isCitizen = targetUser.role === 'CITIZEN' || targetUser.role === null;
 
-        if (isSuperAdmin) {
-            // Authorized
+        if (isAdmin) {
+            // Admins can verify/unverify anyone
         } else if (isSelf && isCitizen) {
-            // Authorized (Self Verification for Citizens)
+            // Citizens can self-verify via OCR flow
         } else {
-            return { success: false, error: 'Unauthorized: Only Super Admin can verify manually.' };
+            return { success: false, error: 'Unauthorized: Insufficient permissions.' };
         }
 
         await prisma.user.update({

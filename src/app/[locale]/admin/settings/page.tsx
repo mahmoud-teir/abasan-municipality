@@ -4,11 +4,12 @@ import { ProfileForm } from '@/components/shared/profile-form';
 import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { ThemeSelector } from '@/components/admin/theme-selector';
+import { ThemeSelector } from '@/components/admin/settings/theme-selector';
 import { getSystemSetting } from '@/actions/settings.actions';
 import { AboutImageManager } from '@/components/admin/about-image-manager';
-import { FontSelector } from '@/components/admin/font-selector';
+import { FontSelector } from '@/components/admin/settings/font-selector';
 import { BackupCard } from '@/components/admin/settings/backup-card';
+import { ARABIC_FONTS, ENGLISH_FONTS } from '@/lib/fonts';
 import { Lightbulb, MessageCircle, MonitorPlay } from 'lucide-react';
 import Link from 'next/link';
 import { MaintenanceToggle } from '@/components/admin/settings/maintenance-toggle';
@@ -78,11 +79,24 @@ export default async function AdminSettingsPage() {
                         website: website || ''
                     }} />
                     <div className="space-y-8">
-                        <ThemeSelector currentTheme={theme} />
-                        <FontSelector
-                            currentArabicFont={fontArabic}
-                            currentEnglishFont={fontEnglish}
-                        />
+                        <ThemeSelector currentTheme={theme || 'default'} />
+                        <div className="space-y-4">
+                            <h3 className="text-sm font-medium">Typography</h3>
+                            <div className="grid gap-4">
+                                <FontSelector
+                                    type="arabic"
+                                    currentFont={fontArabic || 'cairo'}
+                                    fonts={ARABIC_FONTS}
+                                    label="Arabic Font"
+                                />
+                                <FontSelector
+                                    type="english"
+                                    currentFont={fontEnglish || 'outfit'}
+                                    fonts={ENGLISH_FONTS}
+                                    label="English Font"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
 

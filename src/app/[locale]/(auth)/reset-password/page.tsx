@@ -19,8 +19,8 @@ import { Loader2, ArrowLeft } from 'lucide-react';
 import { authClient } from '@/lib/auth/auth-client';
 import { useState, Suspense } from 'react';
 import { toast } from 'sonner';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useRouter, Link } from '@/lib/navigation';
 
 function ResetPasswordForm() {
     const t = useTranslations('auth.resetPassword');
