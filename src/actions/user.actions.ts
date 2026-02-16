@@ -194,6 +194,7 @@ export async function verifyUser(userId: string, isVerified: boolean) {
         });
 
         revalidatePath('/admin/users');
+        revalidatePath('/citizen/verification');
         return { success: true };
     } catch (error) {
         console.error('Error verifying user:', error);

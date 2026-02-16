@@ -30,6 +30,7 @@ export function IdVerification() {
     const [scanProgress, setScanProgress] = useState('');
     const [worker, setWorker] = useState<Tesseract.Worker | null>(null);
     const [workerLoading, setWorkerLoading] = useState(false);
+    const [verified, setVerified] = useState(false);
 
     const userNationalId = (session?.user as any)?.nationalId as string | undefined;
 
@@ -210,15 +211,16 @@ export function IdVerification() {
             }
 
             if (found) {
-                toast.success(t('success'));
                 if (!session?.user?.id) return;
 
                 setScanProgress(t('updating'));
                 const result = await verifyUser(session.user.id, true);
 
                 if (result.success) {
-                    await refetch();
-                    router.refresh();
+                    // Set local state immediately to prevent showing the form again
+                    setVerified(true);
+                    toast.success(t('success'));
+                    // Redirect after a brief delay so user sees the success message
                     setTimeout(() => {
                         if (session?.user) {
                             router.push(`/${locale}${getDashboardLink((session.user as any).role)}`);
@@ -244,7 +246,7 @@ export function IdVerification() {
     };
 
     // Already verified state
-    if (session?.user?.emailVerified) {
+    if (verified || session?.user?.emailVerified) {
         return (
             <div className="flex flex-col items-center justify-center p-8 text-center space-y-4">
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
