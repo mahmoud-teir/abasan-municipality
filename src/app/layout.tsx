@@ -56,6 +56,28 @@ export default async function RootLayout({
   const arabicFont = ARABIC_FONTS[(fontArabicKey as ArabicFontKey) || 'cairo'] || ARABIC_FONTS.cairo;
   const englishFont = ENGLISH_FONTS[(fontEnglishKey as EnglishFontKey) || 'outfit'] || ENGLISH_FONTS.outfit;
 
+  // Map font keys to their CSS variable names (must match fonts.ts)
+  const ARABIC_FONT_VARS: Record<string, string> = {
+    cairo: '--font-cairo',
+    tajawal: '--font-tajawal',
+    ibm_plex_sans_arabic: '--font-ibm-plex-sans-arabic',
+    noto_kufi_arabic: '--font-noto-kufi-arabic',
+    almarai: '--font-almarai',
+    amiri: '--font-amiri',
+    readex_pro: '--font-readex-pro',
+  };
+
+  const ENGLISH_FONT_VARS: Record<string, string> = {
+    outfit: '--font-outfit',
+    inter: '--font-inter',
+    roboto: '--font-roboto',
+    open_sans: '--font-open-sans',
+    lato: '--font-lato',
+  };
+
+  const arabicVar = ARABIC_FONT_VARS[(fontArabicKey as string) || 'cairo'] || '--font-cairo';
+  const englishVar = ENGLISH_FONT_VARS[(fontEnglishKey as string) || 'outfit'] || '--font-outfit';
+
   return (
     <html suppressHydrationWarning>
       <body
@@ -63,8 +85,8 @@ export default async function RootLayout({
         className={`${arabicFont.variable} ${englishFont.variable} font-sans antialiased ${themeClass}`}
         style={
           {
-            '--font-arabic': `var(${arabicFont.variable})`,
-            '--font-english': `var(${englishFont.variable})`,
+            '--font-arabic': `var(${arabicVar})`,
+            '--font-english': `var(${englishVar})`,
           } as React.CSSProperties
         }
       >

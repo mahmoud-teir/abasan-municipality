@@ -21,6 +21,7 @@ const THEMES = [
 
 export function ThemeSelector({ currentTheme }: ThemeSelectorProps) {
     const [selected, setSelected] = useState(currentTheme || 'default');
+    console.log('Current Props Theme in Selector:', currentTheme);
     const [pending, startTransition] = useTransition();
 
     const onSelect = (themeId: string) => {

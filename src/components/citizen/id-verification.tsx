@@ -167,7 +167,7 @@ export function IdVerification() {
 
         } catch (error) {
             console.error('OCR Error:', error);
-            toast.error('Error processing image. Please try again.');
+            toast.error(`Error processing image: ${(error as any)?.message || error}`);
         } finally {
             setScanning(false);
             setScanProgress('');

@@ -27,7 +27,7 @@ export async function updateSystemSetting(key: string, value: string) {
             update: { value },
             create: { key, value },
         });
-        revalidatePath('/');
+        revalidatePath('/', 'layout');
         return { success: true };
     } catch (error) {
         console.error('Failed to update system setting:', error);
@@ -46,7 +46,7 @@ export async function updateSystemSettings(settings: Record<string, string>) {
         );
 
         await prisma.$transaction(transactions);
-        revalidatePath('/');
+        revalidatePath('/', 'layout');
         return { success: true };
     } catch (error) {
         console.error('Failed to update system settings:', error);
