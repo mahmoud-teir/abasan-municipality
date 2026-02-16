@@ -69,57 +69,82 @@ export function MapPicker({ value, onChange }: MapPickerProps) {
         }
 
         setIsLocating(true);
+
+        const onSuccess = (geoPosition: GeolocationPosition, isFinal: boolean) => {
+            const newPos: [number, number] = [geoPosition.coords.latitude, geoPosition.coords.longitude];
+            const locationAccuracy = geoPosition.coords.accuracy;
+
+            handleSetPosition(newPos);
+            setAccuracy(locationAccuracy);
+
+            // Fly to the new position with smooth animation
+            if (mapRef.current) {
+                mapRef.current.flyTo(newPos, 17, {
+                    duration: 1.5,
+                    easeLinearity: 0.25
+                });
+            }
+
+            console.log(`Location (${isFinal ? 'high' : 'low'} accuracy):`, locationAccuracy + 'm');
+
+            if (isFinal) {
+                setIsLocating(false);
+            }
+        };
+
+        const onError = (error: GeolocationPositionError) => {
+            console.error('Geolocation error:', error);
+            setIsLocating(false);
+
+            let errorMessage = '';
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = 'Permission denied. Please allow location access.\nتم رفض الإذن. يرجى السماح بالوصول إلى الموقع.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = 'Location information unavailable.\nمعلومات الموقع غير متوفرة.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = 'Location request timed out. Please try again.\nانتهت مهلة طلب الموقع. حاول مرة أخرى.';
+                    break;
+                default:
+                    errorMessage = 'Unable to get your location.\nلا يمكن الحصول على موقعك.';
+            }
+            alert(errorMessage);
+        };
+
+        // Step 1: Get a FAST position first (WiFi/cell tower — low accuracy but instant)
         navigator.geolocation.getCurrentPosition(
-            (geoPosition) => {
-                const newPos: [number, number] = [geoPosition.coords.latitude, geoPosition.coords.longitude];
-                const locationAccuracy = geoPosition.coords.accuracy;
+            (pos) => {
+                onSuccess(pos, false);
 
-                handleSetPosition(newPos);
-                setAccuracy(locationAccuracy);
-
-                // Fly to the new position with smooth animation
-                if (mapRef.current) {
-                    mapRef.current.flyTo(newPos, 17, {
-                        duration: 1.5,
-                        easeLinearity: 0.25
-                    });
-                }
-
-                // Show accuracy info
-                const accuracyMsg = locationAccuracy < 50
-                    ? `موقع دقيق جداً (${Math.round(locationAccuracy)}م)\nVery accurate (${Math.round(locationAccuracy)}m)`
-                    : locationAccuracy < 100
-                        ? `دقة جيدة (${Math.round(locationAccuracy)}م)\nGood accuracy (${Math.round(locationAccuracy)}m)`
-                        : `دقة متوسطة (${Math.round(locationAccuracy)}م)\nModerate accuracy (${Math.round(locationAccuracy)}m)\n\nنصيحة: فعّل GPS للحصول على دقة أفضل\nTip: Enable GPS for better accuracy`;
-
-                console.log('Location accuracy:', locationAccuracy + 'm');
-
-                setIsLocating(false);
+                // Step 2: Refine with high-accuracy GPS in the background (longer timeout)
+                navigator.geolocation.getCurrentPosition(
+                    (precisePos) => onSuccess(precisePos, true),
+                    () => setIsLocating(false), // Silently fail — we already have a position
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 30000,
+                        maximumAge: 0
+                    }
+                );
             },
+            // If even low-accuracy fails, try high-accuracy as fallback
             (error) => {
-                console.error('Geolocation error:', error);
-                setIsLocating(false);
-
-                let errorMessage = '';
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage = 'Permission denied. Please allow location access.\nتم رفض الإذن. يرجى السماح بالوصول إلى الموقع.';
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage = 'Location information unavailable.\nمعلومات الموقع غير متوفرة.';
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage = 'Location request timed out.\nانتهت مهلة طلب الموقع.';
-                        break;
-                    default:
-                        errorMessage = 'Unable to get your location.\nلا يمكن الحصول على موقعك.';
-                }
-                alert(errorMessage);
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => onSuccess(pos, true),
+                    onError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 30000,
+                        maximumAge: 60000
+                    }
+                );
             },
             {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
+                enableHighAccuracy: false,
+                timeout: 5000,
+                maximumAge: 60000
             }
         );
     };
