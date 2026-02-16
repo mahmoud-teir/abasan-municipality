@@ -25,8 +25,48 @@ export function IdVerification() {
     const [capturedFile, setCapturedFile] = useState<File | null>(null);
     const [scanning, setScanning] = useState(false);
     const [scanProgress, setScanProgress] = useState('');
+    const [worker, setWorker] = useState<Tesseract.Worker | null>(null);
+    const [workerLoading, setWorkerLoading] = useState(false);
 
     const userNationalId = (session?.user as any)?.nationalId as string | undefined;
+
+    // Initialize worker on mount
+    useEffect(() => {
+        const initWorker = async () => {
+            setWorkerLoading(true);
+            try {
+                const w = await createWorker(['eng', 'ara'], 1, {
+                    workerPath: '/tesseract/worker.min.js',
+                    corePath: '/tesseract/tesseract-core-simd.wasm.js',
+                    langPath: '/tesseract/lang-data',
+                    gzip: true,
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            // Progress updates are handled during recognition
+                        }
+                    }
+                });
+                setWorker(w);
+            } catch (err) {
+                console.error('Failed to initialize OCR worker:', err);
+                toast.error(t('initializingError') || 'Failed to initialize OCR engine');
+            } finally {
+                setWorkerLoading(false);
+            }
+        };
+
+        if (!worker && !workerLoading) {
+            initWorker();
+        }
+
+        return () => {
+            // Cleanup worker on unmount
+            if (worker) {
+                worker.terminate();
+            }
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -44,13 +84,13 @@ export function IdVerification() {
         }
     };
 
-    // Auto-scan when file is captured
+    // Auto-scan when file is captured and worker is ready
     useEffect(() => {
-        if (capturedFile && userNationalId && !scanning) {
+        if (capturedFile && userNationalId && !scanning && worker) {
             handleScan();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [capturedFile]);
+    }, [capturedFile, worker]);
 
     /**
      * Preprocess image: grayscale + contrast boost + sharpen for better OCR results
@@ -105,46 +145,27 @@ export function IdVerification() {
     };
 
     const handleScan = async () => {
-        if (!capturedFile) return;
+        if (!capturedFile || !worker) return;
 
         if (!userNationalId) {
-            toast.error('Your profile does not have a National ID number. Please update your profile first.');
+            toast.error(t('missingNationalIdTitle'));
             return;
         }
 
         setScanning(true);
-        setScanProgress(t?.('initializing') || 'Initializing OCR engine...');
+        setScanProgress(t('processing'));
 
         try {
-            // Use local resources to avoid CDN/Network blocking
-            const worker = await createWorker(['eng', 'ara'], 1, {
-                workerPath: '/tesseract/worker.min.js',
-                corePath: '/tesseract/tesseract-core-simd.wasm.js',
-                langPath: '/tesseract/lang-data',
-                gzip: false, // We downloaded compiled .traineddata (not .gz) or we can use .gz if we enable this. I downloaded without .gz extension in command but name was .traineddata. Wait, I used -o .../eng.traineddata.gz but url was raw/main/eng.traineddata (which is actuall uncompressed usually? No, tessdata_fast is usually uncompressed? No, actually fast is smaller. Let's check file header later. 
-                // Actually, I named them .gz in the curl command. If they are NOT gzip, this will fail.
-                // Standard Tesseract.js usually expects .gz. 
-                // Let's assume I downloaded them as-is. If the source is uncompressed, I should rename them or set gzip: false.
-                // NOTE: GitHub raw content for traineddata is BINARY.
-                // Safest bet: set gzip: false and use the files as is, assuming direct download.
-                // Correct config:
-                logger: m => {
-                    if (m.status === 'recognizing text') {
-                        setScanProgress(`${t?.('processing') || 'Processing'} (${Math.round(m.progress * 100)}%)`);
-                    }
-                }
-            });
-
             let found = false;
 
             // Strategy 1: Try original image
-            setScanProgress(t?.('scanningOriginal') || 'Scanning original image...');
+            setScanProgress(t('scanningOriginal'));
             let ret = await worker.recognize(capturedFile);
             found = findNationalIdInText(ret.data.text, userNationalId);
 
             // Strategy 2: Try preprocessed image (grayscale + contrast)
             if (!found) {
-                setScanProgress(t?.('enhancing') || 'Enhancing image and retrying...');
+                setScanProgress(t('enhancing'));
                 const preprocessedUrl = await preprocessImage(capturedFile);
                 ret = await worker.recognize(preprocessedUrl);
                 found = findNationalIdInText(ret.data.text, userNationalId);
@@ -152,19 +173,17 @@ export function IdVerification() {
 
             // Strategy 3: Try with 2x scaled image for small text
             if (!found) {
-                setScanProgress(t?.('enlarging') || 'Trying with enlarged image...');
+                setScanProgress(t('enlarging'));
                 const scaledUrl = await preprocessImage(capturedFile, 2);
                 ret = await worker.recognize(scaledUrl);
                 found = findNationalIdInText(ret.data.text, userNationalId);
             }
 
-            await worker.terminate();
-
             if (found) {
-                toast.success(t?.('success') || 'Identity Verified Successfully! ✅');
+                toast.success(t('success'));
                 if (!session?.user?.id) return;
 
-                setScanProgress(t?.('updating') || 'Updating verification status...');
+                setScanProgress(t('updating'));
                 const result = await verifyUser(session.user.id, true);
 
                 if (result.success) {
@@ -176,18 +195,18 @@ export function IdVerification() {
                         }
                     }, 2000);
                 } else {
-                    toast.error(result.error || 'Failed to update status on server.');
+                    toast.error(result.error || t('failed'));
                 }
             } else {
                 toast.error(
-                    t?.('failed') || 'Verification Failed. Could not find your National ID number in the image.',
+                    t('failed'),
                     { duration: 6000 }
                 );
             }
 
         } catch (error) {
             console.error('OCR Error:', error);
-            toast.error(`Error processing image: ${(error as any)?.message || error}`);
+            toast.error(`${t('failed')} ${(error as any)?.message || ''}`);
         } finally {
             setScanning(false);
             setScanProgress('');
@@ -202,13 +221,13 @@ export function IdVerification() {
                     <CheckCircle2 className="w-10 h-10 text-green-600" />
                 </div>
                 <h2 className="text-2xl font-bold text-green-700">
-                    {t?.('verified') || 'Account Verified'}
+                    {t('verified')}
                 </h2>
                 <p className="text-muted-foreground">
-                    {t?.('verifiedDescription') || 'Your identity has been verified successfully.'}
+                    {t('verifiedDescription')}
                 </p>
                 <Button onClick={() => session?.user && router.push(`/${locale}${getDashboardLink((session.user as any).role)}`)}>
-                    {t?.('goToDashboard') || 'Go to Dashboard'}
+                    {t('goToDashboard')}
                 </Button>
             </div>
         );
@@ -221,16 +240,16 @@ export function IdVerification() {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-amber-600">
                         <AlertTriangle className="w-6 h-6" />
-                        {t?.('missingNationalIdTitle') || 'National ID Required'}
+                        {t('missingNationalIdTitle')}
                     </CardTitle>
                     <CardDescription>
-                        {t?.('missingNationalIdDescription') || 'You need to set your National ID number in your profile settings before you can verify your identity.'}
+                        {t('missingNationalIdDescription')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Link href={`/${locale}/citizen/settings`}>
                         <Button className="w-full">
-                            {t?.('goToSettings') || 'Go to Profile Settings'}
+                            {t('goToSettings')}
                         </Button>
                     </Link>
                 </CardContent>
@@ -243,12 +262,12 @@ export function IdVerification() {
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <ScanFace className="w-6 h-6 text-primary" />
-                    {t?.('title') || 'Identity Verification'}
+                    {t('title')}
                 </CardTitle>
                 <CardDescription>
-                    {t?.('description') || 'Please use your camera to take a clear photo of your National ID.'}{' '}
+                    {t('description')}{' '}
                     ({userNationalId}).
-                    <strong> {t?.('ensureVisible') || 'Ensure the ID number is clearly visible.'}</strong>
+                    <strong> {t('ensureVisible')}</strong>
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -259,14 +278,20 @@ export function IdVerification() {
                                 <Image src={capturedImage} alt="Captured ID" fill className="object-contain" />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <p className="text-white font-medium">
-                                        {t?.('clickToRetake') || 'Click to retake'}
+                                        {t('clickToRetake')}
                                     </p>
                                 </div>
                             </>
                         ) : (
                             <div className="flex flex-col items-center p-8 text-center text-muted-foreground">
-                                <Camera className="w-12 h-12 mb-4 opacity-50" />
-                                <p>{t?.('clickToOpen') || 'Click to open Camera'}</p>
+                                <Loader2 className={`w-12 h-12 mb-4 ${workerLoading ? 'animate-spin text-primary' : 'opacity-50'}`} />
+                                {workerLoading ? (
+                                    <p>{t('initializing')}</p>
+                                ) : (
+                                    <>
+                                        <p>{t('clickToOpen')}</p>
+                                    </>
+                                )}
                             </div>
                         )}
 
@@ -277,12 +302,13 @@ export function IdVerification() {
                             capture="environment"
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                             onChange={handleFileChange}
+                            disabled={workerLoading || scanning}
                         />
                     </div>
 
                     <div className="flex justify-center">
                         <p className="text-xs text-muted-foreground text-center">
-                            {t?.('tapHint') || 'Tap the box above to open your camera. Make sure your National ID is legible.'}
+                            {t('tapHint')}
                         </p>
                     </div>
                 </div>
@@ -292,21 +318,21 @@ export function IdVerification() {
                         <Button
                             className="w-full"
                             onClick={handleScan}
-                            disabled={scanning}
+                            disabled={scanning || !worker}
                             size="lg"
                         >
                             {scanning ? (
                                 <>
                                     <Loader2 className="w-4 h-4 me-2 animate-spin" />
-                                    {scanProgress || 'Processing ID...'}
+                                    {scanProgress || t('processing')}
                                 </>
                             ) : (
-                                t?.('submit') || 'Submit Verification'
+                                t('scanAgain')
                             )}
                         </Button>
                         {scanning && (
                             <p className="text-xs text-muted-foreground text-center animate-pulse">
-                                {t?.('scanningHint') || 'This may take a moment. Please wait...'}
+                                {t('scanningHint')}
                             </p>
                         )}
                     </div>

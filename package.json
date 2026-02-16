@@ -9,9 +9,6 @@
     "lint": "eslint",
     "postinstall": "prisma generate"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.2",
@@ -64,6 +61,7 @@
     "zustand": "^5.0.10"
   },
   "devDependencies": {
+    "@prisma/config": "^7.4.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
