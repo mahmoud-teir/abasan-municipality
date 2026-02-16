@@ -156,6 +156,7 @@ export default function RegisterPage() {
                                         placeholder={t('phonePlaceholder')}
                                         className="ps-10"
                                         disabled={isLoading}
+                                        maxLength={10}
                                     />
                                 </div>
                             </div>
@@ -166,10 +167,11 @@ export default function RegisterPage() {
                                     <Input
                                         id="nationalId"
                                         name="nationalId"
-                                        type="text"
+                                        type="tel"
                                         placeholder={t('nationalIdPlaceholder')}
                                         className="ps-10"
                                         disabled={isLoading}
+                                        maxLength={9}
                                     />
                                 </div>
                             </div>
