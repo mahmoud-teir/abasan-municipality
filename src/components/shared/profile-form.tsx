@@ -1,8 +1,8 @@
-
 'use client';
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/lib/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,7 @@ type Props = {
 
 export function ProfileForm({ user }: Props) {
     const t = useTranslations();
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     // Password state
@@ -42,8 +43,7 @@ export function ProfileForm({ user }: Props) {
             const result = await updateProfile(formData);
             if (result.success) {
                 toast.success(t('common.success'));
-                // Clear previews on success as real data revalidates? 
-                // Actually server revalidate might take a moment.
+                router.refresh();
             } else {
                 toast.error(result.error || t('common.error'));
             }
@@ -97,6 +97,7 @@ export function ProfileForm({ user }: Props) {
                 setCurrentPassword('');
                 setNewPassword('');
                 setConfirmPassword('');
+                router.push('/login');
             }
         } catch (e) {
             toast.error(t('common.error'));

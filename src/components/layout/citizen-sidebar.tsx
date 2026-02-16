@@ -86,10 +86,10 @@ export function CitizenSidebar() {
                     )}
                     <div className="flex flex-col">
                         <span className={cn("text-sm font-medium", isVerified ? "text-green-400" : "text-amber-400")}>
-                            {isVerified ? 'Verified Citizen' : 'Unverified'}
+                            {isVerified ? t('nav.verifiedCitizen') : t('nav.unverified')}
                         </span>
                         {!isVerified && (
-                            <span className="text-xs text-amber-500/80">Action required</span>
+                            <span className="text-xs text-amber-500/80">{t('nav.actionRequired')}</span>
                         )}
                     </div>
                 </div>

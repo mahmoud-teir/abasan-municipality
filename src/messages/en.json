@@ -21,7 +21,10 @@
         "logout": "Logout",
         "admin": "Admin Panel",
         "track": "Track Status",
-        "verification": "Identity Verification"
+        "verification": "Identity Verification",
+        "verifiedCitizen": "Verified Citizen",
+        "unverified": "Unverified",
+        "actionRequired": "Action required"
     },
     "verification": {
         "title": "Identity Verification",

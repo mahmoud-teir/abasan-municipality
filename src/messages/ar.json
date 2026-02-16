@@ -21,7 +21,10 @@
         "dashboard": "لوحة التحكم",
         "logout": "تسجيل الخروج",
         "admin": "الإدارة",
-        "verification": "تأكيد الهوية"
+        "verification": "تأكيد الهوية",
+        "verifiedCitizen": "حساب موثق",
+        "unverified": "غير موثق",
+        "actionRequired": "مطلوب إجراء"
     },
     "verification": {
         "title": "توثيق الهوية",

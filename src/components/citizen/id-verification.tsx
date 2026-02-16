@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { createWorker } from 'tesseract.js';
-import { Loader2, ScanFace, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Loader2, ScanFace, CheckCircle2, AlertTriangle, Camera } from 'lucide-react';
 import { useSession } from '@/lib/auth/auth-client';
 import { verifyUser } from '@/actions/user.actions';
 import { useRouter } from 'next/navigation';
@@ -314,7 +314,11 @@ export function IdVerification() {
                             </>
                         ) : (
                             <div className="flex flex-col items-center p-8 text-center text-muted-foreground">
-                                <Loader2 className={`w-12 h-12 mb-4 ${workerLoading ? 'animate-spin text-primary' : 'opacity-50'}`} />
+                                {workerLoading ? (
+                                    <Loader2 className="w-12 h-12 mb-4 animate-spin text-primary" />
+                                ) : (
+                                    <Camera className="w-12 h-12 mb-4 opacity-50" />
+                                )}
                                 {workerLoading ? (
                                     <p>{t('initializing')}</p>
                                 ) : (
