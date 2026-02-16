@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { createWorker } from 'tesseract.js';
-import { Loader2, ScanFace, Camera, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Loader2, ScanFace, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useSession } from '@/lib/auth/auth-client';
 import { verifyUser } from '@/actions/user.actions';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,9 @@ import { getDashboardLink } from '@/lib/role-utils';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+
+/** Maximum image dimension before OCR — larger images are resized down */
+const MAX_IMAGE_DIMENSION = 1500;
 
 export function IdVerification() {
     const { data: session, refetch } = useSession();
@@ -30,22 +33,24 @@ export function IdVerification() {
 
     const userNationalId = (session?.user as any)?.nationalId as string | undefined;
 
-    // Initialize worker on mount
+    // Initialize worker on mount — only load 'eng' for digit recognition (faster)
     useEffect(() => {
         const initWorker = async () => {
             setWorkerLoading(true);
             try {
-                const w = await createWorker(['eng', 'ara'], 1, {
+                const w = await createWorker('eng', 1, {
                     workerPath: '/tesseract/worker.min.js',
                     corePath: '/tesseract/tesseract-core-simd.wasm.js',
                     langPath: '/tesseract/lang-data',
                     gzip: true,
-                    logger: m => {
-                        if (m.status === 'recognizing text') {
-                            // Progress updates are handled during recognition
-                        }
-                    }
                 });
+
+                // Set PSM_SINGLE_BLOCK (6) — faster for card-style documents
+                await w.setParameters({
+                    tessedit_pageseg_mode: 6 as any,
+                    tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ',
+                });
+
                 setWorker(w);
             } catch (err) {
                 console.error('Failed to initialize OCR worker:', err);
@@ -60,7 +65,6 @@ export function IdVerification() {
         }
 
         return () => {
-            // Cleanup worker on unmount
             if (worker) {
                 worker.terminate();
             }
@@ -73,7 +77,6 @@ export function IdVerification() {
             const file = e.target.files[0];
             setCapturedFile(file);
 
-            // Create preview
             const reader = new FileReader();
             reader.onload = (ev) => {
                 if (ev.target?.result) {
@@ -93,9 +96,10 @@ export function IdVerification() {
     }, [capturedFile, worker]);
 
     /**
-     * Preprocess image: grayscale + contrast boost + sharpen for better OCR results
+     * Resize image to max dimension and optionally apply preprocessing.
+     * This prevents Tesseract from processing huge phone camera images (4000px+).
      */
-    const preprocessImage = (file: File, scale = 1): Promise<string> => {
+    const processImage = (file: File, preprocess: boolean): Promise<string> => {
         return new Promise((resolve) => {
             const img = new window.Image();
             img.onload = () => {
@@ -106,26 +110,43 @@ export function IdVerification() {
                     return;
                 }
 
-                canvas.width = img.width * scale;
-                canvas.height = img.height * scale;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imageData.data;
-
-                // Grayscale + high contrast for ID card text
-                const contrastFactor = 1.5;
-                for (let i = 0; i < data.length; i += 4) {
-                    const avg = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
-                    const newColor = Math.min(255, Math.max(0, ((avg - 128) * contrastFactor) + 128));
-
-                    data[i] = newColor;     // red
-                    data[i + 1] = newColor; // green
-                    data[i + 2] = newColor; // blue
+                // Resize to max dimension while keeping aspect ratio
+                let { width, height } = img;
+                if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
+                    const ratio = Math.min(MAX_IMAGE_DIMENSION / width, MAX_IMAGE_DIMENSION / height);
+                    width = Math.round(width * ratio);
+                    height = Math.round(height * ratio);
                 }
 
-                ctx.putImageData(imageData, 0, 0);
-                resolve(canvas.toDataURL('image/jpeg', 0.95));
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                if (preprocess) {
+                    const imageData = ctx.getImageData(0, 0, width, height);
+                    const data = imageData.data;
+
+                    // Grayscale + high contrast + adaptive threshold for ID card text
+                    const contrastFactor = 1.8;
+                    for (let i = 0; i < data.length; i += 4) {
+                        // Convert to grayscale
+                        const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                        // Apply contrast boost
+                        let val = ((gray - 128) * contrastFactor) + 128;
+                        // Clamp to valid range
+                        val = Math.min(255, Math.max(0, val));
+                        // Apply adaptive threshold to sharpen text
+                        val = val > 140 ? 255 : val < 80 ? 0 : val;
+
+                        data[i] = val;
+                        data[i + 1] = val;
+                        data[i + 2] = val;
+                    }
+
+                    ctx.putImageData(imageData, 0, 0);
+                }
+
+                resolve(canvas.toDataURL('image/jpeg', 0.92));
             };
             img.src = URL.createObjectURL(file);
         });
@@ -134,6 +155,7 @@ export function IdVerification() {
     /**
      * Try to find the national ID number in the OCR text.
      * Cleans both strings to digits-only and checks for inclusion.
+     * Also tries partial matching (at least 7 consecutive digits match).
      */
     const findNationalIdInText = (ocrText: string, targetId: string): boolean => {
         const cleanDigits = (str: string) => str.replace(/[^0-9]/g, '');
@@ -141,7 +163,22 @@ export function IdVerification() {
         const cleanOcr = cleanDigits(ocrText);
 
         if (!cleanTarget) return false;
-        return cleanOcr.includes(cleanTarget);
+
+        // Exact match
+        if (cleanOcr.includes(cleanTarget)) return true;
+
+        // Partial match: try matching at least 7 consecutive digits
+        // This handles cases where OCR misreads 1-2 digits
+        if (cleanTarget.length >= 9) {
+            for (let len = cleanTarget.length; len >= Math.max(7, cleanTarget.length - 2); len--) {
+                for (let start = 0; start <= cleanTarget.length - len; start++) {
+                    const partial = cleanTarget.substring(start, start + len);
+                    if (cleanOcr.includes(partial)) return true;
+                }
+            }
+        }
+
+        return false;
     };
 
     const handleScan = async () => {
@@ -158,24 +195,17 @@ export function IdVerification() {
         try {
             let found = false;
 
-            // Strategy 1: Try original image
-            setScanProgress(t('scanningOriginal'));
-            let ret = await worker.recognize(capturedFile);
+            // Pass 1: Preprocessed image (grayscale + contrast + threshold) — best for most IDs
+            setScanProgress(t('enhancing'));
+            const preprocessedUrl = await processImage(capturedFile, true);
+            let ret = await worker.recognize(preprocessedUrl);
             found = findNationalIdInText(ret.data.text, userNationalId);
 
-            // Strategy 2: Try preprocessed image (grayscale + contrast)
+            // Pass 2: Original image resized only (fallback if preprocessing damaged text)
             if (!found) {
-                setScanProgress(t('enhancing'));
-                const preprocessedUrl = await preprocessImage(capturedFile);
-                ret = await worker.recognize(preprocessedUrl);
-                found = findNationalIdInText(ret.data.text, userNationalId);
-            }
-
-            // Strategy 3: Try with 2x scaled image for small text
-            if (!found) {
-                setScanProgress(t('enlarging'));
-                const scaledUrl = await preprocessImage(capturedFile, 2);
-                ret = await worker.recognize(scaledUrl);
+                setScanProgress(t('scanningOriginal'));
+                const resizedUrl = await processImage(capturedFile, false);
+                ret = await worker.recognize(resizedUrl);
                 found = findNationalIdInText(ret.data.text, userNationalId);
             }
 
@@ -233,7 +263,7 @@ export function IdVerification() {
         );
     }
 
-    // Missing National ID state — user needs to set their nationalId in profile first
+    // Missing National ID state
     if (!userNationalId) {
         return (
             <Card className="w-full max-w-lg mx-auto">
@@ -288,9 +318,7 @@ export function IdVerification() {
                                 {workerLoading ? (
                                     <p>{t('initializing')}</p>
                                 ) : (
-                                    <>
-                                        <p>{t('clickToOpen')}</p>
-                                    </>
+                                    <p>{t('clickToOpen')}</p>
                                 )}
                             </div>
                         )}
