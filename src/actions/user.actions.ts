@@ -3,6 +3,7 @@
 import prisma from '@/lib/db/prisma';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { logAudit } from '@/lib/audit';
 
 /**
  * Get users with pagination
@@ -96,6 +97,12 @@ export async function createUser(data: any) {
                 });
             }
 
+            await logAudit({
+                action: 'CREATE_USER',
+                details: `Created user: ${data.email} with role: ${data.role || 'CITIZEN'}`,
+                targetId: result.user.id
+            });
+
             revalidatePath('/admin/users');
             return { success: true };
         }
@@ -138,6 +145,12 @@ export async function updateUserRole(userId: string, role: string) {
         await prisma.user.update({
             where: { id: validated.userId },
             data: { role: validated.role as any },
+        });
+
+        await logAudit({
+            action: 'UPDATE_ROLE',
+            details: `Changed role to: ${validated.role}`,
+            targetId: validated.userId
         });
 
         revalidatePath('/admin/users');
@@ -193,6 +206,12 @@ export async function verifyUser(userId: string, isVerified: boolean) {
             data: { emailVerified: isVerified }
         });
 
+        await logAudit({
+            action: isVerified ? 'VERIFY_USER' : 'UNVERIFY_USER',
+            details: `User verification ${isVerified ? 'approved' : 'revoked'}`,
+            targetId: userId
+        });
+
         revalidatePath('/admin/users');
         revalidatePath('/citizen/verification');
         return { success: true };
@@ -243,6 +262,12 @@ export async function unbanUser(userId: string) {
             }
         });
 
+        await logAudit({
+            action: 'UNBAN_USER',
+            details: 'User unbanned',
+            targetId: userId
+        });
+
         revalidatePath('/admin/users');
         return { success: true };
     } catch (error) {
@@ -281,6 +306,12 @@ export async function banUser(userId: string, reason?: string) {
                 isBanned: true,
                 banReason: reason || 'Manual ban by admin'
             }
+        });
+
+        await logAudit({
+            action: 'BAN_USER',
+            details: `User banned. Reason: ${reason || 'Manual ban by admin'}`,
+            targetId: userId
         });
 
         // Notify Admins about this manual ban

@@ -4,6 +4,7 @@ import prisma from '@/lib/db/prisma';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
+import { logAudit } from '@/lib/audit';
 
 /**
  * Get published news
@@ -109,6 +110,12 @@ export async function createNews(data: {
             },
         });
 
+        await logAudit({
+            action: 'CREATE_NEWS',
+            details: `Created news: ${data.titleEn}`,
+            targetId: news.id
+        });
+
         revalidatePath('/news');
         revalidatePath('/admin/news');
 
@@ -146,6 +153,12 @@ export async function updateNews(
             },
         });
 
+        await logAudit({
+            action: 'UPDATE_NEWS',
+            details: `Updated news: ${news.titleEn}`,
+            targetId: id
+        });
+
         revalidatePath('/news');
         revalidatePath('/admin/news');
 
@@ -171,6 +184,12 @@ export async function deleteNews(id: string) {
 
         await prisma.news.delete({
             where: { id },
+        });
+
+        await logAudit({
+            action: 'DELETE_NEWS',
+            details: `News article deleted`,
+            targetId: id
         });
 
         revalidatePath('/news');

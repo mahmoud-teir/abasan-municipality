@@ -110,11 +110,14 @@ export default function AdminMessagesPage() {
     };
 
     return (
-        <div className="h-[calc(100vh-10rem)] flex gap-6">
-            {/* Sidebar List */}
-            <Card className="w-80 flex flex-col h-full">
-                <CardHeader className="p-4 border-b">
-                    <CardTitle className="text-lg font-bold flex items-center gap-2">
+        <div className="h-[calc(100vh-10rem)] flex gap-0 md:gap-6">
+            {/* Sidebar List — hidden on mobile when a conversation is selected */}
+            <Card className={cn(
+                "flex flex-col h-full w-full md:w-80 md:shrink-0",
+                selectedConversationId ? "hidden md:flex" : "flex"
+            )}>
+                <CardHeader className="p-3 sm:p-4 border-b">
+                    <CardTitle className="text-base sm:text-lg font-bold flex items-center gap-2">
                         <MessageSquare className="w-5 h-5" />
                         {t('admin.messagesPage.title')}
                     </CardTitle>
@@ -127,7 +130,7 @@ export default function AdminMessagesPage() {
                         />
                     </div>
                 </CardHeader>
-                <CardContent className="flex-1 overflow-y-auto p-2 space-y-2">
+                <CardContent className="flex-1 overflow-y-auto p-1.5 sm:p-2 space-y-1 sm:space-y-2">
                     {!conversations ? (
                         <div className="p-4 text-center text-sm">{t('common.loading')}</div>
                     ) : conversations.length === 0 ? (
@@ -138,22 +141,22 @@ export default function AdminMessagesPage() {
                                 key={conv._id}
                                 onClick={() => handleSelectConversation(conv._id)}
                                 className={cn(
-                                    "flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors hover:bg-slate-100",
+                                    "flex items-start gap-3 p-2.5 sm:p-3 rounded-lg cursor-pointer transition-colors hover:bg-slate-100",
                                     selectedConversationId === conv._id ? "bg-slate-100 border-l-4 border-l-primary" : ""
                                 )}
                             >
-                                <div className="relative">
-                                    <Avatar className="h-10 w-10 border">
+                                <div className="relative shrink-0">
+                                    <Avatar className="h-9 w-9 sm:h-10 sm:w-10 border">
                                         <AvatarFallback>{conv.participantName.charAt(0)}</AvatarFallback>
                                     </Avatar>
                                     {onlineUsers?.includes(conv.participantId) && (
                                         <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                                     )}
                                 </div>
-                                <div className="flex-1 overflow-hidden">
-                                    <div className="flex justify-between items-center mb-1">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-center mb-1 gap-2">
                                         <span className="font-semibold truncate text-sm">{conv.participantName}</span>
-                                        <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                                        <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
                                             {formatDistanceToNow(new Date(conv.lastMessageAt), { addSuffix: false })}
                                         </span>
                                     </div>
@@ -162,7 +165,7 @@ export default function AdminMessagesPage() {
                                     </p>
                                 </div>
                                 {conv.unreadCount > 0 && (
-                                    <Badge variant="destructive" className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-[10px]">
+                                    <Badge variant="destructive" className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-[10px] shrink-0">
                                         {conv.unreadCount}
                                     </Badge>
                                 )}
@@ -172,8 +175,11 @@ export default function AdminMessagesPage() {
                 </CardContent>
             </Card>
 
-            {/* Chat Area */}
-            <Card className="flex-1 flex flex-col h-full overflow-hidden">
+            {/* Chat Area — hidden on mobile when NO conversation is selected */}
+            <Card className={cn(
+                "flex-1 flex flex-col h-full overflow-hidden min-w-0",
+                selectedConversationId ? "flex" : "hidden md:flex"
+            )}>
                 {!selectedConversationId ? (
                     <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
                         <MessageSquare className="w-16 h-16 mb-4 opacity-20" />
@@ -182,29 +188,38 @@ export default function AdminMessagesPage() {
                 ) : (
                     <>
                         {/* Header */}
-                        <div className="p-4 border-b flex items-center justify-between bg-slate-50/50">
+                        <div className="p-3 sm:p-4 border-b flex items-center justify-between bg-slate-50/50 gap-2">
                             {(() => {
                                 const activeConv = conversations?.find((c: any) => c._id === selectedConversationId);
                                 return (
                                     <>
-                                        <div className="flex items-center gap-3">
-                                            <Avatar>
-                                                <AvatarFallback>{activeConv?.participantName.charAt(0)}</AvatarFallback>
+                                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                                            {/* Back button — only visible on mobile */}
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="md:hidden shrink-0 h-8 w-8"
+                                                onClick={() => setSelectedConversationId(null)}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rtl:rotate-180"><path d="m15 18-6-6 6-6" /></svg>
+                                            </Button>
+                                            <Avatar className="h-8 w-8 sm:h-10 sm:w-10 shrink-0">
+                                                <AvatarFallback className="text-xs sm:text-sm">{activeConv?.participantName.charAt(0)}</AvatarFallback>
                                             </Avatar>
-                                            <div>
-                                                <h3 className="font-bold">{activeConv?.participantName}</h3>
-                                                <p className="text-xs text-muted-foreground">{activeConv?.participantEmail || 'No email'}</p>
+                                            <div className="min-w-0">
+                                                <h3 className="font-bold text-sm sm:text-base truncate">{activeConv?.participantName}</h3>
+                                                <p className="text-[11px] sm:text-xs text-muted-foreground truncate">{activeConv?.participantEmail || 'No email'}</p>
                                             </div>
                                         </div>
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                                            className="text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0 h-8 w-8 sm:h-10 sm:w-10"
                                             onClick={handleDeleteConversation}
                                             disabled={isDeleting}
                                             title="حذف المحادثة"
                                         >
-                                            <Trash2 className="w-5 h-5" />
+                                            <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                                         </Button>
                                     </>
                                 );
@@ -212,7 +227,7 @@ export default function AdminMessagesPage() {
                         </div>
 
                         {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30">
+                        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-slate-50/30">
                             {!messages ? (
                                 <div>Loading messages...</div>
                             ) : (
@@ -221,9 +236,9 @@ export default function AdminMessagesPage() {
                                         const isMe = msg.senderRole === 'ADMIN' || msg.senderRole === 'SUPER_ADMIN';
                                         return (
                                             <div key={msg._id} className={cn("flex w-full flex-col group", isMe ? "items-end" : "items-start")}>
-                                                <div className={cn("flex items-end gap-2 max-w-[80%]", isMe ? "flex-row-reverse" : "flex-row")}>
+                                                <div className={cn("flex items-end gap-1.5 sm:gap-2 max-w-[90%] sm:max-w-[80%]", isMe ? "flex-row-reverse" : "flex-row")}>
                                                     <div className={cn(
-                                                        "px-4 py-3 rounded-2xl text-sm shadow-sm relative",
+                                                        "px-3 py-2 sm:px-4 sm:py-3 rounded-2xl text-sm shadow-sm relative break-words",
                                                         isMe ? "bg-primary text-white rounded-br-none" : "bg-white border rounded-bl-none"
                                                     )}>
                                                         {msg.contentType === 'image' && msg.fileUrl ? (
@@ -234,20 +249,20 @@ export default function AdminMessagesPage() {
                                                                         alt={msg.fileName || 'Image'}
                                                                         width={200}
                                                                         height={200}
-                                                                        className="rounded-md object-cover max-h-[200px] w-auto bg-slate-100"
+                                                                        className="rounded-md object-cover max-h-[150px] sm:max-h-[200px] w-auto bg-slate-100"
                                                                         unoptimized
                                                                     />
                                                                 </a>
                                                             </div>
                                                         ) : msg.contentType === 'file' && msg.fileUrl ? (
                                                             <div className="mb-2">
-                                                                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 underline">
-                                                                    <Paperclip className="w-4 h-4" />
-                                                                    {msg.fileName || 'Attachment'}
+                                                                <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 underline text-xs sm:text-sm">
+                                                                    <Paperclip className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                                                                    <span className="truncate">{msg.fileName || 'Attachment'}</span>
                                                                 </a>
                                                             </div>
                                                         ) : null}
-                                                        <p>{msg.content}</p>
+                                                        <p className="text-[13px] sm:text-sm">{msg.content}</p>
                                                         <span className={cn("text-[10px] block mt-1 opacity-70", isMe ? "text-start" : "text-end")}>
                                                             {formatDistanceToNow(new Date(msg._creationTime))}
                                                         </span>
@@ -257,7 +272,7 @@ export default function AdminMessagesPage() {
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                                                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive shrink-0"
                                                         onClick={() => handleDeleteMessage(msg._id)}
                                                         title="حذف الرسالة"
                                                     >
@@ -288,8 +303,8 @@ export default function AdminMessagesPage() {
                         </div>
 
                         {/* Input */}
-                        <div className="p-4 border-t bg-white">
-                            <div className="flex gap-2 items-end">
+                        <div className="p-2 sm:p-4 border-t bg-white">
+                            <div className="flex gap-1.5 sm:gap-2 items-end">
                                 <input
                                     type="file"
                                     ref={fileInputRef}
@@ -331,11 +346,11 @@ export default function AdminMessagesPage() {
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="shrink-0"
+                                    className="shrink-0 h-9 w-9 sm:h-10 sm:w-10"
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={isUploading}
                                 >
-                                    {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5 text-muted-foreground" />}
+                                    {isUploading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" /> : <Paperclip className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />}
                                 </Button>
                                 <Textarea
                                     value={reply}
@@ -344,7 +359,7 @@ export default function AdminMessagesPage() {
                                         notifyTyping();
                                     }}
                                     placeholder={t('admin.messagesPage.typeReply')}
-                                    className="min-h-[50px] max-h-[150px] resize-none"
+                                    className="min-h-[40px] sm:min-h-[50px] max-h-[120px] sm:max-h-[150px] resize-none text-sm"
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && !e.shiftKey) {
                                             e.preventDefault();
@@ -352,8 +367,8 @@ export default function AdminMessagesPage() {
                                         }
                                     }}
                                 />
-                                <Button onClick={handleSend} disabled={!reply.trim() || !selectedConversationId} size="icon" className="h-auto w-12 self-end">
-                                    <Send className="w-5 h-5" />
+                                <Button onClick={handleSend} disabled={!reply.trim() || !selectedConversationId} size="icon" className="h-9 w-9 sm:h-auto sm:w-12 self-end shrink-0">
+                                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                                 </Button>
                             </div>
                         </div>

@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import prisma from '@/lib/db/prisma';
 import { revalidatePath } from 'next/cache';
+import { logAudit } from '@/lib/audit';
 
 // ============================================
 // Schemas
@@ -162,6 +163,12 @@ export async function updateRequestStatus(
                 reviewedAt: new Date(),
                 ...(status === 'APPROVED' || status === 'REJECTED' ? { completedAt: new Date() } : {}),
             },
+        });
+
+        await logAudit({
+            action: 'UPDATE_REQUEST_STATUS',
+            details: `Request ${request.requestNo} status changed to ${status}${note ? `. Note: ${note}` : ''}`,
+            targetId: requestId
         });
 
         if (note) {

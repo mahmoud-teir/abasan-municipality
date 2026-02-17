@@ -3,6 +3,7 @@
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
 import { prisma } from "@/lib/db/prisma";
+import { logAudit } from '@/lib/audit';
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
@@ -92,6 +93,12 @@ export async function sendBroadcastToUsers(data: {
             type: data.type,
             audience: data.audience,
             sentBy: data.sentBy
+        });
+
+        await logAudit({
+            action: 'SEND_BROADCAST',
+            details: `Broadcast "${data.title}" sent to ${data.audience} (${users.length} users)`,
+            actorId: data.sentBy
         });
 
         return { success: true, count: users.length };

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { HeroSlide } from "@prisma/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export function HeroSlideManager({ initialSlides }: Props) {
+    const t = useTranslations("admin.hero");
     const [slides, setSlides] = useState(initialSlides);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
@@ -62,7 +64,7 @@ export function HeroSlideManager({ initialSlides }: Props) {
         e.preventDefault();
 
         if (!imageUrl) {
-            toast.error("Image is required");
+            toast.error(t('imageRequired'));
             return;
         }
 
@@ -76,11 +78,11 @@ export function HeroSlideManager({ initialSlides }: Props) {
                     imageUrl,
                 });
                 if (res.success) {
-                    toast.success("Slide updated successfully");
+                    toast.success(t('updateSuccess'));
                     setSlides(slides.map(s => s.id === editingSlide.id ? res.data : s) as HeroSlide[]);
                     setIsSheetOpen(false);
                 } else {
-                    toast.error("Failed to update slide");
+                    toast.error(t('updateError'));
                 }
             } else {
                 const res = await createHeroSlide({
@@ -92,25 +94,25 @@ export function HeroSlideManager({ initialSlides }: Props) {
                     order: slides.length,
                 });
                 if (res.success) {
-                    toast.success("Slide created successfully");
+                    toast.success(t('createSuccess'));
                     setSlides([...slides, res.data] as HeroSlide[]);
                     setIsSheetOpen(false);
                 } else {
-                    toast.error("Failed to create slide");
+                    toast.error(t('createError'));
                 }
             }
         });
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this slide?")) return;
+        if (!confirm(t('deleteConfirm'))) return;
         startTransition(async () => {
             const res = await deleteHeroSlide(id);
             if (res.success) {
-                toast.success("Slide deleted");
+                toast.success(t('deleteSuccess'));
                 setSlides(slides.filter(s => s.id !== id));
             } else {
-                toast.error("Failed to delete slide");
+                toast.error(t('deleteError'));
             }
         });
     };
@@ -129,7 +131,7 @@ export function HeroSlideManager({ initialSlides }: Props) {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Active Slides ({slides.length})</h2>
+                <h2 className="text-xl font-semibold">{t('activeSlides')} ({slides.length})</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -141,8 +143,8 @@ export function HeroSlideManager({ initialSlides }: Props) {
                     <div className="p-4 bg-slate-100 rounded-full group-hover:bg-white group-hover:shadow-md transition-all mb-4">
                         <Plus className="w-8 h-8 text-slate-500 group-hover:text-primary" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-600 group-hover:text-primary">Add New Slide</h3>
-                    <p className="text-sm text-slate-400 text-center mt-2">Upload image or video for the hero slider</p>
+                    <h3 className="text-lg font-semibold text-slate-600 group-hover:text-primary">{t('addNew')}</h3>
+                    <p className="text-sm text-slate-400 text-center mt-2">{t('uploadText')}</p>
                 </div>
 
                 {slides.map((slide) => (
@@ -197,13 +199,13 @@ export function HeroSlideManager({ initialSlides }: Props) {
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
                     <SheetHeader>
-                        <SheetTitle>{editingSlide ? "Edit Slide" : "Create New Slide"}</SheetTitle>
+                        <SheetTitle>{editingSlide ? t('editSlide') : t('createSlide')}</SheetTitle>
                     </SheetHeader>
 
                     <form onSubmit={handleSubmit} className="space-y-6 py-6">
                         {/* Image/Video Upload */}
                         <div className="space-y-2">
-                            <Label>Slide Media (Image or Video)</Label>
+                            <Label>{t('slideMedia')}</Label>
                             <div className="relative border-2 border-dashed rounded-xl aspect-video flex flex-col items-center justify-center bg-slate-50 hover:bg-slate-100 hover:border-primary/50 transition-colors group overflow-hidden">
                                 {imageUrl ? (
                                     <>
@@ -235,8 +237,8 @@ export function HeroSlideManager({ initialSlides }: Props) {
                                                 <ImageIcon className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors" />
                                             </div>
                                             <div className="text-center space-y-1">
-                                                <p className="text-sm font-semibold text-slate-600 group-hover:text-primary transition-colors">Click or Drag to Upload Media</p>
-                                                <p className="text-xs text-slate-400">Supported: HQ Images or MP4 Videos</p>
+                                                <p className="text-sm font-semibold text-slate-600 group-hover:text-primary transition-colors">{t('clickDrag')}</p>
+                                                <p className="text-xs text-slate-400">{t('supported')}</p>
                                             </div>
                                         </div>
                                         <UploadBtn
@@ -257,26 +259,26 @@ export function HeroSlideManager({ initialSlides }: Props) {
 
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <Label>Title (Arabic)</Label>
-                                <Input value={titleAr} onChange={e => setTitleAr(e.target.value)} placeholder="العنوان بالعربية" />
+                                <Label>{t('titleAr')}</Label>
+                                <Input value={titleAr} onChange={e => setTitleAr(e.target.value)} placeholder={t('titleAr')} />
                             </div>
                             <div className="space-y-2">
-                                <Label>Title (English)</Label>
-                                <Input value={titleEn} onChange={e => setTitleEn(e.target.value)} placeholder="Title in English" />
+                                <Label>{t('titleEn')}</Label>
+                                <Input value={titleEn} onChange={e => setTitleEn(e.target.value)} placeholder={t('titleEn')} />
                             </div>
                             <div className="space-y-2">
-                                <Label>Subtitle (Arabic)</Label>
-                                <Input value={subtitleAr} onChange={e => setSubtitleAr(e.target.value)} placeholder="وصف قصير بالعربية" />
+                                <Label>{t('subtitleAr')}</Label>
+                                <Input value={subtitleAr} onChange={e => setSubtitleAr(e.target.value)} placeholder={t('subtitleAr')} />
                             </div>
                             <div className="space-y-2">
-                                <Label>Subtitle (English)</Label>
-                                <Input value={subtitleEn} onChange={e => setSubtitleEn(e.target.value)} placeholder="Subtitle in English" />
+                                <Label>{t('subtitleEn')}</Label>
+                                <Input value={subtitleEn} onChange={e => setSubtitleEn(e.target.value)} placeholder={t('subtitleEn')} />
                             </div>
                         </div>
 
                         <SheetFooter className="pt-4">
-                            <Button type="button" variant="outline" onClick={() => setIsSheetOpen(false)}>Cancel</Button>
-                            <Button type="submit" disabled={isPending}>{isPending ? "Saving..." : "Save Slide"}</Button>
+                            <Button type="button" variant="outline" onClick={() => setIsSheetOpen(false)}>{t('cancel')}</Button>
+                            <Button type="submit" disabled={isPending}>{isPending ? t('saving') : t('save')}</Button>
                         </SheetFooter>
                     </form>
                 </SheetContent>

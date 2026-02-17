@@ -10,16 +10,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+
 import { Megaphone, Send, Users, History, Trash2, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { ar, enUS } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { sendBroadcastToUsers } from "@/actions/notification.actions"; // Import server action
+import { useTranslations, useLocale } from "next-intl";
 
 type Props = {
     userId: string;
 };
 
 export function BroadcastSender({ userId }: Props) {
+    const t = useTranslations('admin.notifications');
+    const locale = useLocale();
     // const sendBroadcast = useMutation(api.broadcasts.send); // Replaced by Server Action
     const deleteBroadcast = useMutation(api.broadcasts.deleteBroadcast);
     const recentBroadcasts = useQuery(api.broadcasts.list, { limit: 10 });
@@ -46,14 +51,14 @@ export function BroadcastSender({ userId }: Props) {
             });
 
             if (result.success) {
-                toast.success(`Broadcast sent to ${result.count} users!`);
+                toast.success(t('toast.sendSuccess', { count: result.count ?? 0 }));
                 setTitle("");
                 setMessage("");
             } else {
-                toast.error(result.error || "Failed to send broadcast");
+                toast.error(result.error || t('toast.sendError'));
             }
         } catch (error) {
-            toast.error("An error occurred");
+            toast.error(t('toast.error'));
             console.error(error);
         } finally {
             setIsSending(false);
@@ -61,13 +66,13 @@ export function BroadcastSender({ userId }: Props) {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this broadcast record?")) return;
+        if (!confirm(t('recent.deleteConfirm'))) return;
         setDeletingId(id);
         try {
             await deleteBroadcast({ id: id as any }); // Cast id if needed by TS
-            toast.success("Broadcast deleted");
+            toast.success(t('recent.deleteSuccess'));
         } catch (error) {
-            toast.error("Failed to delete broadcast");
+            toast.error(t('recent.deleteError'));
             console.error(error);
         } finally {
             setDeletingId(null);
@@ -80,16 +85,16 @@ export function BroadcastSender({ userId }: Props) {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Megaphone className="w-5 h-5 text-primary" />
-                        Send New Broadcast
+                        {t('sendNew')}
                     </CardTitle>
-                    <CardDescription>Send announcements to platform users.</CardDescription>
+                    <CardDescription>{t('sendDescription')}</CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSend}>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Title</Label>
+                            <Label>{t('form.title')}</Label>
                             <Input
-                                placeholder="Announcement Title"
+                                placeholder={t('form.titlePlaceholder')}
                                 value={title}
                                 onChange={e => setTitle(e.target.value)}
                                 required
@@ -97,9 +102,9 @@ export function BroadcastSender({ userId }: Props) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Message</Label>
+                            <Label>{t('form.message')}</Label>
                             <Textarea
-                                placeholder="What would you like to say?"
+                                placeholder={t('form.messagePlaceholder')}
                                 value={message}
                                 onChange={e => setMessage(e.target.value)}
                                 required
@@ -109,29 +114,29 @@ export function BroadcastSender({ userId }: Props) {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label>Type</Label>
+                                <Label>{t('form.type')}</Label>
                                 <Select value={type} onValueChange={setType}>
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="info">Information</SelectItem>
-                                        <SelectItem value="warning">Warning/Alert</SelectItem>
-                                        <SelectItem value="success">Success/Event</SelectItem>
+                                        <SelectItem value="info">{t('form.types.info')}</SelectItem>
+                                        <SelectItem value="warning">{t('form.types.warning')}</SelectItem>
+                                        <SelectItem value="success">{t('form.types.success')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
 
                             <div className="space-y-2">
-                                <Label>Audience</Label>
+                                <Label>{t('form.audience')}</Label>
                                 <Select value={audience} onValueChange={setAudience}>
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="all">All Users</SelectItem>
-                                        <SelectItem value="employees">Employees Only</SelectItem>
-                                        <SelectItem value="citizens">Citizens Only</SelectItem>
+                                        <SelectItem value="all">{t('form.audiences.all')}</SelectItem>
+                                        <SelectItem value="employees">{t('form.audiences.employees')}</SelectItem>
+                                        <SelectItem value="citizens">{t('form.audiences.citizens')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -142,12 +147,12 @@ export function BroadcastSender({ userId }: Props) {
                             {isSending ? (
                                 <>
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Sending...
+                                    {t('form.sending')}
                                 </>
                             ) : (
                                 <>
                                     <Send className="w-4 h-4 mr-2" />
-                                    Send Notification
+                                    {t('form.sendButton')}
                                 </>
                             )}
                         </Button>
@@ -159,9 +164,9 @@ export function BroadcastSender({ userId }: Props) {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <History className="w-5 h-5" />
-                        Recent Broadcasts
+                        {t('recent.title')}
                     </CardTitle>
-                    <CardDescription>Recently sent announcements.</CardDescription>
+                    <CardDescription>{t('recent.description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1 overflow-y-auto max-h-[500px]">
                     <div className="space-y-4">
@@ -170,7 +175,7 @@ export function BroadcastSender({ userId }: Props) {
                                 <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
                             </div>
                         ) : recentBroadcasts.length === 0 ? (
-                            <p className="text-muted-foreground text-sm text-center py-4">No broadcasts sent yet.</p>
+                            <p className="text-muted-foreground text-sm text-center py-4">{t('recent.noBroadcasts')}</p>
                         ) : (
                             recentBroadcasts.map((item) => (
                                 <div key={item._id} className="border rounded-lg p-3 space-y-2 group relative hover:bg-slate-50 transition-colors">
@@ -184,10 +189,10 @@ export function BroadcastSender({ userId }: Props) {
                                     <div className="flex justify-between items-center text-[10px] text-slate-500 pt-2">
                                         <span className="flex items-center gap-1">
                                             <Users className="w-3 h-3" />
-                                            {item.audience}
+                                            {t(`form.audiences.${item.audience}` as any)}
                                         </span>
                                         <span>
-                                            {format(new Date(item.timestamp), "MMM d, HH:mm")}
+                                            {format(new Date(item.timestamp), "MMM d, HH:mm", { locale: locale === 'ar' ? ar : enUS })}
                                         </span>
                                     </div>
                                     <Button

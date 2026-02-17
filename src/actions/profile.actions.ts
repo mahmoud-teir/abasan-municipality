@@ -143,3 +143,56 @@ export async function deleteNationalIdImage() {
         return { success: false, error: 'Failed to delete ID image' };
     }
 }
+
+export async function deleteAccount() {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers()
+        });
+
+        if (!session) {
+            return { success: false, error: 'Unauthorized' };
+        }
+
+        const userId = session.user.id;
+
+        // Only allow citizens to delete their own accounts
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { role: true }
+        });
+
+        if (!user || user.role !== 'CITIZEN') {
+            return { success: false, error: 'Only citizen accounts can be self-deleted' };
+        }
+
+        // Delete all related data in a transaction
+        await prisma.$transaction(async (tx) => {
+            // Delete responses on user's complaints
+            await tx.response.deleteMany({
+                where: { complaint: { userId } }
+            });
+
+            // Delete request-related data
+            await tx.requestMessage.deleteMany({ where: { senderId: userId } });
+            await tx.document.deleteMany({ where: { request: { userId } } });
+            await tx.note.deleteMany({ where: { request: { userId } } });
+
+            // Delete main entities
+            await tx.request.deleteMany({ where: { userId } });
+            await tx.complaint.deleteMany({ where: { userId } });
+            await tx.appointment.deleteMany({ where: { userId } });
+            await tx.payment.deleteMany({ where: { userId } });
+            await tx.comment.deleteMany({ where: { userId } });
+            await tx.auditLog.deleteMany({ where: { actorId: userId } });
+
+            // Session, Account, Notification are cascade — deleted with user
+            await tx.user.delete({ where: { id: userId } });
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('Delete account error:', error);
+        return { success: false, error: 'Failed to delete account' };
+    }
+}

@@ -270,7 +270,19 @@
             "update": "تحديث كلمة المرور",
             "mismatch": "كلمتا المرور غير متطابقتين"
         },
-        "nationalIdImage": "صورة الهوية"
+        "nationalIdImage": "صورة الهوية",
+        "deleteAccount": {
+            "title": "حذف الحساب",
+            "description": "بمجرد حذف حسابك، سيتم حذف جميع بياناتك نهائياً ولا يمكن استعادتها.",
+            "button": "حذف حسابي",
+            "confirmTitle": "هل أنت متأكد؟",
+            "confirmDescription": "هذا الإجراء لا يمكن التراجع عنه. سيتم حذف حسابك وجميع بياناتك بشكل نهائي.",
+            "confirmButton": "نعم، احذف حسابي",
+            "cancel": "إلغاء",
+            "success": "تم حذف حسابك بنجاح",
+            "error": "فشل في حذف الحساب",
+            "deleting": "جاري الحذف..."
+        }
     },
     "employee": {
         "title": "بوابة الموظفين",
@@ -370,6 +382,101 @@
         "requests": "الطلبات",
         "complaints": "الشكاوى",
         "appointments": "المواعيد",
+        "appointmentsPage": {
+            "title": "المواعيد",
+            "subtitle": "إدارة طلبات المواعيد المقدمة من المواطنين.",
+            "allRequests": "كل الطلبات",
+            "noRequests": "لا توجد طلبات مواعيد.",
+            "status": "الحالة",
+            "citizen": "المواطن",
+            "department": "القسم",
+            "date": "التاريخ",
+            "reason": "السبب",
+            "actions": "الإجراءات",
+            "approve": "موافقة",
+            "reject": "رفض",
+            "rejectDialog": {
+                "title": "رفض الموعد",
+                "description": "يرجى ذكر سبب رفض هذا الطلب.",
+                "reasonLabel": "السبب",
+                "reasonPlaceholder": "مثال: تعارض في المواعيد، عدم توفر القسم...",
+                "cancel": "إلغاء",
+                "confirm": "تأكيد الرفض"
+            },
+            "statusBadge": {
+                "approved": "موافق عليه",
+                "rejected": "مرفوض",
+                "completed": "مكتمل",
+                "pending": "قيد الانتظار"
+            },
+            "toast": {
+                "approveSuccess": "تمت الموافقة على الموعد",
+                "approveError": "فشل في الموافقة",
+                "rejectSuccess": "تم رفض الموعد",
+                "rejectError": "فشل في الرفض"
+            },
+            "note": "ملاحظة"
+        },
+        "notifications": {
+            "title": "مركز الإشعارات",
+            "subtitle": "إرسال رسائل بث للمواطنين والموظفين.",
+            "sendNew": "إرسال بث جديد",
+            "sendDescription": "إرسال إعلانات لمستخدمي المنصة.",
+            "form": {
+                "title": "العنوان",
+                "titlePlaceholder": "عنوان الإعلان",
+                "message": "الرسالة",
+                "messagePlaceholder": "ماذا تود أن تقول؟",
+                "type": "النوع",
+                "types": {
+                    "info": "معلومات",
+                    "warning": "تحذير/تنبيه",
+                    "success": "نجاح/حدث"
+                },
+                "audience": "الجمهور",
+                "audiences": {
+                    "all": "كل المستخدمين",
+                    "employees": "الموظفين فقط",
+                    "citizens": "المواطنين فقط"
+                },
+                "sendButton": "إرسال الإشعار",
+                "sending": "جاري الإرسال..."
+            },
+            "recent": {
+                "title": "البثوث الأخيرة",
+                "description": "الإعلانات المرسلة مؤخراً.",
+                "noBroadcasts": "لم يتم إرسال أي بث بعد.",
+                "deleteConfirm": "هل أنت متأكد أنك تريد حذف سجل البث هذا؟",
+                "deleteSuccess": "تم حذف البث",
+                "deleteError": "فشل في حذف البث"
+            },
+            "toast": {
+                "sendSuccess": "تم إرسال البث إلى {count} مستخدم!",
+                "sendError": "فشل في إرسال البث",
+                "error": "حدث خطأ"
+            }
+        },
+        "media": {
+            "title": "مكتبة الوسائط",
+            "subtitle": "تصفح وإدارة الملفات المرفوعة.",
+            "cardTitle": "مكتبة الوسائط",
+            "cardDescription": "إدارة الأصول والملفات الخاصة بك.",
+            "empty": "لا يوجد ملفات.",
+            "size": "{size} ك.ب",
+            "copy": "نسخ الرابط",
+            "delete": "حذف",
+            "open": "فتح",
+            "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا الملف؟ لا يمكن التراجع عن هذا الإجراء.",
+            "uploading": "جاري الحذف...",
+            "deleteSuccess": "تم حذف الملف بنجاح",
+            "deleteError": "فشل في حذف الملف",
+            "copySuccess": "تم نسخ الرابط للحافظة",
+            "pagination": {
+                "prev": "السابق",
+                "next": "التالي",
+                "info": "صفحة {current} من {total}"
+            }
+        },
         "projects": "المشاريع",
         "careers": "الوظائف",
         "news": "الأخبار",
@@ -380,9 +487,7 @@
         "settings": "الإعدادات",
         "actions": "الإجراءات",
         "logs": "سجلات التدقيق",
-        "notifications": "مركز الإشعارات",
         "alerts": "تنبيهات الطوارئ",
-        "media": "مكتبة الوسائط",
         "servicesMenu": "إدارة الخدمات",
         "services": {
             "add": "إضافة خدمة جديدة",
@@ -495,6 +600,33 @@
                 "error": "حدث خطأ أثناء إنشاء الخبر",
                 "cleaning": "جاري التنظيف..."
             }
+        },
+        "hero": {
+            "title": "شريط العرض الرئيسي",
+            "description": "إدارة الصور والنصوص في شريط العرض على الصفحة الرئيسية.",
+            "activeSlides": "الشرائح النشطة",
+            "addNew": "إضافة شريحة جديدة",
+            "uploadText": "رفع صورة أو فيديو لشريط العرض",
+            "editSlide": "تعديل الشريحة",
+            "createSlide": "إنشاء شريحة جديدة",
+            "slideMedia": "وسائط الشريحة (صورة أو فيديو)",
+            "clickDrag": "انقر أو اسحب لرفع الوسائط",
+            "supported": "مدعوم: صور عالية الجودة أو فيديوهات MP4",
+            "titleAr": "العنوان (بالعربية)",
+            "titleEn": "العنوان (بالإنجليزية)",
+            "subtitleAr": "العنوان الفرعي (بالعربية)",
+            "subtitleEn": "العنوان الفرعي (بالإنجليزية)",
+            "save": "حفظ الشريحة",
+            "saving": "جاري الحفظ...",
+            "cancel": "إلغاء",
+            "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه الشريحة؟",
+            "deleteSuccess": "تم حذف الشريحة",
+            "deleteError": "فشل حذف الشريحة",
+            "updateSuccess": "تم تحديث الشريحة بنجاح",
+            "updateError": "فشل تحديث الشريحة",
+            "createSuccess": "تم إنشاء الشريحة بنجاح",
+            "createError": "فشل إنشاء الشريحة",
+            "imageRequired": "الصورة مطلوبة"
         },
         "settingsPage": {
             "subtitle": "تحكم في إعدادات المنصة والمظهر العام",

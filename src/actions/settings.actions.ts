@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/db/prisma';
 import { revalidatePath } from 'next/cache';
+import { logAudit } from '@/lib/audit';
 
 export async function getSystemSetting(key: string) {
     try {
@@ -27,6 +28,12 @@ export async function updateSystemSetting(key: string, value: string) {
             update: { value },
             create: { key, value },
         });
+
+        await logAudit({
+            action: 'UPDATE_SETTING',
+            details: `Setting "${key}" updated`
+        });
+
         revalidatePath('/', 'layout');
         return { success: true };
     } catch (error) {
@@ -46,6 +53,12 @@ export async function updateSystemSettings(settings: Record<string, string>) {
         );
 
         await prisma.$transaction(transactions);
+
+        await logAudit({
+            action: 'UPDATE_SETTINGS',
+            details: `Updated settings: ${Object.keys(settings).join(', ')}`
+        });
+
         revalidatePath('/', 'layout');
         return { success: true };
     } catch (error) {

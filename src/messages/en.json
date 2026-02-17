@@ -270,7 +270,19 @@
             "update": "Update Password",
             "mismatch": "Passwords do not match"
         },
-        "nationalIdImage": "National ID Image"
+        "nationalIdImage": "National ID Image",
+        "deleteAccount": {
+            "title": "Delete Account",
+            "description": "Once you delete your account, all your data will be permanently removed and cannot be recovered.",
+            "button": "Delete My Account",
+            "confirmTitle": "Are you sure?",
+            "confirmDescription": "This action cannot be undone. Your account and all associated data will be permanently deleted.",
+            "confirmButton": "Yes, Delete My Account",
+            "cancel": "Cancel",
+            "success": "Your account has been successfully deleted",
+            "error": "Failed to delete account",
+            "deleting": "Deleting..."
+        }
     },
     "employee": {
         "title": "Employee Portal",
@@ -370,6 +382,101 @@
         "requests": "Requests",
         "complaints": "Complaints",
         "appointments": "Appointments",
+        "appointmentsPage": {
+            "title": "Appointments",
+            "subtitle": "Manage citizen appointment requests.",
+            "allRequests": "All Requests",
+            "noRequests": "No appointment requests found.",
+            "status": "Status",
+            "citizen": "Citizen",
+            "department": "Department",
+            "date": "Date",
+            "reason": "Reason",
+            "actions": "Actions",
+            "approve": "Approve",
+            "reject": "Reject",
+            "rejectDialog": {
+                "title": "Reject Appointment",
+                "description": "Please provide a reason for rejecting this request.",
+                "reasonLabel": "Reason",
+                "reasonPlaceholder": "e.g. Schedule conflict, Department unavailable...",
+                "cancel": "Cancel",
+                "confirm": "Confirm Rejection"
+            },
+            "statusBadge": {
+                "approved": "Approved",
+                "rejected": "Rejected",
+                "completed": "Completed",
+                "pending": "Pending"
+            },
+            "toast": {
+                "approveSuccess": "Appointment approved",
+                "approveError": "Failed to approve",
+                "rejectSuccess": "Appointment rejected",
+                "rejectError": "Failed to reject"
+            },
+            "note": "Note"
+        },
+        "notifications": {
+            "title": "Notification Center",
+            "subtitle": "Broadcast messages to citizens and staff.",
+            "sendNew": "Send New Broadcast",
+            "sendDescription": "Send announcements to platform users.",
+            "form": {
+                "title": "Title",
+                "titlePlaceholder": "Announcement Title",
+                "message": "Message",
+                "messagePlaceholder": "What would you like to say?",
+                "type": "Type",
+                "types": {
+                    "info": "Information",
+                    "warning": "Warning/Alert",
+                    "success": "Success/Event"
+                },
+                "audience": "Audience",
+                "audiences": {
+                    "all": "All Users",
+                    "employees": "Employees Only",
+                    "citizens": "Citizens Only"
+                },
+                "sendButton": "Send Notification",
+                "sending": "Sending..."
+            },
+            "recent": {
+                "title": "Recent Broadcasts",
+                "description": "Recently sent announcements.",
+                "noBroadcasts": "No broadcasts sent yet.",
+                "deleteConfirm": "Are you sure you want to delete this broadcast record?",
+                "deleteSuccess": "Broadcast deleted",
+                "deleteError": "Failed to delete broadcast"
+            },
+            "toast": {
+                "sendSuccess": "Broadcast sent to {count} users!",
+                "sendError": "Failed to send broadcast",
+                "error": "An error occurred"
+            }
+        },
+        "media": {
+            "title": "Media Library",
+            "subtitle": "Browse and manage your uploaded files.",
+            "cardTitle": "Media Library",
+            "cardDescription": "Manage your uploaded files and assets.",
+            "empty": "No files found.",
+            "size": "{size} KB",
+            "copy": "Copy URL",
+            "delete": "Delete",
+            "open": "Open",
+            "confirmDelete": "Are you sure you want to delete this file? This cannot be undone.",
+            "uploading": "Deleting file...",
+            "deleteSuccess": "File deleted successfully",
+            "deleteError": "Failed to delete file",
+            "copySuccess": "URL copied to clipboard",
+            "pagination": {
+                "prev": "Previous",
+                "next": "Next",
+                "info": "Page {current} of {total}"
+            }
+        },
         "projects": "Projects",
         "careers": "Careers",
         "news": "News",
@@ -380,9 +487,7 @@
         "settings": "Settings",
         "actions": "Actions",
         "logs": "Audit Logs",
-        "notifications": "Notification Center",
         "alerts": "Emergency Alerts",
-        "media": "Media Library",
         "servicesMenu": "Manage Services",
         "services": {
             "add": "Add New Service",
@@ -495,6 +600,33 @@
                 "error": "Error creating news",
                 "cleaning": "Cleaning up..."
             }
+        },
+        "hero": {
+            "title": "Hero Slider",
+            "description": "Manage the images and text on the homepage slider.",
+            "activeSlides": "Active Slides",
+            "addNew": "Add New Slide",
+            "uploadText": "Upload image or video for the hero slider",
+            "editSlide": "Edit Slide",
+            "createSlide": "Create New Slide",
+            "slideMedia": "Slide Media (Image or Video)",
+            "clickDrag": "Click or Drag to Upload Media",
+            "supported": "Supported: HQ Images or MP4 Videos",
+            "titleAr": "Title (Arabic)",
+            "titleEn": "Title (English)",
+            "subtitleAr": "Subtitle (Arabic)",
+            "subtitleEn": "Subtitle (English)",
+            "save": "Save Slide",
+            "saving": "Saving...",
+            "cancel": "Cancel",
+            "deleteConfirm": "Are you sure you want to delete this slide?",
+            "deleteSuccess": "Slide deleted",
+            "deleteError": "Failed to delete slide",
+            "updateSuccess": "Slide updated successfully",
+            "updateError": "Failed to update slide",
+            "createSuccess": "Slide created successfully",
+            "createError": "Failed to create slide",
+            "imageRequired": "Image is required"
         },
         "settingsPage": {
             "subtitle": "Manage platform settings and appearance",

@@ -42,9 +42,9 @@ const sidebarItems = [
     { icon: Briefcase, label: 'admin.projects', href: '/admin/projects' },
     { icon: Users, label: 'admin.careers', href: '/admin/careers' },
     { icon: Layers, label: 'admin.servicesMenu', href: '/admin/services' },
-    { icon: Bell, label: 'admin.notifications', href: '/admin/notifications' },
+    { icon: Bell, label: 'admin.notifications.title', href: '/admin/notifications' },
     { icon: History, label: 'admin.logs', href: '/admin/logs' },
-    { icon: Image, label: 'admin.media', href: '/admin/media' },
+    { icon: Image, label: 'admin.media.title', href: '/admin/media' },
     { icon: Settings, label: 'admin.settings', href: '/admin/settings' },
 ];
 

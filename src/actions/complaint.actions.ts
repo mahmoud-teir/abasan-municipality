@@ -7,6 +7,7 @@ import { createComplaintSchema } from '@/lib/validators/schemas';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { createNotification } from './notification.actions';
+import { logAudit } from '@/lib/audit';
 
 // Define ActionResult type
 type ActionResult = {
@@ -195,6 +196,12 @@ export async function updateComplaintStatus(
         const complaint = await prisma.complaint.update({
             where: { id: complaintId },
             data: { status },
+        });
+
+        await logAudit({
+            action: 'UPDATE_COMPLAINT_STATUS',
+            details: `Complaint ${complaint.complaintNo} status changed to ${status}`,
+            targetId: complaintId
         });
 
         if (responseContent && responderId) {

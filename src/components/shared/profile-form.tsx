@@ -8,10 +8,21 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Loader2, User, Phone, Lock, Camera, Trash2 } from 'lucide-react';
-import { updateProfile, deleteNationalIdImage } from '@/actions/profile.actions';
-import { authClient } from '@/lib/auth/auth-client';
+import { Loader2, User, Phone, Lock, Camera, Trash2, AlertTriangle } from 'lucide-react';
+import { updateProfile, deleteNationalIdImage, deleteAccount } from '@/actions/profile.actions';
+import { authClient, signOut } from '@/lib/auth/auth-client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 type Props = {
     user: {
@@ -20,6 +31,7 @@ type Props = {
         phone?: string | null;
         image?: string | null;
         nationalIdImage?: string | null;
+        role?: string;
     };
 };
 
@@ -33,6 +45,9 @@ export function ProfileForm({ user }: Props) {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passLoading, setPassLoading] = useState(false);
+
+    // Delete account state
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [idPreview, setIdPreview] = useState<string | null>(null);
@@ -105,6 +120,31 @@ export function ProfileForm({ user }: Props) {
             setPassLoading(false);
         }
     }
+
+    async function handleDeleteAccount() {
+        setDeleteLoading(true);
+        try {
+            const result = await deleteAccount();
+            if (result.success) {
+                toast.success(t('settings.deleteAccount.success'));
+                await signOut({
+                    fetchOptions: {
+                        onSuccess: () => {
+                            window.location.href = '/login';
+                        },
+                    },
+                });
+            } else {
+                toast.error(result.error || t('settings.deleteAccount.error'));
+            }
+        } catch (e) {
+            toast.error(t('settings.deleteAccount.error'));
+        } finally {
+            setDeleteLoading(false);
+        }
+    }
+
+    const isCitizen = !user.role || user.role === 'CITIZEN';
 
     return (
         <div className="space-y-6">
@@ -196,8 +236,6 @@ export function ProfileForm({ user }: Props) {
                                                         if (res.success) {
                                                             toast.success('ID Image deleted');
                                                             setIdPreview(null);
-                                                            // Forcibly clear user prop locally if possible or rely on reval
-                                                            // Ideally we should use router.refresh() but revalidatePath handles it mostly
                                                         } else {
                                                             toast.error('Failed to delete');
                                                         }
@@ -288,6 +326,61 @@ export function ProfileForm({ user }: Props) {
                     </form>
                 </CardContent>
             </Card>
+
+            {/* Delete Account - Only for Citizens */}
+            {isCitizen && (
+                <Card className="border-red-200 bg-red-50/50">
+                    <CardHeader>
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                                <AlertTriangle className="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-red-700">{t('settings.deleteAccount.title')}</CardTitle>
+                                <CardDescription className="text-red-600/80">
+                                    {t('settings.deleteAccount.description')}
+                                </CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="destructive" className="gap-2">
+                                    <Trash2 className="w-4 h-4" />
+                                    {t('settings.deleteAccount.button')}
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>{t('settings.deleteAccount.confirmTitle')}</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        {t('settings.deleteAccount.confirmDescription')}
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>{t('settings.deleteAccount.cancel')}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={handleDeleteAccount}
+                                        disabled={deleteLoading}
+                                        className="bg-red-600 hover:bg-red-700 text-white"
+                                    >
+                                        {deleteLoading ? (
+                                            <>
+                                                <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                                                {t('settings.deleteAccount.deleting')}
+                                            </>
+                                        ) : (
+                                            t('settings.deleteAccount.confirmButton')
+                                        )}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 }
+

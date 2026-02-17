@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function NotificationsPage() {
-    const t = await getTranslations();
+    const t = await getTranslations('admin.notifications');
     const session = await auth.api.getSession({
         headers: await headers()
     });
@@ -15,8 +15,8 @@ export default async function NotificationsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Notification Center</h1>
-                <p className="text-muted-foreground">Broadcast messages to citizens and staff.</p>
+                <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+                <p className="text-muted-foreground">{t('subtitle')}</p>
             </div>
 
             <BroadcastSender userId={session.user.id} />

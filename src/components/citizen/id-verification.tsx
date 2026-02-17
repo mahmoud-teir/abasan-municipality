@@ -19,7 +19,7 @@ import { useLocale, useTranslations } from 'next-intl';
 const MAX_IMAGE_DIMENSION = 1500;
 
 export function IdVerification() {
-    const { data: session, refetch } = useSession();
+    const { data: session, refetch, isPending } = useSession();
     const router = useRouter();
     const locale = useLocale();
     const t = useTranslations('verification');
@@ -220,6 +220,8 @@ export function IdVerification() {
                     // Set local state immediately to prevent showing the form again
                     setVerified(true);
                     toast.success(t('success'));
+                    // Refresh the session so the cookie cache picks up emailVerified: true
+                    await refetch();
                     // Redirect after a brief delay so user sees the success message
                     setTimeout(() => {
                         if (session?.user) {
@@ -244,6 +246,15 @@ export function IdVerification() {
             setScanProgress('');
         }
     };
+
+    // Still loading session — show nothing until we know the state
+    if (isPending) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        );
+    }
 
     // Already verified state
     if (verified || session?.user?.emailVerified) {

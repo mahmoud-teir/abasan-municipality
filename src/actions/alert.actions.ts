@@ -2,6 +2,7 @@
 
 import prisma from '@/lib/db/prisma';
 import { revalidatePath } from 'next/cache';
+import { logAudit } from '@/lib/audit';
 
 export async function createAlert(formData: FormData) {
     try {
@@ -18,6 +19,11 @@ export async function createAlert(formData: FormData) {
                 expiresAt: expiresAtStr ? new Date(expiresAtStr) : null,
                 isActive: true
             }
+        });
+
+        await logAudit({
+            action: 'CREATE_ALERT',
+            details: `Created ${type} alert: ${title}`
         });
 
         revalidatePath('/');
@@ -55,6 +61,13 @@ export async function deactivateAlert(id: string) {
             where: { id },
             data: { isActive: false }
         });
+
+        await logAudit({
+            action: 'DEACTIVATE_ALERT',
+            details: 'Alert deactivated',
+            targetId: id
+        });
+
         revalidatePath('/');
         return { success: true };
     } catch (error) {

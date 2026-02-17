@@ -15,9 +15,11 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { format } from 'date-fns';
+import { ar, enUS } from 'date-fns/locale';
 import { CheckCircle, XCircle, Clock, Calendar, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSession } from '@/lib/auth/auth-client';
+import { useTranslations, useLocale } from 'next-intl';
 import {
     Dialog,
     DialogContent,
@@ -31,6 +33,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
 export default function AdminAppointmentsPage() {
+    const t = useTranslations('admin.appointmentsPage');
+    const locale = useLocale();
     const { data: session } = useSession();
     const appointments = useQuery(api.appointments.list, {});
     const updateStatus = useMutation(api.appointments.updateStatus);
@@ -46,9 +50,9 @@ export default function AdminAppointmentsPage() {
                 status: 'approved',
                 adminId: session?.user?.id,
             });
-            toast.success('Appointment approved');
+            toast.success(t('toast.approveSuccess'));
         } catch (error) {
-            toast.error('Failed to approve');
+            toast.error(t('toast.approveError'));
         }
     };
 
@@ -61,21 +65,21 @@ export default function AdminAppointmentsPage() {
                 notes: rejectReason,
                 adminId: session?.user?.id,
             });
-            toast.success('Appointment rejected');
+            toast.success(t('toast.rejectSuccess'));
             setIsRejectOpen(false);
             setRejectReason('');
             setSelectedAppt(null);
         } catch (error) {
-            toast.error('Failed to reject');
+            toast.error(t('toast.rejectError'));
         }
     };
 
     const getStatusBadge = (status: string) => {
         switch (status) {
-            case 'approved': return <Badge className="bg-green-500">Approved</Badge>;
-            case 'rejected': return <Badge variant="destructive">Rejected</Badge>;
-            case 'completed': return <Badge variant="secondary">Completed</Badge>;
-            default: return <Badge variant="outline" className="text-amber-500 border-amber-500">Pending</Badge>;
+            case 'approved': return <Badge className="bg-green-500">{t('statusBadge.approved')}</Badge>;
+            case 'rejected': return <Badge variant="destructive">{t('statusBadge.rejected')}</Badge>;
+            case 'completed': return <Badge variant="secondary">{t('statusBadge.completed')}</Badge>;
+            default: return <Badge variant="outline" className="text-amber-500 border-amber-500">{t('statusBadge.pending')}</Badge>;
         }
     };
 
@@ -87,32 +91,32 @@ export default function AdminAppointmentsPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Appointments</h1>
-                    <p className="text-muted-foreground">Manage citizen appointment requests.</p>
+                    <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+                    <p className="text-muted-foreground">{t('subtitle')}</p>
                 </div>
             </div>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All Requests</CardTitle>
+                    <CardTitle>{t('allRequests')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Citizen</TableHead>
-                                <TableHead>Department</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Reason</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead>{t('status')}</TableHead>
+                                <TableHead>{t('citizen')}</TableHead>
+                                <TableHead>{t('department')}</TableHead>
+                                <TableHead>{t('date')}</TableHead>
+                                <TableHead>{t('reason')}</TableHead>
+                                <TableHead className="text-right">{t('actions')}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {appointments.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                                        No appointment requests found.
+                                        {t('noRequests')}
                                     </TableCell>
                                 </TableRow>
                             ) : (
@@ -129,7 +133,7 @@ export default function AdminAppointmentsPage() {
                                         <TableCell>
                                             <div className="flex items-center gap-1">
                                                 <Calendar className="w-3 h-3 text-muted-foreground" />
-                                                {format(new Date(appt.date), 'PP')}
+                                                {format(new Date(appt.date), 'PP', { locale: locale === 'ar' ? ar : enUS })}
                                             </div>
                                         </TableCell>
                                         <TableCell className="max-w-[200px] truncate" title={appt.reason}>
@@ -144,7 +148,7 @@ export default function AdminAppointmentsPage() {
                                                         className="text-green-600 hover:text-green-700 hover:bg-green-50"
                                                         onClick={() => handleApprove(appt._id)}
                                                     >
-                                                        <CheckCircle className="w-4 h-4 mr-1" /> Approve
+                                                        <CheckCircle className="w-4 h-4 mr-1" /> {t('approve')}
                                                     </Button>
                                                     <Button
                                                         size="sm"
@@ -155,12 +159,12 @@ export default function AdminAppointmentsPage() {
                                                             setIsRejectOpen(true);
                                                         }}
                                                     >
-                                                        <XCircle className="w-4 h-4 mr-1" /> Reject
+                                                        <XCircle className="w-4 h-4 mr-1" /> {t('reject')}
                                                     </Button>
                                                 </div>
                                             )}
                                             {appt.status === 'rejected' && appt.notes && (
-                                                <span className="text-xs text-red-500 italic">Note: {appt.notes}</span>
+                                                <span className="text-xs text-red-500 italic">{t('note')}: {appt.notes}</span>
                                             )}
                                         </TableCell>
                                     </TableRow>
@@ -175,22 +179,22 @@ export default function AdminAppointmentsPage() {
             <Dialog open={isRejectOpen} onOpenChange={setIsRejectOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Reject Appointment</DialogTitle>
+                        <DialogTitle>{t('rejectDialog.title')}</DialogTitle>
                         <DialogDescription>
-                            Please provide a reason for rejecting this request.
+                            {t('rejectDialog.description')}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-2">
-                        <Label>Reason</Label>
+                        <Label>{t('rejectDialog.reasonLabel')}</Label>
                         <Textarea
                             value={rejectReason}
                             onChange={(e) => setRejectReason(e.target.value)}
-                            placeholder="e.g. Schedule conflict, Department unavailable..."
+                            placeholder={t('rejectDialog.reasonPlaceholder')}
                         />
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsRejectOpen(false)}>Cancel</Button>
-                        <Button variant="destructive" onClick={handleReject} disabled={!rejectReason}>Confirm Rejection</Button>
+                        <Button variant="outline" onClick={() => setIsRejectOpen(false)}>{t('rejectDialog.cancel')}</Button>
+                        <Button variant="destructive" onClick={handleReject} disabled={!rejectReason}>{t('rejectDialog.confirm')}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

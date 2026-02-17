@@ -9,6 +9,8 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { deleteMedia, listMedia } from "@/actions/media.actions";
 import { format } from "date-fns";
+import { useTranslations, useLocale } from "next-intl";
+import { ar, enUS } from "date-fns/locale";
 
 type Props = {
     initialFiles: MediaFile[];
@@ -19,6 +21,8 @@ export function MediaLibrary({ initialFiles, initialPagination }: Props) {
     const [files, setFiles] = useState(initialFiles);
     const [pagination, setPagination] = useState(initialPagination);
     const [isLoading, startTransition] = useTransition();
+    const t = useTranslations('admin.media');
+    const locale = useLocale();
 
     const loadPage = async (page: number) => {
         startTransition(async () => {
@@ -31,33 +35,33 @@ export function MediaLibrary({ initialFiles, initialPagination }: Props) {
     };
 
     const handleDelete = async (id: string, key: string) => {
-        if (!confirm("Are you sure you want to delete this file? This cannot be undone.")) return;
+        if (!confirm(t('confirmDelete'))) return;
 
         const deletePromise = deleteMedia(id, key);
 
         toast.promise(deletePromise, {
-            loading: 'Deleting file...',
+            loading: t('uploading'),
             success: (data) => {
                 if (data.success) {
                     setFiles(files.filter(f => f.id !== id));
-                    return 'File deleted successfully';
+                    return t('deleteSuccess');
                 }
                 throw new Error(data.error);
             },
-            error: 'Failed to delete file',
+            error: t('deleteError'),
         });
     };
 
     const copyToClipboard = (url: string) => {
         navigator.clipboard.writeText(url);
-        toast.success("URL copied to clipboard");
+        toast.success(t('copySuccess'));
     };
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Media Library</CardTitle>
-                <CardDescription>Manage your uploaded files and assets.</CardDescription>
+                <CardTitle>{t('cardTitle')}</CardTitle>
+                <CardDescription>{t('cardDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
                 {isLoading ? (
@@ -67,7 +71,7 @@ export function MediaLibrary({ initialFiles, initialPagination }: Props) {
                 ) : files.length === 0 ? (
                     <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-xl">
                         <ImageIcon className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                        <p>No files found.</p>
+                        <p>{t('empty')}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -88,14 +92,14 @@ export function MediaLibrary({ initialFiles, initialPagination }: Props) {
 
                                     {/* Overlay Actions */}
                                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                        <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full" onClick={() => copyToClipboard(file.url)} title="Copy URL">
+                                        <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full" onClick={() => copyToClipboard(file.url)} title={t('copy')}>
                                             <Copy className="w-4 h-4" />
                                         </Button>
-                                        <Button size="icon" variant="destructive" className="h-8 w-8 rounded-full" onClick={() => handleDelete(file.id, file.key)} title="Delete">
+                                        <Button size="icon" variant="destructive" className="h-8 w-8 rounded-full" onClick={() => handleDelete(file.id, file.key)} title={t('delete')}>
                                             <Trash2 className="w-4 h-4" />
                                         </Button>
                                         <a href={file.url} target="_blank" rel="noopener noreferrer">
-                                            <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full" title="Open">
+                                            <Button size="icon" variant="secondary" className="h-8 w-8 rounded-full" title={t('open')}>
                                                 <ExternalLink className="w-4 h-4" />
                                             </Button>
                                         </a>
@@ -104,8 +108,8 @@ export function MediaLibrary({ initialFiles, initialPagination }: Props) {
                                 <div className="p-3">
                                     <p className="font-medium text-sm truncate" title={file.filename}>{file.filename}</p>
                                     <div className="flex justify-between items-center mt-1 text-xs text-muted-foreground">
-                                        <span>{(file.size / 1024).toFixed(0)} KB</span>
-                                        <span>{format(new Date(file.createdAt), 'MMM d')}</span>
+                                        <span>{t('size', { size: (file.size / 1024).toFixed(0) })}</span>
+                                        <span>{format(new Date(file.createdAt), 'MMM d', { locale: locale === 'ar' ? ar : enUS })}</span>
                                     </div>
                                 </div>
                             </div>
@@ -122,10 +126,10 @@ export function MediaLibrary({ initialFiles, initialPagination }: Props) {
                             disabled={pagination.current === 1}
                             onClick={() => loadPage(pagination.current - 1)}
                         >
-                            Previous
+                            {t('pagination.prev')}
                         </Button>
                         <span className="flex items-center text-sm px-2">
-                            Page {pagination.current} of {pagination.pages}
+                            {t('pagination.info', { current: pagination.current, total: pagination.pages })}
                         </span>
                         <Button
                             variant="outline"
@@ -133,7 +137,7 @@ export function MediaLibrary({ initialFiles, initialPagination }: Props) {
                             disabled={pagination.current === pagination.pages}
                             onClick={() => loadPage(pagination.current + 1)}
                         >
-                            Next
+                            {t('pagination.next')}
                         </Button>
                     </div>
                 )}
