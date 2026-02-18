@@ -12,6 +12,9 @@ export default async function middleware(request: NextRequest) {
     // 1. Run i18n middleware first
     const response = intlMiddleware(request);
 
+    // Set x-pathname header so server components (like layout.tsx) can detect the current route
+    response.headers.set('x-pathname', request.nextUrl.pathname);
+
     // 2. Check for protected routes
     const { pathname } = request.nextUrl;
 

@@ -21,6 +21,7 @@ model User {
   nationalId    String?   @unique
   name          String
   nameEn        String?
+  address       String?
   role          Role      @default(CITIZEN)
   emailVerified Boolean   @default(false)
   image         String?

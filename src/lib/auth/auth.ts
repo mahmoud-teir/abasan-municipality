@@ -40,6 +40,35 @@ export const auth = betterAuth({
                 type: 'string',
                 required: false,
             },
+            address: {
+                type: 'string',
+                required: false,
+            },
+        },
+    },
+    databaseHooks: {
+        session: {
+            create: {
+                after: async (session) => {
+                    try {
+                        // Get user info for logging
+                        const user = await prisma.user.findUnique({
+                            where: { id: session.userId },
+                            select: { name: true, email: true },
+                        });
+                        await prisma.auditLog.create({
+                            data: {
+                                action: 'LOGIN',
+                                details: `User ${user?.name || user?.email || session.userId} signed in`,
+                                actorId: session.userId,
+                                ipAddress: session.ipAddress || 'unknown',
+                            },
+                        });
+                    } catch (error) {
+                        console.error('[AuditLog] Failed to log sign-in:', error);
+                    }
+                },
+            },
         },
     },
     trustedOrigins: [

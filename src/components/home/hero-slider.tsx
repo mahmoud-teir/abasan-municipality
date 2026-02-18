@@ -34,7 +34,7 @@ export function HeroSlider({ slides, defaultTitle, defaultSubtitle, locale }: Pr
     // Default Content Render (if no slides)
     if (activeSlides.length === 0) {
         return (
-            <section className="relative bg-gradient-to-br from-primary/90 to-primary py-20 md:py-32 overflow-hidden h-[500px] sm:h-[600px] md:h-[700px] flex items-center justify-center">
+            <section className="relative bg-gradient-to-br from-primary/90 to-primary py-20 md:py-32 overflow-hidden h-[300px] sm:h-[500px] md:h-[700px] flex items-center justify-center">
                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
                 <div className="container mx-auto px-4 text-center text-white relative z-10">
                     <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
@@ -54,7 +54,7 @@ export function HeroSlider({ slides, defaultTitle, defaultSubtitle, locale }: Pr
     const subtitle = locale === 'ar' ? currentSlide.subtitleAr : currentSlide.subtitleEn;
 
     return (
-        <section className="relative h-[500px] sm:h-[600px] md:h-[700px] w-full overflow-hidden bg-slate-900">
+        <section className="relative h-[300px] sm:h-[500px] md:h-[700px] w-full overflow-hidden bg-slate-900">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={current}

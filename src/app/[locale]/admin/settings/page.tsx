@@ -81,19 +81,19 @@ export default async function AdminSettingsPage() {
                     <div className="space-y-8">
                         <ThemeSelector currentTheme={theme || 'default'} />
                         <div className="space-y-4">
-                            <h3 className="text-sm font-medium">Typography</h3>
+                            <h3 className="text-sm font-medium">{t('admin.settingsPage.typography')}</h3>
                             <div className="grid gap-4">
                                 <FontSelector
                                     type="arabic"
                                     currentFont={fontArabic || 'cairo'}
                                     fonts={ARABIC_FONTS}
-                                    label="Arabic Font"
+                                    label={t('admin.settingsPage.arabicFont')}
                                 />
                                 <FontSelector
                                     type="english"
                                     currentFont={fontEnglish || 'outfit'}
                                     fonts={ENGLISH_FONTS}
-                                    label="English Font"
+                                    label={t('admin.settingsPage.englishFont')}
                                 />
                             </div>
                         </div>
@@ -112,8 +112,8 @@ export default async function AdminSettingsPage() {
                                             <MessageCircle className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-lg text-slate-900">Chat Responses</h3>
-                                            <p className="text-sm text-muted-foreground">Manage bot FAQs</p>
+                                            <h3 className="font-bold text-lg text-slate-900">{t('admin.settingsPage.chat.title')}</h3>
+                                            <p className="text-sm text-muted-foreground">{t('admin.settingsPage.chat.subtitle')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -126,8 +126,8 @@ export default async function AdminSettingsPage() {
                                             <MonitorPlay className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-lg text-slate-900">Hero Slider</h3>
-                                            <p className="text-sm text-muted-foreground">Manage Homepage</p>
+                                            <h3 className="font-bold text-lg text-slate-900">{t('admin.settingsPage.hero.title')}</h3>
+                                            <p className="text-sm text-muted-foreground">{t('admin.settingsPage.hero.subtitle')}</p>
                                         </div>
                                     </div>
                                 </div>

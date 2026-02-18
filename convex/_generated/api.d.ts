@@ -11,7 +11,9 @@
 import type * as appointments from "../appointments.js";
 import type * as audit from "../audit.js";
 import type * as broadcasts from "../broadcasts.js";
+import type * as cleanup from "../cleanup.js";
 import type * as conversations from "../conversations.js";
+import type * as crons from "../crons.js";
 import type * as emergency from "../emergency.js";
 import type * as faq from "../faq.js";
 import type * as messages from "../messages.js";
@@ -32,7 +34,9 @@ declare const fullApi: ApiFromModules<{
   appointments: typeof appointments;
   audit: typeof audit;
   broadcasts: typeof broadcasts;
+  cleanup: typeof cleanup;
   conversations: typeof conversations;
+  crons: typeof crons;
   emergency: typeof emergency;
   faq: typeof faq;
   messages: typeof messages;

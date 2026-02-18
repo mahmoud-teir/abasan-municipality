@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { signUp } from '@/lib/auth/auth-client';
 import { checkPhoneUsage, checkNationalIdUsage } from '@/actions/auth-checks';
 import { toast } from 'sonner';
-import { Loader2, Lock, Mail, User, Phone, FileText } from 'lucide-react';
+import { Loader2, Lock, Mail, User, Phone, FileText, MapPin } from 'lucide-react';
 
 export default function RegisterPage() {
     const t = useTranslations('auth.register');
@@ -28,6 +28,7 @@ export default function RegisterPage() {
         const confirmPassword = formData.get('confirmPassword') as string;
         const phone = formData.get('phone') as string;
         const nationalId = formData.get('nationalId') as string;
+        const address = formData.get('address') as string;
 
 
         if (password !== confirmPassword) {
@@ -76,6 +77,7 @@ export default function RegisterPage() {
                 name,
                 phone: phone || undefined,
                 nationalId: nationalId || undefined,
+                address: address || undefined,
                 callbackURL: '/citizen/dashboard',
             } as any, {
                 onRequest: () => {
@@ -174,6 +176,21 @@ export default function RegisterPage() {
                                         maxLength={9}
                                     />
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="address">{t('address')}</Label>
+                            <div className="relative">
+                                <MapPin className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    id="address"
+                                    name="address"
+                                    type="text"
+                                    placeholder={t('addressPlaceholder')}
+                                    className="ps-10"
+                                    disabled={isLoading}
+                                />
                             </div>
                         </div>
 

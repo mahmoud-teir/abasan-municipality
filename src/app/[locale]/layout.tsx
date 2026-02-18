@@ -46,14 +46,22 @@ export default async function LocaleLayout({ children, params }: Props) {
         const isAdmin = userRole === 'ADMIN' || userRole === 'SUPER_ADMIN';
 
         if (!isAdmin) {
-            const isRTL = locale === 'ar';
-            return (
-                <div dir={isRTL ? 'rtl' : 'ltr'} lang={locale}>
-                    <NextIntlClientProvider messages={messages} locale={locale}>
-                        <MaintenanceScreen />
-                    </NextIntlClientProvider>
-                </div>
-            );
+            // Check if the current path is a login route
+            // We use x-pathname header set by middleware to reliably detect the route
+            const headersList = await headers();
+            const pathname = headersList.get('x-pathname') || '';
+            const isLoginRoute = pathname.includes('/login') || pathname.includes('/register') || pathname.includes('/forgot-password');
+
+            if (!isLoginRoute) {
+                const isRTL = locale === 'ar';
+                return (
+                    <div dir={isRTL ? 'rtl' : 'ltr'} lang={locale}>
+                        <NextIntlClientProvider messages={messages} locale={locale}>
+                            <MaintenanceScreen />
+                        </NextIntlClientProvider>
+                    </div>
+                );
+            }
         }
     }
 

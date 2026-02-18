@@ -1,6 +1,8 @@
 'use server';
 
 import prisma from '@/lib/db/prisma';
+import { revalidatePath } from 'next/cache';
+import { logAudit } from '@/lib/audit';
 
 export async function getServiceTypes(locale: 'ar' | 'en' = 'ar') {
     try {
@@ -45,7 +47,7 @@ export async function createService(formData: FormData) {
         const nameAr = formData.get('nameAr') as string;
         const nameEn = formData.get('nameEn') as string;
 
-        await prisma.serviceType.create({
+        const service = await prisma.serviceType.create({
             data: {
                 slug: slug.toUpperCase().replace(/\s+/g, '_'),
                 nameAr,
@@ -54,6 +56,13 @@ export async function createService(formData: FormData) {
             }
         });
 
+        await logAudit({
+            action: 'CREATE_SERVICE',
+            details: `Created service: ${nameEn} (${nameAr})`,
+            targetId: service.id
+        });
+
+        revalidatePath('/admin/services');
         return { success: true };
     } catch (error) {
         return { success: false, error: 'Failed to create service' };
@@ -65,6 +74,14 @@ export async function deleteService(id: string) {
         await prisma.serviceType.delete({
             where: { id }
         });
+
+        await logAudit({
+            action: 'DELETE_SERVICE',
+            details: 'Service type deleted',
+            targetId: id
+        });
+
+        revalidatePath('/admin/services');
         return { success: true };
     } catch (error) {
         return { success: false, error: 'Failed to delete service' };
@@ -88,6 +105,13 @@ export async function updateService(id: string, formData: FormData) {
             }
         });
 
+        await logAudit({
+            action: 'UPDATE_SERVICE',
+            details: `Updated service: ${nameEn} (${nameAr})`,
+            targetId: id
+        });
+
+        revalidatePath('/admin/services');
         return { success: true };
     } catch (error) {
         return { success: false, error: 'Failed to update service' };

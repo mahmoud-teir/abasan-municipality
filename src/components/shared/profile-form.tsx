@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Loader2, User, Phone, Lock, Camera, Trash2, AlertTriangle } from 'lucide-react';
+import { Loader2, User, Phone, Lock, Camera, Trash2, AlertTriangle, MapPin } from 'lucide-react';
 import { updateProfile, deleteNationalIdImage, deleteAccount } from '@/actions/profile.actions';
 import { authClient, signOut } from '@/lib/auth/auth-client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -29,6 +29,7 @@ type Props = {
         name: string;
         email: string;
         phone?: string | null;
+        address?: string | null;
         image?: string | null;
         nationalIdImage?: string | null;
         role?: string | null;
@@ -209,6 +210,20 @@ export function ProfileForm({ user }: Props) {
                                     name="phone"
                                     defaultValue={user.phone || ''}
                                     placeholder="059xxxxxxx"
+                                    className="ps-10"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="address">{t('settings.address')}</Label>
+                            <div className="relative">
+                                <MapPin className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    id="address"
+                                    name="address"
+                                    defaultValue={user.address || ''}
+                                    placeholder={t('settings.addressPlaceholder') || 'Address...'}
                                     className="ps-10"
                                 />
                             </div>

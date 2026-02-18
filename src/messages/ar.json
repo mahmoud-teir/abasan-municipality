@@ -137,6 +137,8 @@
             "phonePlaceholder": "059xxxxxxx",
             "nationalId": "رقم الهوية",
             "nationalIdPlaceholder": "رقم الهوية",
+            "address": "العنوان",
+            "addressPlaceholder": "المدينة، الشارع، المعلم...",
             "password": "كلمة المرور",
             "passwordPlaceholder": "••••••••",
             "confirmPassword": "تأكيد كلمة المرور",
@@ -262,6 +264,8 @@
         "title": "إعدادات الحساب",
         "description": "إدارة معلوماتك الشخصية والأمان.",
         "phone": "رقم الهاتف",
+        "address": "العنوان",
+        "addressPlaceholder": "المدينة، الشارع، المعلم...",
         "password": {
             "title": "تغيير كلمة المرور",
             "current": "كلمة المرور الحالية",
@@ -282,6 +286,37 @@
             "success": "تم حذف حسابك بنجاح",
             "error": "فشل في حذف الحساب",
             "deleting": "جاري الحذف..."
+        },
+        "settingsPage": {
+            "title": "الإعدادات",
+            "subtitle": "إدارة إعدادات الموقع وتفضيلاتك.",
+            "typography": "الخطوط",
+            "arabicFont": "الخط العربي",
+            "englishFont": "الخط الإنجليزي",
+            "social": {
+                "facebook": "فيسبوك",
+                "twitter": "تويتر",
+                "instagram": "إنستغرام",
+                "youtube": "يوتيوب",
+                "website": "الموقع الإلكتروني"
+            },
+            "chat": {
+                "title": "ردود المحادثة",
+                "subtitle": "إدارة الأسئلة الشائعة للبوت"
+            },
+            "hero": {
+                "title": "شريط العرض",
+                "subtitle": "إدارة الصفحة الرئيسية"
+            },
+            "suggestions": {
+                "title": "مقترحات",
+                "logo": "قم بتحديث شعار الموقع وأيقونة المفضلة.",
+                "social": "أضف روابط وسائل التواصل الاجتماعي الخاصة بك.",
+                "hero": "قم بتخصيص صور شريط العرض.",
+                "maintenance": "قم بتفعيل وضع الصيانة عند الحاجة.",
+                "analytics": "تحقق من التحليلات بانتظام."
+            },
+            "profile": "إعدادات الملف الشخصي"
         }
     },
     "employee": {

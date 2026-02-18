@@ -9,6 +9,7 @@ import { z } from 'zod';
 const updateProfileSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
     phone: z.string().optional(),
+    address: z.string().optional(),
     currentPassword: z.string().optional(),
     newPassword: z.string().min(6, 'Password must be at least 6 characters').optional(),
 });
@@ -29,6 +30,7 @@ export async function updateProfile(formData: FormData) {
 
         const name = formData.get('name') as string;
         const phone = formData.get('phone') as string;
+        const address = formData.get('address') as string;
         const imageFile = formData.get('image') as File | null;
 
         if (!name || name.length < 2) {
@@ -99,6 +101,7 @@ export async function updateProfile(formData: FormData) {
             data: {
                 name,
                 phone,
+                address,
                 ...(imageUrl && { image: imageUrl }),
                 ...(nationalIdImageUrl && { nationalIdImage: nationalIdImageUrl }),
             },

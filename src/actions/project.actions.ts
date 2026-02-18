@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { ProjectStatus } from '@prisma/client';
 import { auth } from '@/lib/auth/auth';
 import { headers } from 'next/headers';
+import { logAudit } from '@/lib/audit';
 
 const projectSchema = z.object({
     titleAr: z.string().min(1, 'العنوان العربي مطلوب'),
@@ -117,6 +118,12 @@ export async function createProject(data: any) {
             }
         });
 
+        await logAudit({
+            action: 'CREATE_PROJECT',
+            details: `Created project: ${data.titleEn}`,
+            targetId: project.id
+        });
+
         revalidatePath('/projects');
         revalidatePath('/admin/projects');
         return { success: true, data: project };
@@ -157,6 +164,12 @@ export async function updateProject(id: string, data: any) {
             }
         });
 
+        await logAudit({
+            action: 'UPDATE_PROJECT',
+            details: `Updated project: ${data.titleEn || id}`,
+            targetId: id
+        });
+
         revalidatePath('/projects');
         revalidatePath('/admin/projects');
         return { success: true };
@@ -180,6 +193,12 @@ export async function deleteProject(id: string) {
         }
 
         await prisma.project.delete({ where: { id } });
+
+        await logAudit({
+            action: 'DELETE_PROJECT',
+            details: 'Project deleted',
+            targetId: id
+        });
 
         revalidatePath('/projects');
         revalidatePath('/admin/projects');
