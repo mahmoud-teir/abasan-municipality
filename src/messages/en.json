@@ -286,37 +286,6 @@
             "success": "Your account has been successfully deleted",
             "error": "Failed to delete account",
             "deleting": "Deleting..."
-        },
-        "settingsPage": {
-            "title": "Settings",
-            "subtitle": "Manage your site settings and preferences.",
-            "typography": "Typography",
-            "arabicFont": "Arabic Font",
-            "englishFont": "English Font",
-            "social": {
-                "facebook": "Facebook",
-                "twitter": "Twitter",
-                "instagram": "Instagram",
-                "youtube": "YouTube",
-                "website": "Website"
-            },
-            "chat": {
-                "title": "Chat Responses",
-                "subtitle": "Manage bot FAQs"
-            },
-            "hero": {
-                "title": "Hero Slider",
-                "subtitle": "Manage Homepage"
-            },
-            "suggestions": {
-                "title": "Suggestions",
-                "logo": "Update your site logo and favicon.",
-                "social": "Add your social media links.",
-                "hero": "Customize the hero slider images.",
-                "maintenance": "Enable maintenance mode when needed.",
-                "analytics": "Check analytics regularly."
-            },
-            "profile": "Profile Settings"
         }
     },
     "employee": {
@@ -665,6 +634,17 @@
         },
         "settingsPage": {
             "subtitle": "Manage platform settings and appearance",
+            "typography": "Typography",
+            "arabicFont": "Arabic Font",
+            "englishFont": "English Font",
+            "chat": {
+                "title": "Chat Responses",
+                "subtitle": "Manage bot FAQs"
+            },
+            "hero": {
+                "title": "Hero Slider",
+                "subtitle": "Manage Homepage"
+            },
             "aboutImage": {
                 "title": "\"About Municipality\" Image",
                 "description": "Control the image displayed on the \"About Municipality\" page.",
