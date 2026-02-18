@@ -31,7 +31,7 @@ type Props = {
         phone?: string | null;
         image?: string | null;
         nationalIdImage?: string | null;
-        role?: string;
+        role?: string | null;
     };
 };
 
