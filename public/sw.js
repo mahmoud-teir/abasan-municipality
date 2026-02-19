@@ -7,8 +7,8 @@ const OFFLINE_URL = '/offline.html';
 const PRECACHE_ASSETS = [
     OFFLINE_URL,
     '/favicon.png',
-    '/icons/icon-192x192.png',
-    '/icons/icon-512x512.png',
+    '/icons/icon-192x192.jpg',
+    '/icons/icon-512x512.jpg',
 ];
 
 // Install: pre-cache essential assets
