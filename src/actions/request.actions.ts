@@ -126,9 +126,11 @@ export async function getUserRequests(userId: string) {
 /**
  * Get all requests (for employees/admins)
  */
-export async function getRequests(status?: string) {
+export async function getRequests(status?: string, assignedToId?: string) {
     try {
-        const where = status ? { status: status as any } : {};
+        const where: any = {};
+        if (status) where.status = status;
+        if (assignedToId) where.assignedToId = assignedToId;
 
         const requests = await prisma.request.findMany({
             where,
@@ -136,6 +138,9 @@ export async function getRequests(status?: string) {
             include: {
                 user: {
                     select: { name: true, email: true, phone: true }
+                },
+                assignedTo: {
+                    select: { id: true, name: true, email: true }
                 },
                 documents: true,
             },
@@ -271,5 +276,189 @@ export async function getRequestById(requestId: string, userId: string): Promise
     } catch (error) {
         console.error('Error fetching request:', error);
         return { success: false, error: 'Failed to fetch request' };
+    }
+}
+
+/**
+ * Get list of employees (for assignment dropdowns)
+ */
+export async function getEmployeesList(): Promise<ActionResult> {
+    try {
+        const employees = await prisma.user.findMany({
+            where: {
+                role: {
+                    in: ['EMPLOYEE', 'SUPERVISOR', 'ADMIN', 'SUPER_ADMIN', 'ENGINEER', 'ACCOUNTANT', 'PR_MANAGER']
+                },
+                isBanned: false
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+            },
+            orderBy: { name: 'asc' },
+        });
+        return { success: true, data: employees };
+    } catch (error) {
+        console.error('Error fetching employees:', error);
+        return { success: false, error: 'حدث خطأ أثناء جلب قائمة الموظفين' };
+    }
+}
+
+/**
+ * Assign a request to an employee
+ */
+export async function assignRequest(
+    requestId: string,
+    assignedToId: string,
+    assignedById: string,
+    reason?: string
+): Promise<ActionResult> {
+    try {
+        // Update the request
+        const request = await prisma.request.update({
+            where: { id: requestId },
+            data: { assignedToId },
+        });
+
+        // Create assignment log
+        await prisma.requestAssignment.create({
+            data: {
+                requestId,
+                assignedById,
+                assignedToId,
+                reason: reason || null,
+            },
+        });
+
+        // Audit log
+        const assignee = await prisma.user.findUnique({ where: { id: assignedToId }, select: { name: true } });
+        await logAudit({
+            action: 'ASSIGN_REQUEST',
+            details: `Request ${request.requestNo} assigned to ${assignee?.name || assignedToId}${reason ? `. Reason: ${reason}` : ''}`,
+            targetId: requestId
+        });
+
+        // Send notification to assigned employee
+        try {
+            const { ConvexHttpClient } = await import("convex/browser");
+            const { api } = await import("../../convex/_generated/api");
+
+            if (process.env.NEXT_PUBLIC_CONVEX_URL) {
+                const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL);
+                await convex.mutation(api.notifications.send, {
+                    userId: assignedToId,
+                    title: `تم تعيين طلب لك: ${request.requestNo}`,
+                    message: `تم تعيين الطلب رقم ${request.requestNo} لك للمراجعة.${reason ? `\nالسبب: ${reason}` : ''}`,
+                    link: `/employee/requests/${request.id}`
+                });
+            }
+        } catch (error) {
+            console.error("Failed to send Convex notification:", error);
+        }
+
+        revalidatePath('/employee/requests');
+        revalidatePath('/admin/requests');
+
+        return { success: true, data: request };
+    } catch (error) {
+        console.error('Error assigning request:', error);
+        return { success: false, error: 'حدث خطأ أثناء تعيين الطلب' };
+    }
+}
+
+/**
+ * Transfer a request to another employee
+ */
+export async function transferRequest(
+    requestId: string,
+    newAssigneeId: string,
+    transferredById: string,
+    reason: string
+): Promise<ActionResult> {
+    try {
+        const request = await prisma.request.findUnique({
+            where: { id: requestId },
+            select: { requestNo: true, assignedToId: true, id: true }
+        });
+
+        if (!request) {
+            return { success: false, error: 'الطلب غير موجود' };
+        }
+
+        // Update the request
+        await prisma.request.update({
+            where: { id: requestId },
+            data: { assignedToId: newAssigneeId },
+        });
+
+        // Create assignment log
+        await prisma.requestAssignment.create({
+            data: {
+                requestId,
+                assignedById: transferredById,
+                assignedToId: newAssigneeId,
+                reason,
+            },
+        });
+
+        // Audit log
+        const [oldAssignee, newAssignee] = await Promise.all([
+            request.assignedToId ? prisma.user.findUnique({ where: { id: request.assignedToId }, select: { name: true } }) : null,
+            prisma.user.findUnique({ where: { id: newAssigneeId }, select: { name: true } }),
+        ]);
+
+        await logAudit({
+            action: 'TRANSFER_REQUEST',
+            details: `Request ${request.requestNo} transferred from ${oldAssignee?.name || 'unassigned'} to ${newAssignee?.name || newAssigneeId}. Reason: ${reason}`,
+            targetId: requestId
+        });
+
+        // Send notification to new assignee
+        try {
+            const { ConvexHttpClient } = await import("convex/browser");
+            const { api } = await import("../../convex/_generated/api");
+
+            if (process.env.NEXT_PUBLIC_CONVEX_URL) {
+                const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL);
+                await convex.mutation(api.notifications.send, {
+                    userId: newAssigneeId,
+                    title: `تم تحويل طلب إليك: ${request.requestNo}`,
+                    message: `تم تحويل الطلب رقم ${request.requestNo} إليك.\nالسبب: ${reason}`,
+                    link: `/employee/requests/${request.id}`
+                });
+            }
+        } catch (error) {
+            console.error("Failed to send Convex notification:", error);
+        }
+
+        revalidatePath('/employee/requests');
+        revalidatePath('/admin/requests');
+
+        return { success: true, data: request };
+    } catch (error) {
+        console.error('Error transferring request:', error);
+        return { success: false, error: 'حدث خطأ أثناء تحويل الطلب' };
+    }
+}
+
+/**
+ * Get assignment history for a request
+ */
+export async function getRequestAssignmentHistory(requestId: string): Promise<ActionResult> {
+    try {
+        const history = await prisma.requestAssignment.findMany({
+            where: { requestId },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                assignedBy: { select: { name: true } },
+                assignedTo: { select: { name: true } },
+            },
+        });
+        return { success: true, data: history };
+    } catch (error) {
+        console.error('Error fetching assignment history:', error);
+        return { success: false, error: 'حدث خطأ أثناء جلب سجل التعيينات' };
     }
 }

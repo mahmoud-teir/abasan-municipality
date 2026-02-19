@@ -19,17 +19,21 @@ import {
     MapPin,
     Calendar,
     FileText,
-    Printer
+    Printer,
+    UserCheck
 } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { AssignRequestDialog } from '@/components/requests/assign-request-dialog';
+import { TransferRequestDialog } from '@/components/requests/transfer-request-dialog';
 
 type Props = {
-    request: any; // Using detailed type in real app
+    request: any;
     user: any;
+    currentUserId?: string;
 };
 
-export default function RequestActionPanel({ request, user }: Props) {
+export default function RequestActionPanel({ request, user, currentUserId }: Props) {
     const t = useTranslations();
     const router = useRouter();
     const [note, setNote] = useState('');
@@ -105,6 +109,18 @@ export default function RequestActionPanel({ request, user }: Props) {
                                     </p>
                                 </div>
                             </div>
+
+                            {/* Assigned Employee Info */}
+                            {request.assignedTo && (
+                                <div className="rounded-lg border border-indigo-200 bg-indigo-50/50 p-4">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <UserCheck className="w-4 h-4 text-indigo-600" />
+                                        <Label className="text-indigo-700 font-medium">{t('requests.assignment.assignee')}</Label>
+                                    </div>
+                                    <p className="font-medium text-indigo-900">{request.assignedTo.name}</p>
+                                    <p className="text-xs text-indigo-600">{request.assignedTo.email}</p>
+                                </div>
+                            )}
 
                             {request.documents && request.documents.length > 0 && (
                                 <div className="space-y-2 pt-4 border-t">
@@ -207,6 +223,27 @@ export default function RequestActionPanel({ request, user }: Props) {
                                     <AlertCircle className="w-4 h-4 me-2" />
                                     {t('requests.requestActions.requestChanges')}
                                 </Button>
+
+                                {/* Divider */}
+                                <div className="border-t my-1" />
+
+                                {/* Assignment / Transfer Section */}
+                                {currentUserId && (
+                                    <>
+                                        {!request.assignedTo ? (
+                                            <AssignRequestDialog
+                                                requestId={request.id}
+                                                currentUserId={currentUserId}
+                                            />
+                                        ) : (
+                                            <TransferRequestDialog
+                                                requestId={request.id}
+                                                currentUserId={currentUserId}
+                                                currentAssignee={request.assignedTo}
+                                            />
+                                        )}
+                                    </>
+                                )}
                             </div>
                         </CardContent>
                     </Card>

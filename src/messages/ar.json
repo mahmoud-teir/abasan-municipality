@@ -234,7 +234,29 @@
             "uploadError": "حدث خطأ: {error}",
             "uploadedList": "الملفات المرفقة:"
         },
-        "noDescription": "لا يوجد وصف"
+        "noDescription": "لا يوجد وصف",
+        "assignment": {
+            "assignTo": "تعيين لموظف",
+            "transferTo": "تحويل لموظف آخر",
+            "assignee": "الموظف المعين",
+            "currentAssignee": "الموظف الحالي",
+            "newEmployee": "الموظف الجديد",
+            "employee": "اختر الموظف",
+            "selectEmployee": "اختر موظفاً",
+            "reason": "السبب",
+            "optional": "اختياري",
+            "reasonPlaceholder": "سبب التعيين (اختياري)...",
+            "transferReasonPlaceholder": "سبب التحويل (مطلوب)...",
+            "reasonRequired": "يجب ذكر سبب التحويل",
+            "confirm": "تأكيد التعيين",
+            "confirmTransfer": "تأكيد التحويل",
+            "assignSuccess": "تم تعيين الطلب بنجاح",
+            "transferSuccess": "تم تحويل الطلب بنجاح",
+            "assignDescription": "اختر الموظف المسؤول عن مراجعة هذا الطلب.",
+            "transferDescription": "تحويل الطلب لموظف آخر مع ذكر السبب.",
+            "assignedToMe": "المعين لي",
+            "unassigned": "غير معين"
+        }
     },
     "common": {
         "loading": "جاري التحميل...",
@@ -736,7 +758,9 @@
             "selectConversation": "اختر محادثة للبدء",
             "typeReply": "اكتب ردك هنا...",
             "supportAgent": "موظف الدعم",
-            "loading": "جاري تحميل الرسائل..."
+            "loading": "جاري تحميل الرسائل...",
+            "confirmDelete": "هل أنت متأكد من حذف هذه المحادثة؟",
+            "deleteError": "حدث خطأ أثناء الحذف"
         }
     },
     "services": {

@@ -30,6 +30,11 @@ type RequestWithUser = {
         email: string;
         phone: string | null;
     };
+    assignedTo?: {
+        id: string;
+        name: string;
+        email: string;
+    } | null;
 };
 
 export default function AdminRequestsPage() {
@@ -40,7 +45,7 @@ export default function AdminRequestsPage() {
 
     useEffect(() => {
         const fetchRequests = async () => {
-            const res = await getRequests(); // Fetch all
+            const res = await getRequests();
             if (res.success) {
                 setRequests(res.data as any);
             }
@@ -73,13 +78,14 @@ export default function AdminRequestsPage() {
                 <h1 className="text-3xl font-bold tracking-tight">{t('admin.requests')}</h1>
                 <ExportButton
                     data={requests.map(r => ({
-                        'Request No': r.id, // Using ID for now, ideally RequestNo
+                        'Request No': r.id,
                         Type: r.type,
                         Status: r.status,
                         Date: format(new Date(r.submittedAt), 'yyyy-MM-dd'),
                         'Applicant Name': r.user.name,
                         'Applicant Email': r.user.email,
-                        'Applicant Phone': r.user.phone
+                        'Applicant Phone': r.user.phone,
+                        'Assigned To': r.assignedTo?.name || '-'
                     }))}
                     filename="requests_list"
                     label={t('admin.exportRequests') || 'Export Requests'}
@@ -101,9 +107,9 @@ export default function AdminRequestsPage() {
                                 <TableRow>
                                     <TableHead>{t('requests.type')}</TableHead>
                                     <TableHead>{t('common.name')}</TableHead>
+                                    <TableHead>{t('requests.assignment.assignee')}</TableHead>
                                     <TableHead>{t('admin.usersPage.table.joinedAt')}</TableHead>
                                     <TableHead>{t('admin.usersPage.table.role')}</TableHead>
-                                    {/* <TableHead className="text-end">الإجراءات</TableHead> */}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -119,6 +125,15 @@ export default function AdminRequestsPage() {
                                                 <span className="font-medium">{req.user.name}</span>
                                                 <span className="text-xs text-muted-foreground">{req.user.email}</span>
                                             </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            {req.assignedTo ? (
+                                                <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200">
+                                                    {req.assignedTo.name}
+                                                </Badge>
+                                            ) : (
+                                                <span className="text-xs text-muted-foreground">{t('requests.assignment.unassigned')}</span>
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             {format(new Date(req.submittedAt), 'PPP', { locale: locale === 'ar' ? ar : enUS })}

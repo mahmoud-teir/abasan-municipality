@@ -41,6 +41,11 @@ model User {
   accounts     Account[]
   comments     Comment[]
   
+  // Assignment Relations
+  assignedRequests Request[] @relation("AssignedEmployee")
+  assignmentsGiven RequestAssignment[] @relation("Assigner")
+  assignmentsReceived RequestAssignment[] @relation("Assignee")
+
   // System Relations
   auditLogs    AuditLog[] @relation("Actor")
   notifications Notification[]
@@ -136,6 +141,11 @@ model Request {
   userId      String
   user        User          @relation(fields: [userId], references: [id])
   
+  // الموظف المعين
+  assignedToId String?
+  assignedTo   User?         @relation("AssignedEmployee", fields: [assignedToId], references: [id])
+  assignments  RequestAssignment[]
+  
   // Relations
   documents   Document[]
   notes       Note[]
@@ -149,6 +159,20 @@ model Request {
   updatedAt   DateTime      @updatedAt
 }
 
+// ============================================
+// سجل تعيين/تحويل الطلبات - Request Assignments
+// ============================================
+model RequestAssignment {
+  id           String   @id @default(cuid())
+  requestId    String
+  request      Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  assignedById String
+  assignedBy   User     @relation("Assigner", fields: [assignedById], references: [id])
+  assignedToId String
+  assignedTo   User     @relation("Assignee", fields: [assignedToId], references: [id])
+  reason       String?
+  createdAt    DateTime @default(now())
+}
 
 
 enum RequestStatus {

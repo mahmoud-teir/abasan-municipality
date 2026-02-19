@@ -234,7 +234,29 @@
             "uploadError": "Upload error: {error}",
             "uploadedList": "Attached Files:"
         },
-        "noDescription": "No description provided"
+        "noDescription": "No description provided",
+        "assignment": {
+            "assignTo": "Assign to Employee",
+            "transferTo": "Transfer to Another Employee",
+            "assignee": "Assigned To",
+            "currentAssignee": "Currently Assigned To",
+            "newEmployee": "New Employee",
+            "employee": "Select Employee",
+            "selectEmployee": "Select an employee",
+            "reason": "Reason",
+            "optional": "optional",
+            "reasonPlaceholder": "Reason for assignment (optional)...",
+            "transferReasonPlaceholder": "Reason for transfer (required)...",
+            "reasonRequired": "Transfer reason is required",
+            "confirm": "Confirm Assignment",
+            "confirmTransfer": "Confirm Transfer",
+            "assignSuccess": "Request assigned successfully",
+            "transferSuccess": "Request transferred successfully",
+            "assignDescription": "Select the employee responsible for reviewing this request.",
+            "transferDescription": "Transfer this request to another employee with a reason.",
+            "assignedToMe": "Assigned to Me",
+            "unassigned": "Unassigned"
+        }
     },
     "common": {
         "loading": "Loading...",
@@ -736,7 +758,9 @@
             "selectConversation": "Select a conversation to start",
             "typeReply": "Write your reply here...",
             "supportAgent": "Support Agent",
-            "loading": "Loading messages..."
+            "loading": "Loading messages...",
+            "confirmDelete": "Are you sure you want to delete this conversation?",
+            "deleteError": "An error occurred while deleting"
         }
     },
     "services": {

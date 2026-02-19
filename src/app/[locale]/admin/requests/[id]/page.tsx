@@ -6,6 +6,8 @@ import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { auth } from '@/lib/auth/auth';
+import { headers } from 'next/headers';
 
 type Props = {
     params: Promise<{ id: string }>;
@@ -15,21 +17,31 @@ export default async function AdminRequestDetailsPage({ params }: Props) {
     const { id } = await params;
     const t = await getTranslations();
 
-    const request = await prisma.request.findUnique({
-        where: { id },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    phone: true,
-                }
-            },
-            documents: true,
-            notes: true
-        }
-    });
+    const [request, session] = await Promise.all([
+        prisma.request.findUnique({
+            where: { id },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        phone: true,
+                    }
+                },
+                assignedTo: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    }
+                },
+                documents: true,
+                notes: true
+            }
+        }),
+        auth.api.getSession({ headers: await headers() })
+    ]);
 
     if (!request) {
         notFound();
@@ -51,7 +63,11 @@ export default async function AdminRequestDetailsPage({ params }: Props) {
                 </div>
             </div>
 
-            <RequestActionPanel request={request} user={request.user} />
+            <RequestActionPanel
+                request={request}
+                user={request.user}
+                currentUserId={session?.user?.id}
+            />
 
             <div className="mt-8">
                 <h2 className="text-xl font-bold mb-4">{t('admin.chat') || 'Chat & History'}</h2>
