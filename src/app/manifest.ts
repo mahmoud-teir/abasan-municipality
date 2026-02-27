@@ -16,7 +16,7 @@ export default function manifest(): MetadataRoute.Manifest {
         categories: ['government', 'public-services'],
         icons: [
             {
-                src: '/favicon.png',
+                src: '/favicon.svg',
                 sizes: 'any',
                 type: 'image/png',
             },

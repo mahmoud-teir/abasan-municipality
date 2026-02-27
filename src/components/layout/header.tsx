@@ -12,6 +12,7 @@ import { LanguageSwitcher } from '@/components/layout/language-switcher';
 // import styles from './header.module.css'; // Assuming this exists or kept as is
 import { UserNav } from '@/components/layout/user-nav';
 import { NotificationBell } from '@/components/layout/notification-bell';
+import { Logo } from '@/components/ui/logo';
 import { useSession } from '@/lib/auth/auth-client';
 
 import { getDashboardLink } from '@/lib/role-utils';
@@ -54,7 +55,8 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container relative flex h-16 items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-primary tracking-tight hover:scale-105 transition-transform">
+                <Link href="/" className="flex items-center gap-3 font-bold text-2xl text-primary tracking-tight hover:scale-105 transition-transform">
+                    <Logo size={42} className="shrink-0" />
                     <span>{tMetadata('title')}</span>
                 </Link>
 

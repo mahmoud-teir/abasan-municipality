@@ -6,7 +6,7 @@ const OFFLINE_URL = '/offline.html';
 // Static assets to pre-cache
 const PRECACHE_ASSETS = [
     OFFLINE_URL,
-    '/favicon.png',
+    '/favicon.svg',
     '/icons/icon-192x192.jpg',
     '/icons/icon-512x512.jpg',
 ];
